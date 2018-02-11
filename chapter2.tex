@@ -100,6 +100,14 @@ The first experiment is based on 100 replicates of the LSTAR(2) model in Equatio
 		&\textrm{ and }\epsilon_t \sim \textrm{i.i.d. }  N (0,0.02^2).\\
 	\end{split}
 \end{equation}
+
+\begin{figure}
+	\centering
+	\caption{Ten Random Replications (top), Transition Function (middle), and Illustration of Regime-switching Behavior  for Simulation 1 }
+	\includegraphics[scale=.7]{sim1plots}
+	\label{fig:sim1plots}
+\end{figure}
+
  This model is identical to the one presented in \cite{Lopes2006} where RJMCMC is used to select model order and a discrete $Uniform$ is adopted for $d$. If $p=4$ is known \textit{a priori}, the true parameter vector $\bm{\theta}=[\alpha_0, \alpha_1, \cdots, \alpha_4, \beta_0,\cdots,\beta_4, \gamma,\delta,\sigma]'$ contains $5$ zero parameters. Until further notice, we will assume $d$ is known as we focus our attention on the ability of Bayesian shrinkage to combat over-fitting.
 
 Bayesian estimation of the underlying LSTAR(2) model compares  BLASSO, RS-BLASSO, VS-BLASSO, and BHS shrinkage priors to conventional Normal priors. For the variations of BLASSO, posterior medians are obtained \citep{Park2008}, whereas when BHS \citep{Carvalho2009} or Normal priors are used, point estimates are based on posterior means. After a burn-in period of 15,000 and a thinning of 10 to reduce autocorrelation and control computer memory usage, we obtain an initial 1,000 samples for 3 chains from the joint posterior distribution. The ``potential scale reduction factor'' (PSRF($\theta$)) of \cite{Gelman1992} evaluates convergence across the three chains, and effective sample size (ESS($\theta$)) measures mixing efficiency for each parameter $\theta \in \bm{\theta}$.  If $\underset{\theta}{\max} \textrm{ PSRF}(\theta)<1.05$ and $\underset{\theta}{\min} \textrm{ ESS}(\theta)>150$, convergence criteria is met and our initial sample is sufficient; otherwise, posterior samples are added, a maximum of 20 times, with intermittent convergence checks. Posterior simulations are only considered valid whenever the convergence criteria is met. Upcoming sections will follow the same convergence and reporting standards. Prior hyper-parameters are intentionally chosen to be non-informative and starting values are either randomly chosen or over-dispersed. Specifically for $\gamma^*$, we use the non-informative log normal prior $LN(3,1)$ for all  simulation experiments \citep{Gerlach2008}. 
@@ -154,6 +162,14 @@ The next experiment is based on 100 replications of the LSTAR(3) model described
 		&\textrm{ and }\epsilon_t \sim \textrm{i.i.d. }  N (0,0.02^2)\\
 	\end{split}
 \end{equation}
+
+\begin{figure}
+	\centering
+	\caption{Ten Random Replications (top), Transition Function (middle), and Illustration of Regime-switching Behavior  for Simulation 2}
+	\includegraphics[scale=.7]{sim2plots}
+	\label{fig:sim2plots}
+\end{figure}
+
  Under the assumption that $p=4$, we find truly zero coefficients  $\bm{\theta}$ for autoregressive lags less than and larger than 3. This is a situation where even if RJMCMC visits the correct parameter space, normal priors will result in over-fitting. Motivation is geared towards nonlinear models where seasonal dynamics, of any period length, exhibit nonlinearities through dependence on some threshold variable.
 
 Table \ref{tab:blassobhssummary3} summarizes and Figure \ref{fig:blvsbh3} illustrates the estimation accuracy of each method. Again, the normal priors result in unsatisfactory estimation accuracy. The simplest shrinkage methods, BLASSO and RS-BLASSO, consistently identify the true signal slightly better than the other shrinkage methods. 
@@ -255,6 +271,14 @@ The effectiveness of the proposed methods is evaluated via simulating 100 replic
 		&\textrm{ and }\epsilon_t \sim \textrm{i.i.d. }  N (0,0.02^2)\\
 	\end{split}
 \end{equation}
+
+\begin{figure}
+	\centering
+	\caption{Ten Random Replications (top), Transition Function (middle), and Illustration of Regime-switching Behavior  for Simulation 3}
+	\includegraphics[scale=.7]{sim3plots}
+	\label{fig:sim3plots}
+\end{figure}
+
 From Table \ref{tab:blassobhssummary4} and Figure \ref{fig:blvsbh4}, one observes that estimation accuracy is satisfactory for all three shrinkage methods, whereas $Normal$ priors continue to lead to poor estimates. The motivation for regime-specific shrinkage parameters $\lambda_1$ and $\lambda_2$ is illustrated in Figure \ref{fig:lambdabox}, which presents histograms of posterior median estimates for the tuning parameters of BLASSO vs RS-BLASSO. The visual disparity between $\lambda_1$ and $\lambda_2$ is a result of the regime-specific sparsity patterns: $\lambda_1>\lambda_2$ necessitates from the lower regime requiring relatively more shrinkage to identify the underlying signal.
 
 \begin{table}[!h]
