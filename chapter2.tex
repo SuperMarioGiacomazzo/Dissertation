@@ -25,7 +25,7 @@ Section 2 explains how Bayesian estimation methods for sparse signals can be inc
  
 Difficulties in the estimation of $\gamma=\gamma^*/s_y$ have led to a variety of prior proposals: $Cauchy$ \citep{Lubrano2000},  $Gamma$ \citep{Lopes2006}, $truncated-Normal$ \citep{Livingston2017}, and $log-Normal$ \citep{Gerlach2008}.  \cite{Livingston2017} compared  $Gamma$ and $truncated-Normal$ and demonstrated that computational time and posterior results are mainly influenced by starting values and prior information rather than distributional choice. \cite{Gerlach2008} favored the $log-Normal$ ($LN$) prior $\gamma^* \sim LN(\mu_\gamma,\sigma^2_\gamma)$ over $Cauchy$, since it leads to an integrable posterior for $\gamma$ and removes unnecessary prior weight placed at 0. Our preliminary analyses showed that the choice of prior had little effect on posterior distributions, confirming the findings by \cite{Livingston2017}. In what follows, we adopt the $log-Normal$ prior for $\gamma^*$ since it resulted in low computational times relative to $Gamma$, $Cauchy$ and $truncated-Normal$.
  
-Sampling algorithms of the joint posterior $f(\bm{\theta}|\bm{y})$ exploit the fact that the LSTAR(p) model is conditionally linear given $\gamma^*$ and $\delta$. Specifically, Gibbs sampling is applied for $\bm{\alpha}$, $\bm{\beta}$, and $\sigma^2$  \citep{Gelfand1990} and Metropolis-Hastings \citep{Metropolis1953,Hastings1970} for $\gamma^*$ and $\delta$. Since the length of $\bm{\theta}$ increases with the model order $p$, \cite{Lopes2006} extended the sampling algorithm outlined by \cite{Lubrano2000} to incorporate a reversible jump step, which includes the model order $p$ in $\bm{\theta}$. RJMCMC allows the dimension of the sampled vector $\bm{\theta}$ to change from $2(p+1)+3$ to $2(p'+1)+3$ whenever proposed changes from $p$ to $p'$ are accepted. Posterior assessment with regard to $p$ relies on comparing  posterior model probabilities. The most likely model order $\hat{p}$ is defined as $\hat{p}=\max_{p}\#\{p_s=p| s \in {1,\cdots, S}\}/S$  where $S$ represents the number of samples from the joint posterior distribution after burn-in and $p_s$ represents the sampled value at iteration $s$. 
+Sampling algorithms of the joint posterior $f(\bm{\theta}|\bm{y})$ exploit that the LSTAR($p$) model is conditionally linear given $\gamma^*$ and $\delta$. Specifically, Gibbs sampling is applied for $\bm{\alpha}$, $\bm{\beta}$, and $\sigma^2$  \citep{Gelfand1990} and Metropolis-Hastings \citep{Metropolis1953,Hastings1970} for $\gamma^*$ and $\delta$. Since the length of $\bm{\theta}$ increases with the model order $p$, \cite{Lopes2006} extended the sampling algorithm outlined by \cite{Lubrano2000} to incorporate a reversible jump step, which includes the model order $p$ in $\bm{\theta}$. RJMCMC allows the dimension of the sampled vector $\bm{\theta}$ to change from $2(p+1)+3$ to $2(p'+1)+3$ whenever proposed changes from $p$ to $p'$ are accepted. Posterior assessment with regard to $p$ relies on comparing  posterior model probabilities. The most likely model order $\hat{p}$ is defined as $\hat{p}=\max_{p}\#\{p_s=p| s \in {1,\cdots, S}\}/S$  where $S$ represents the number of samples from the joint posterior distribution after burn-in and $p_s$ represents the sampled value at iteration $s$. 
 
 \subsection{SPARSE ESTIMATION VIA BAYESIAN SHRINKAGE}
 Let $p_1$ be the true linear AR model order in the low regime and $p_2$ be its equivalent in the high regime. Furthermore, let $p=\max\{p_1, p_2\}$. Two cases where RJMCMC may never sample from the correct parameter space are when $p_1\neq p_2$ or when $\exists \textrm{ } j <p$ such that $\alpha_j=0 \cup \beta_j=0$. The conditional linear nature of the LSTAR(p) model invites a plethora of Bayesian techniques for model selection through the editing of the priors for $\bm{\alpha}$ and $\bm{\beta}$. For insights into the different varieties, the interested reader may consult \cite{OHara2009}. 
@@ -90,14 +90,14 @@ Applying the constraint $\sum \phi_k =1$ eliminates the previous issues involvin
 
 \subsection{SIMULATION 1: WELL-BEHAVED LSTAR}
 
-The first experiment is based on 100 replicates of the LSTAR(2) model in Equation \ref{eq:sim1}, each of length 1000, after a burn-in period of
-500.
+The first experiment is based on 100 replicates of the LSTAR(2) model in Equation \ref{eq:sim1}, each of length 1000, after a burn-in period of 500. Figure \ref{fig:sim1plots} 
 \begin{equation}
 	\begin{split}
 		\label{eq:sim1}
-		y_t&=(1.8y_{t-1}-1.06y_{t-2})[1-G(y_{t-2})] + (0.02+0.9y_{t-1}-0.265y_{t-2})[G(y_{t-2})]+\epsilon_t\\
-		& \textrm{where: } G(y_{t-2})=\bigg\{1+\exp\big[-100(y_{t-2}-0.02)\big]\bigg\}^{-1} \\
-		&\textrm{ and }\epsilon_t \sim \textrm{i.i.d. }  N (0,0.02^2).\\
+		y_t&=(1.8y_{t-1}-1.06y_{t-2})[1-G(y_{t-2})]\\ 
+		&+ (0.02+0.9y_{t-1}-0.265y_{t-2})[G(y_{t-2})]+\epsilon_t\\
+		G(y_{t-2})&=\bigg\{1+\exp\big[-100(y_{t-2}-0.02)\big]\bigg\}^{-1}\\
+		\epsilon_t &\sim \textrm{i.i.d. }  N(0,0.02^2)
 	\end{split}
 \end{equation}
 
