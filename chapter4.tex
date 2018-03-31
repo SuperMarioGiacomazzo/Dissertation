@@ -22,15 +22,20 @@ The seasonal periodicity $S$ is typically unknown \textit{a priori}. Any SARMA m
 
 Fitting an ARMA$(p^*,q^*)$ model to an arbitrary series $\{y_t\}$ requires estimation of AR coefficients $\bm{\phi}=[\phi_1,\cdots,\phi_{p*}]'$ and MA coefficients $\bm{\theta}=[\theta_1,\cdots,\theta_{q^*}]'$. We desire estimates $\hat{\bm{\phi} }$ and $\hat{\bm{\theta} }$ that validate stationary and invertible regulatory assumptions. Stationary and invertible processes guarantee all roots of both characteristic equations, $1-\phi_1z-\phi_2z^2-\cdots -\phi_{p^*}z^{p^*}=0$ and $1+\theta_1z+\theta_2z^2+\cdots +\theta_{q^*}z^{q^*}=0$, are outside the unit circle. Classically, parameter estimation is conducted via method of moments, least squares, or maximum likelihood \citep{Hamilton1994, Cryer2008}. When $q^*=0$, these approaches are simple extensions of linear regression where the set of predictor variables are lagged realizations of the time series. If $q^*>0$, a linear model representation exists, but the presence of MA terms pose an estimation problem since the innovations $\{\epsilon_t\}$ are unobservable and dependent on $\bm{\phi}$ and $\bm{\theta}$. Popular least squares and maximum likelihood estimation methods become far less efficient and require nonlinear optimization techniques.
 
-Any ARMA$(p^*,q^*)$ model that satisfies the invertibility condition has an $AR(\infty)$ representation i.e. $(1-\sum\limits_{j=1}^\infty \phi^\prime_jB^j)y_t=\epsilon_t$. If we know $\bm{\phi}^\prime$, we can obtain the full set $\{\epsilon_t\}$. The residuals $\{\hat{\epsilon}_t: t=\tilde{p}+1,\cdots,T\}$ of a long AR$(p^\prime)$ process fitted to  $\{y_t\}$ can approximate the unobserved $\{\epsilon_t\}$.  This approach was initially proposed by \cite{Hannan1982} to obtain quick estimation of ARMA$(p^*,q^*)$ as it avoids previously mentioned estimation issues. For further information, see \cite{Brockwell2016}.
+Any ARMA$(p^*,q^*)$ model that satisfies the invertibility condition has an $AR(\infty)$ representation i.e. $(1-\sum\limits_{j=1}^\infty \phi^\prime_jB^j)y_t=\epsilon_t$. If we know $\bm{\phi}^\prime$, we can obtain the full set $\{\epsilon_t\}$. The residuals $\{\hat{\epsilon}_t: t=\tilde{p}+1,\cdots,T\}$ of a long AR$(p^\prime)$ process fitted to  $\{y_t\}$ can approximate the unobserved $\{\epsilon_t\}$.  This approach was initially proposed by \cite{Hannan1982} to obtain quick estimation of ARMA$(p^*,q^*)$ as it avoids previously mentioned estimation issues. For further information, see \cite[pg.156]{Brockwell2016}.
 
 The model orders $p^*$ and $q^*$ can be heuristically selected through inspection of sample autocorrelation and partial autocorrelation functions (abbreviated ACF and PACF, respectively). This non-scientific approach could lead to misspecified models and possibly poor forecasting performance. Suppose $p$ and $q$ are safe upper bounds such that $p\geq p^*$ and $q\geq q^*$. For the $(p+1)(q+1)$ different ARMA models, final order selection can be based off minimization of some measure of prediction error (PE). Information criteria such as AIC \citep{Akaike1974} or BIC \citep{Schwarz1978} are popular metrics that penalize for model complexity. Stepwise selection algorithms are usually instituted to accelerate this process.
 
 These approaches are best suited for estimating ARMA processes where $\phi_j\neq 0$ and $\theta_k \neq 0$ for $j\in\{1,\cdots,p^*\}$ and $k\in\{1,\cdots,q^*\}$. For the scenario in Equation \ref{eq:sarma2arma}, correct identification of $p^*=5$ and $q^*=0$ still leads to overfitting since truly zero parameters, $\phi_2$ and $\phi_3$, are included in estimation. We define the true process in Equation \ref{eq:sarma2arma} as a subset ARMA$(5,0)$ model where $\bm{\phi}=[\phi_1,\phi_4,\phi_5]'=[0.6,0.3,-0.18]'$. Common approaches for ARMA$(p,q)$ model selection become less efficient and reliable when searching through the $2^{(p+q)}$ unique subset ARMA$(p,q)$ models.	
 
-Let $\bm{y}=[y_{m},\cdots,y_T]'$, $\bm{\epsilon}=[\epsilon_{m},\cdots,\epsilon_T]'$, $\bm{\beta}=[\bm{\phi},\bm{\theta}]'=[\phi_1,\cdots,\phi_p,\theta_1,\cdots,\theta_q]'$, and 
+Let $\bm{y}=[y_{m},\cdots,y_T]'$, $\bm{\epsilon}=[\epsilon_{m},\cdots,\epsilon_T]'$, $\bm{\beta}=[\bm{\phi}',\bm{\theta}']'=[\phi_1,\cdots,\phi_p,\theta_1,\cdots,\theta_q]'$, and 
 \begin{equation*}
-\bm{X}= [\bm{x}'_1,\cdots,\bm{x}'_{p+q}]=	\begin{bmatrix} y_{m-1} & \cdots & y_{m-p} &
+\bm{X}=\begin{bmatrix} \bm{x}'_{m}  \\
+					\bm{x}'_{m+1}  \\
+					\vdots \\
+					\bm{x}'_{T} \\
+	\end{bmatrix} =
+	\begin{bmatrix} y_{m-1} & \cdots & y_{m-p} &
 					\hat{\epsilon}_{m-1} & \cdots & \hat{\epsilon}_{m-q} \\
 					y_{m-2} & \cdots & y_{m-p-1} &
 					\hat{\epsilon}_{m-2} & \cdots & \hat{\epsilon}_{m-q-1} \\
@@ -42,13 +47,13 @@ Let $\bm{y}=[y_{m},\cdots,y_T]'$, $\bm{\epsilon}=[\epsilon_{m},\cdots,\epsilon_T
 \end{equation*}
 any ARMA$(p,q)$ model can be expressed by $\bm{y}=\bm{X}\bm{\beta}+\bm{\epsilon}$. Recall that $\hat{\epsilon}_t$ are residuals from fitted AR$(p^\prime)$ models used to estimate unknown innovations. Similar to estimation via conditional least squares and conditional maximum likelihood \citep{Hamilton1994}, the first $m-1$ observations are lost in parameter estimation where $m=p^\prime+max\{p,q\}+1$. For reduction of $m$, selection of $p^\prime$ can be based off AIC or BIC  \citep{Hannan1984a,Chen2011}. Also, it is important to note $\{y_t\}$ is assumed to be mean-centered. An additional mean parameter $\mu$ can be included in $\bm{\beta}$ via  binding a column of $1$s to $\bm{X}$.
 
-Presenting the ARMA$(p,q)$ model as a linear Gaussian model is quite advantageous. For both linear and generalized linear models, the lease absolute shrinkage and selection operator (LASSO) of \cite{Tibshirani1996} efficiently combines model selection and estimation. The LASSO estimator in Equation \ref{eq:lasso2} achieves sparsity through $\ell_1$ penalization of the least squares criterion.  The tuning parameter $\lambda >0$ controls overall shrinkage of $\bm{\beta}$ towards 0. Consequentially, the LASSO estimate is a function of $\lambda$, but full solution paths are quickly obtained via well-developed algorithms \citep{Efron2004}. The optimal $\lambda$ is often based off minimization of AIC, BIC, or some generalization of prediction error. The effectiveness of LASSO motivated analogous Bayesian approaches using Laplace priors \citep{Park2008, Yuan2005}. Similarly, hyperpriors placed on $\lambda$ encourage data-driven shrinkage of posterior estimates.
+Presenting the ARMA$(p,q)$ model as a linear Gaussian model is quite advantageous. For both linear and generalized linear models, the least absolute shrinkage and selection operator (LASSO) of \cite{Tibshirani1996} efficiently combines model selection and estimation. The LASSO estimator in Equation \ref{eq:lasso2} achieves sparsity through $\ell_1$ penalization of the least squares criterion.  The tuning parameter $\lambda >0$ controls overall shrinkage of $\bm{\beta}$ towards 0. Consequentially, the LASSO estimate is a function of $\lambda$, but full solution paths are quickly obtained via well-developed algorithms \citep{Efron2004}. The optimal $\lambda$ is often based off minimization of AIC, BIC, or some generalization of prediction error. The effectiveness of LASSO motivated analogous Bayesian approaches using Laplace priors \citep{Park2008, Yuan2005}. Similarly, hyperpriors placed on $\lambda$ encourage data-driven shrinkage of posterior estimates.
 \begin{equation}
 \label{eq:lasso2}
 \hat{\bm{\beta}}_{L} (\lambda)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\bm{y}-\bm{X}\bm{\beta}||^2 + \lambda \sum\limits_{i=1}^{p+q}|\beta_i|
 \end{equation}
 
-Applying LASSO in time series analysis is potentially problematic since the ARMA model matrix $\bm{X}$ contains correlated predictors.  \cite{Nardi2011} explored the consistency properties of $\hat{\bm{\beta}}_{L}$ for AR$(p)$ processes to approximate realizations from ARMA data generating processes. However, high correlation between non-zero and irrelevant ARMA predictors violates an "irrepresentable condition" almost required for sign and model selection consistency \citep{Zhao2006}. \cite{Hebiri2013} demonstrate that highly collinear designs yield underestimation of $\lambda$ and poor prediction. Modified LASSO and other methods with better asymptotic properties mitigate the consequences of correlated predictors.
+Applying LASSO in time series analysis is potentially problematic since the ARMA model matrix $\bm{X}$ contains correlated predictors.  \cite{Nardi2011} explored the consistency properties of $\hat{\bm{\beta}}_{L}$ for AR$(p)$ processes to approximate realizations from ARMA data generating processes (DGPs). However, high correlation between non-zero and irrelevant ARMA predictors violates an "irrepresentable condition" almost required for sign and model selection consistency \citep{Zhao2006}. \cite{Hebiri2013} demonstrate that highly collinear designs yield underestimation of $\lambda$ and poor prediction. Modified LASSO and other methods with better asymptotic properties mitigate the consequences of correlated predictors.
 
 In our context, $p$ and $q$ should be safely overestimated, resulting in a sparse parameter vector $\bm{\beta}$. In this article, we explore the application of regularization methods to automate subset ARMA$(p,q)$ selection and estimation of $\bm{\beta}$. Section \ref{sec:methods} presents 3 different methods that incorporate subset selection through regularization estimation. The first 2 methods extend off work from \citep{Chen2011}. A discussion of cross-validation techniques explores alternative ways to select regularization tuning parameters. The final regularization method is developed under the Bayesian framework for a contrast to the preceding classical approaches. Section \ref{sec:mc} contains simulation studies evaluating and comparing the different methods. Section \ref{sec:co2app} applies the methods to monthly carbon dioxide time series measured from 2 different atmospheric observatories.
 
@@ -64,7 +69,7 @@ In our context, $p$ and $q$ should be safely overestimated, resulting in a spars
 \section{METHODS}
 \label{sec:methods}
 
-Assume $y_t$ follows a subset ARMA$(p,q)$ process. Recall the matrix ARMA representation $\bm{y}=\bm{X}\bm{\beta}+\bm{\epsilon}$ where $\bm{\beta}=[\bm{\phi}',\bm{\theta}']=[\beta_1,\cdots,\beta_{p+q}]'$. The set $\mathcal{A}=\{i:\beta_i\neq 0\}$ indicates the AR and MA terms relevant to the true process. If the cardinality $|\mathcal{A}|<p+q$, irrelevant predictors are included in the ARMA model matrix $\bm{X}$. Given observed data $\{y_t: t=m,m+1,\cdots,T\}$, we obtain estimates $\hat{\bm{\beta}}$ for $\bm{\beta}$ and $\hat{\mathcal{A}}=\{i:\hat{\beta}_i\neq 0\}$ for $\mathcal{A}$. Multiple researchers have theoretically explored the asymptotic behavior of penalized estimators including the popular oracle property \citep{Fan2001,Fan2004,Fan2011}. A method for estimating $\bm{\beta}$ is described as oracle if the estimator $\hat{\bm{\beta}}$ asymptotically behaves as an estimator developed under prior knowledge of $\mathcal{A}$. Under these considerations, we describe approaches to estimate ARMA coefficients while simultaneously identifying $\mathcal{A}$ through shrinking irrelevant effects to 0.
+Assume $y_t$ follows a subset ARMA$(p,q)$ process. Recall the matrix ARMA representation $\bm{y}=\bm{X}\bm{\beta}+\bm{\epsilon}$ where $\bm{\beta}=[\bm{\phi}',\bm{\theta}']=[\beta_1,\cdots,\beta_{p+q}]'$. The set $\mathcal{V}=\{i:\beta_i\neq 0\}$ indicates the AR and MA terms relevant to the true process. If the cardinality $|\mathcal{V}|<p+q$, irrelevant predictors are included in the ARMA model matrix $\bm{X}$. Given observed data $\{y_t: t=m,m+1,\cdots,T\}$, we obtain estimates $\hat{\bm{\beta}}$ for $\bm{\beta}$ and $\hat{\mathcal{V}}=\{i:\hat{\beta}_i\neq 0\}$ for $\mathcal{V}$. Multiple researchers have theoretically explored the asymptotic behavior of penalized estimators including the popular oracle property \citep{Fan2001,Fan2004,Fan2011}. A method for estimating $\bm{\beta}$ is described as oracle if the estimator $\hat{\bm{\beta}}$ asymptotically behaves as an estimator developed under prior knowledge of $\mathcal{V}$. Under these considerations, we describe approaches to estimate ARMA coefficients while simultaneously identifying $\mathcal{V}$ through shrinking irrelevant effects to 0.
 
 \subsection{ADAPTIVE LASSO}
 
@@ -77,18 +82,67 @@ Assume $y_t$ follows a subset ARMA$(p,q)$ process. Recall the matrix ARMA repres
 For subset ARMA model selection, \cite{Chen2011} showed ADLASSO is an oracle procedure under 3 regulatory assumptions when $\hat{\bm{\beta}}=(\bm{X}'\bm{X})^{-1}\bm{X}'\bm{y}$. Proof of this result followed from using a long AR$(p^\prime)$ process to estimate unknown innovations. Simulation results indicated best empirical performance when the initial estimate $\hat{\bm{\beta}}=\hat{\bm{\beta}}_L$. Following from \cite{Zou2006} and \cite{Chen2011}, we fix $\eta=2$ and only consider $\hat{\bm{\beta}}_L$ in the formulation of $\hat{\bm{w}}$.
 
 \subsection{ADAPTIVE ELASTIC NET}
+The ADLASSO procedure has become popular in time series analysis since parsimonious models typically improve forecasting. Incorporating lags of exogenous time series in $\bm{X}$ adds complexity that ADLASSO can discriminate against. Assuming information becomes less relevant for forecasting as time passes has encouraged modifications for more complicated full models. For example, lag lengths can be included in the functional representation of $\hat{\bm{w}}$ to further encourage penalization for long lagged terms \citep{Park2013,Konzen2016}. When seasonal effects are prevalent, these ADLASSO modifications may completely eliminate important terms at long lags. In this section, we digress from ADLASSO without just redefining the weights.
+
+The elastic net (ENET) of \cite{Zou2005} has applicability in this context where $\bm{X}$ contains two groups of predictors with potentially high pairwise collinearity. Although variable selection benefits of LASSO would be lost, the ridge estimator of \citep{Hoerl1970} could lead to better forecasting. The ENET estimator in Equation \ref{eq:enet}  introduces another tuning parameter $\alpha\in[0,1]$ to influence the trade-off between $\ell_1$ and $\ell_2$ penalties \citep{DeMol2009}. The original motivation of ENET was to overcome model selection limitations of LASSO when the number of parameters is larger than the sample size, a common problem in bioinformatic data \citep{Zou2005}. This problem is not prevalent in time series analysis; however, seasonal dynamics, which require multiple cycles to estimate, are difficult to identify when data is limited and/or the period is large. Hypothetically, it makes sense to evaluate empirical performance of ENET in this context.
+\begin{equation}
+\label{eq:enet}
+\hat{\bm{\beta}}_{E} (\lambda,\alpha)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\bm{y}-\bm{X}\bm{\beta}||^2 + \lambda\bigg[ (1-\alpha) \sum\limits_{i=1}^{p+q} \beta^2_i+ \alpha\sum\limits_{i=1}^{p+q} |\beta_i| \bigg]
+\end{equation}
+
+As we have seen, ADLASSO satisfies the oracle properties \citep{Zou2006} and ENET \citep{Zou2005} manages collinearity. \cite{Zou2009} exploits both these advantages by modifying the $\ell_1$ penalty Equation \ref{eq:enet} to match the weighted form in Equation \ref{eq:adlasso2}. This adaptive ENET (ADENET) estimator is formally presented in Equation \ref{eq:aenet}. \cite{Zou2009} recommends selecting $\hat{\bm{\beta}}=\hat{\bm{\beta}}_{E}$. Since $\hat{\bm{\beta}}_{E}$ depends on choice of 2 tuning parameters $\lambda$ and $\alpha$, optimal selection requires a grid search and repeating this process twice is inefficient selection and estimation is not significantly improved. Upon empirical evaluation, setting $\hat{\bm{\beta}}=\hat{\bm{\beta}}_{L}$ is computationally sufficient for obtaining the initial weights.
+
+\begin{equation}
+\label{eq:aenet}
+\hat{\bm{\beta}}_{AE} (\lambda,\alpha)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\bm{y}-\bm{X}\bm{\beta}||^2 + \lambda\bigg[ (1-\alpha)  \sum\limits_{i=1}^{p+q} \beta^2_i+ \alpha\sum\limits_{i=1}^{p+q} \hat{w}_{i}|\beta_i| \bigg]
+\end{equation}
 
 
 \subsection{OPTIONS FOR SELECTING TUNING PARAMETERS}
-Let $\mathcal{M}_1$ and $\mathcal{M}_2$ represent two competing subset ARMA($p$,$q$) models
-
-Penalized estimation via ENET of autoregressive parameters $\hat{\bm{\phi}}_{\lambda,\alpha}$ and $\hat{\bm{\theta}}_{\lambda,\alpha}$ using LASSO or ENET are dependent on selection of tuning parameters $\lambda$ and  $\alpha$.
-
-\cite{Bergmeir2018} performs a simulation study to examine the validity of using different model selection procedures to estimate predictive performance. From the literature, 
+The adaptive estimators $\hat{\bm{\beta}}_{AL} (\lambda)$ and $\hat{\bm{\beta}}_{AE} (\lambda,\alpha)$ are dependent choices of $\lambda$ and $\alpha$. Given finite sets $\mathcal{L}=\{\lambda_j>0: j=1,\cdots,J\}$ and $\mathcal{A}=\{0<\alpha_k<1: k=1,\cdots,K\}$, full solution paths for both estimators can be produced via LARS algorithm \citep{Efron2004}. Essentially, each $\lambda\in\mathcal{L}$ and $\alpha\in\mathcal{A}$ corresponds to a different subset ARMA$(p,q)$ model, equating to $|\mathcal{L}|$ different ADLASSO models and $|\mathcal{L}|\times|\mathcal{A}|$ different ADENET models. In the time series context, optimal $\lambda^*$ and $\alpha^*$ should be emperically determined by an estimate of forecasting performance. In this section we explore different performance estimating algorithms to select final subset ARMA models, $\hat{\bm{\beta}}_{AL}=\hat{\bm{\beta}}_{AL}(\lambda^*)$ and $\hat{\bm{\beta}}_{AE}=\hat{\bm{\beta}}_{AE}(\lambda^*,\alpha^*)$. See \cite[pg.241]{Hastie2009a} for classic approaches to select tuning parameters.
 
 \subsubsection{SELECTION BASED ON AIC OR BIC}
 
-\subsubsection{SELECTION BASED ON OOS FORECAST EVALUATION}
+Popular information criteria AIC and BIC can be used to select tuning parameters $\lambda$ and $\alpha$. We consider the effect of using these penalized measures of error in model selection for the initial LASSO-based weights $\hat{\bm{w}}$ and final models. To quantify model complexity, consider the approximate degrees of freedom $\hat{v}(\lambda)$=$|\widehat{\mathcal{V}}(\lambda)|$ where $\widehat{\mathcal{V}}(\lambda)=\{i:\hat{\beta}_i\neq 0\}$ \citep{Zou2007}. The AIC and BIC formulas for LASSO and ADLASSO are given in Equation \ref{eq:aicbic}. For ENET and ADENET, $\hat{\bm{\beta}}(\lambda)$ and $\hat{v}(\lambda)$ must be replaced with $\hat{\bm{\beta}}(\lambda,\alpha)$ and $\hat{v}(\lambda,\alpha)$.
+\begin{equation}
+\label{eq:aicbic}
+\begin{split}
+\textrm{AIC}(\hat{\bm{\beta}}(\lambda))&=2\hat{v}(\lambda)+(T-m+1)\log\bigg(\frac{||\bm{y}-\bm{X}\hat{\bm{\beta}}(\lambda)||^2}{T-m+1}\bigg)\\
+\textrm{BIC}(\hat{\bm{\beta}}(\lambda))&=\log(T-m+1)\hat{v}(\lambda)+(T-m+1)\log\bigg(\frac{||\bm{y}-\bm{X}\hat{\bm{\beta}}(\lambda)||^2}{T-m+1}\bigg)\\
+\end{split}
+\end{equation}
+
+Choice of information criteria (BIC or AIC) is not a Bayesian versus non-Bayesian argument, but an argument about whether true models exist and can be discovered \citep{burnham2003}. Empirical analysis indicates AIC more frequently outperforms in prediction, but BIC's stronger penalty notoriously leads to better model selection \citep{Burnham2004}. The true complexity of the unknown DGP and path of AIC/BIC influence this decision\citep{Shao1997,burnham2003}. \cite{Chen2011} consider AIC and BIC in both stages of ADLASSO and acknowledge this phenomenon in simulation of subset ARMA models.  It is important to note that averaged models weighted based off AIC and BIC are often superior in prediction to individual models, but this is out of the scope of this paper \citep{Burnham2004}. 
+
+Philosophical differences aside, we evaluate both measures in model selection and forecasting. ADLASSO and ADENET are two stage procedures. In \cite{Chen2011}, only BIC is used for LASSO estimated weights. These weights are crucial in the overall effectiveness of both estimation algorithm. If the BIC penalty overshrinks estimates toward $0$, relevant parameters can be unrecognized in the second stage regardless of whether AIC or BIC are used. We favor AIC in the first stage providing safer protection against losing too many key variables. To provide comparison to \cite{Chen2011}, we consider three of four possible combinations: AIC in both stages, AIC then BIC, and BIC in both stages. Empirical ADLASSO results for the last option exist in \cite{Chen2011}.
+
+\subsubsection{SELECTION BASED ON CROSS-VALIDATION}
+
+Optimal tuning parameters for regularization are typically chosen via cross-validation (CV) \citep{Hastie2009a}. This approach has been popular for model selection in classic linear regression since \cite{Stone1974}. For $K$-Fold CV (CV-K), we begin by splitting the usable $T-m+1$ portion of the time series into $K$ separate folds. Each fold acts as a testing period for models fitted to remaining data. Figure \ref{fig:kcvplots} illustrates this partitioning for CV-5 and CV-10 assuming $T-m+1=100$. Random assignment of data to $K$ folds leads to approximately $100/K$ prediction points in each data split.
+\begin{figure}[htbp!]
+	\caption{General $K$-fold Cross-Validation for Model Selection for $K=5$ (top) and $K=10$ (bottom)}
+	\label{fig:kcvplots}
+	\includegraphics[scale=0.7]{kcvplots}
+\end{figure}
+
+Following similar notation from \cite{Hastie2009a}, $\kappa:\{m,m+1,\cdots,T\}\to\{1,\cdots,K\}$ is the indexing function mapping data to specific testing groups. An estimate of PE is obtained for each $\lambda \in \mathcal{L}$ and $\alpha \in \mathcal{A}$, and optimal tuning parameters are chosen based on minimization of this estimate. Specifically for the LASSO cases, $\widehat{PE}(\lambda)$ is expressed in Equation \ref{eq:lassocvpe}. We use $\hat{\bm{\beta}}_{\kappa(t)}(\lambda)$ to represent the estimated ARMA parameters from models fitted to data not in the $\kappa(t)$ group. The most exhaustive case is leave-one-out CV (LOOCV) where $K=(T-m+1)$ and  $\kappa(t)=t-m+1$. Obtaining $\widehat{PE}(\lambda)$ for LOOCV would be time consuming if not for the generalized CV (GCV) of \cite{Wahba1978}.
+
+\begin{equation}
+\label{eq:lassocvpe}
+	\widehat{PE}(\lambda)=\frac{1}{T-m+1}\sum\limits_{t=m}^T \bigg(y_t-\bm{x}_t'\hat{\bm{\beta}}_{\kappa(t)}(\lambda)\bigg)^2
+\end{equation}
+
+
+\subsubsection{SELECTION BASED ON OUT-OF-SAMPLE EVALUATION}
+
+Applied statisticians prefer CV-K or LOOCV when data is cross-sectional. This approach is not intuitive for time series data where prediction on a randomly selected subset of the full data does not seem like forecasting. For a particular $\tau\in (0,1)$, the out-of-sample (OOS) method estimates $\hat{\bm{\beta}}(\lambda)$ from the first $(1-\tau)\times 100\%$ of the data (TRAIN) and forecasts on the final $\tau\times 100\%$ (TEST). Equation 
+\ref{eq:lassooos} equates to root mean squared forecast error (RMSFE) and is used to optimally select tuning parameters. 
+\begin{equation}
+\label{eq:lassooos}
+	\widehat{PE}(\lambda)=\frac{1}{\tau T}\sum\limits_{t\in \textrm{TEST}} \bigg(y_t-\bm{x}_t'\hat{\bm{\beta}}(\lambda)\bigg)^2
+\end{equation}
+
+For subset ARMA selection, order parameters $p$ and $q$ are fixed and quantify the memory required to forecast.  In our naive description of OOS, we ignore the fact that some of our forecasts in the TEST period are obtained using data in the TRAIN period. Given $p$ and $q$, the final $d=\max\{p,q\}$ points in the TRAIN period are ignored in model fitting. Now, models are strictly evaluated on future data independent of the TRAIN period. In some literature, this is default OOS \citep{Bergmeir2018}; however, we abbreviate this modified version depOOS to highlight the additional considerations being made. Figure \ref{fig:oosplots} displays the difference data division between OOS and depOOS.
 
 \begin{figure}[htbp!]
 	\caption{Variations of Out-of-Sample Procedures for Model Selection}
@@ -96,15 +150,9 @@ Penalized estimation via ENET of autoregressive parameters $\hat{\bm{\phi}}_{\la
 	\includegraphics[scale=0.7]{oosplots}
 \end{figure}
 
-\subsubsection{SELECTION BASED ON CV FOR INDEPENDENT DATA}
 
-\begin{figure}[htbp!]
-	\caption{General $K$-fold Cross-Validation for Model Selection for $K=5$ (top) and $K=10$ (bottom)}
-	\label{fig:kcvplots}
-	\includegraphics[scale=0.7]{kcvplots}
-\end{figure}
-
-\subsubsection{SELECTION BASED ON CV FOR DEPENDENT DATA}
+\subsubsection{SELECTION BASED ON BLOCKED CV}
+Classic CV estimates the expected PE constructed from predictions on unfitted data. This may lead to a poor estimate for time series data where the popular "independent observation" assumption is violated \citep{Arlot2010}. \cite{Burman1994} modified LOOCV by ignoring the $d$ observations before and after each time point in fitting. Similarly, \cite{Bergmeir2018} describe and evaluate a non-dependent version CV-K. For $T-m+1=100$ and $d=4$, we show this modification in Figure \ref{fig:depkcvplots} which is based off the same random assignment in Figure \ref{fig:oosplots}. Controlling the number of points available for fitting models is difficult for this modified CV-K even for a low order $d$. This along with the poor empirical results in \cite{Bergmeir2018} removes this approach from consideration.
 
 \begin{figure}[htbp!]
 	\caption{Non-Dependent $K$-fold Cross-Validation for Model Selection for $K=5$ (top) and $K=10$ (bottom)}
@@ -112,11 +160,20 @@ Penalized estimation via ENET of autoregressive parameters $\hat{\bm{\phi}}_{\la
 	\includegraphics[scale=0.7]{depkcvplots}
 \end{figure}
 
+In this paper, we propose blocked variants of CV that retain the ordered structure and ensure reasonable sample sizes for model fitting. \cite{Racine2000} alters the CV method of \cite{Burman1994} to measure prediction error on blocks of data around each data point for each fold. \cite{Bergmeir2012} proposes K-fold blocked CV (BCV-K) where naturally ordered data is evenly split into $K$ sets.  For order $d$, the first and last $\lceil \frac{d}{2} \rceil$ data points are removed from each block to remove dependence, and ordinary CV is performed using the blocks. See Figure \ref{fig:bcvplots} for for BCV-5 and BCV-10 when $d=4$. 
+
 \begin{figure}[htbp!]
 	\caption{Non-Dependent $K$-Block Cross-Validation for Model Selection for $K=5$ (top) and $K=10$ (bottom)}
 	\label{fig:bcvplots}
 	\includegraphics[scale=0.7]{bcvplots}
 \end{figure}
+
+Analogous to LOOCV, we extend BCV-K to leave-one-block-out CV (LOBOCV) design. This approach is similar to BCV-$K^*$ when $K^*=\lfloor \frac{T-m+1}{d} \rfloor$ since we divide time series sequentially into $K^*$ blocks. Block specific estimates $\widehat{PE}_K(\lambda)$ or $\widehat{PE}_K(\lambda,\alpha)$ are evaluated after models are fitted to data in non-adjacent blocks. In LASSO cases, overall BCV prediction error is based on expression in Equation \ref{eq:lobocv2}. Similar expressions are seen for BCV-5 and BCV-10 since all prediction periods are of the same length. This is a key difference to the initial proposed non-dependent CV-K.
+
+\begin{equation}
+\label{eq:lobocv2}
+	\widehat{PE}(\lambda)=\frac{1}{K}\sum\limits_{k=1}^K \widehat{PE}_K(\lambda)
+\end{equation}
 
 \begin{figure}[htbp!]
 	\caption{Leave-One-Block-Out Cross-Validation for Model Selection}
@@ -124,12 +181,123 @@ Penalized estimation via ENET of autoregressive parameters $\hat{\bm{\phi}}_{\la
 	\includegraphics[scale=0.7]{lobocvplots}
 \end{figure}
 
-In the time series context, the best model minimizes forecasting error for future observations  unrealized during the model building  
+Literature evaluates these methods on the error between estimated $\widehat{PE}$ using CV and OOS and true $PE$ from data completely ignored \citep{Bergmeir2014,Bergmeir2018}. Typical experiments examine this error when the fitted models are known to be misspecified \citep{Burman1994,Racine2000,Bergmeir2018}. These discussions are not the focus on this paper. We only explore the performance of these methods in selection of $\lambda$ and $\alpha$ for ADLASSO and ADENET. 
 
 \subsection{BAYESIAN PREDICTIVE POSTERIOR PROJECTION METHOD}
-The classic method for model selection within the Bayesian framework begins with a reparameterization of the AR and MA coefficients to $\phi_i^*=\phi_i$ and $\theta_j^*=\theta_j$.
+\subsubsection{TRADITIONAL BAYESIAN MODEL SELECTION}
+Classic Bayesian model selection starts by reparamaterizing $\beta_i^*=\xi_i\beta_i$ where $\xi_i\in\{0,1\}$. For the new vector of parameters $\bm{\beta}^*=[\beta^*_1,\beta^*_2,\cdots,\beta^*_{p+q}]'$, the set of relevant parameters $\mathcal{V}=\{i:\beta^*_i\neq 0\}=\{i:\xi_i\neq 0\}$. Let $\mathcal{N}_p(\bm{\mu},\sigma^2\bm{\Sigma}_p)$ represent the $p$-dimensional multivariate normal distribution and $BERN(\pi)$ represent the Bernouilli distribition. If dimension $p$ is not given, assume $p=1$. The scenario $\bm{\Sigma}_p=\bm{I}_p$, where $\bm{I}_p$ is $p\times p$ identity matrix, implies that $\beta_j\perp\beta_k$ for all $j\neq k$. For the new linear model  $\bm{y}=\bm{X}\bm{\beta}^*$, \cite{Kuo1998} suggested the prior $p(\beta_i,\xi_i)=p(\beta_i)p(\xi_i)$ indicating $\beta_i \perp \xi_i$. Later authors suggested $p(\beta_i,\xi_i)=p(\beta_i|\xi_i)p(\xi_i)$ where $p(\beta_i|\xi_i)=(1-\xi_i)p(\beta_i|\xi_i=1)+\xi_i p(\beta_i|\xi_i=0) $ is a mixture prior \citep{Carlin1995}. The popular "spike and slab" prior is of this type where the slab $p(\beta_i|\xi_i=1)$ is uninformative and the spike $p(\beta_i|\xi_i=0)$ is concentrated around 0 \citep{Mitchell1988,George1993, Carlin1995}. Common to all methods, $\xi_i \sim BERN(\pi_{i,0})$ where $\pi_{i,0}$ is the prior probability that variable $\beta_i \neq 0$. All subset models are equally likely \textit{a priori} when $\pi_{i,0}=0.5$. Sampling from $p(\bm{\beta},\bm{\xi},\sigma^2|\bm{y},\bm{X})$ requires a combination of approaches \citep{Dellaportas2002}, and the posterior mode of $\bm{\xi}$ indicates the best model. Posterior model probabilities and Bayes factors are used to discriminate between possible sub models. Implementation of Bayesian model averaging is within this umbrella \citep{Raftery1997,Hoeting1998,Hoeting1999}.
 
-Since the introduction of Bayesian LASSO, research in Bayesian regularization methods has exploded over the last ten years. Bayesian methods analogous to adaptive lasso \citep{Leng2014}, elastic net \citep{Li2010a}, and adaptive elastic net \citep{Stankiewicz2015} have been introduced and applied. \cite{Polson2010}
+\subsubsection{BAYESIAN REGULARIZATION}
+Posterior samplers based on 2-component mixture priors are often slow in exploring high-dimensional spaces. Priors developed from continuous mixing densities achieve similar results without requiring tuning. For example, \cite{Andrews1974} presented a hierarchy for the $Laplace$ (i.e. $Double-Exponential$) distribution from scale-mixture of $Normals$ using $Exponential$ mixing density. The Bayesian LASSO \citep{Park2008,Hans2009} uses this hierarchy for $p(\bm{\beta}|\sigma^2)$ understanding the link between $\ell_1$-regularization and posterior modes from $Laplace$ priors \citep{Tibshirani1996}. See \cite{OHara2009} for a historical look and comparison of adaptive Laplacian priors to discontinuous mixture priors.
+
+Since the introduction of Bayesian LASSO, research in Bayesian regularization methods has exploded over the last ten years. Bayesian methods analogous to adaptive lasso \citep{Leng2014}, elastic net \citep{Li2010a}, and adaptive elastic net \citep{Stankiewicz2015} have been introduced and applied. The prior hierarchies of the aforementioned methods are in a class of "global-local" shrinkage priors \citep{Polson2010}. The recently popular Bayesian horseshoe (BHS) prior falls in this class where $half-Cauchy$ priors are used to enforce global sparsity while preventing overshrinking of relevant parameters \citep{Carvalho2009,Carvalho2010}. The BHS enjoys the important oracle properties established for ADLASSO and ADENET \citep{Datta2015}. \cite{Bhadra2016} introduced horseshoe+ ($\textrm{BHS}^+$) which includes an additional layer of local shrinkage improving estimation when $\bm{\beta}$ is "ultra-sparse". In subset ARMA selection, we safely choose $p$ and $q$ large enough to ensure any long lag seasonal effects may be discovered. Overestimation of $p$ and $q$ may introduce many non-seasonal ARMA terms that are equal to 0.  For these reasons, we utilize BHS and $\textrm{BHS}^+$ type priors for $\beta_i$. 
+
+The hierarchical representations of BHS and $\textrm{BHS}^+$ displayed in Equations \ref{eq:makschmidths} \& \ref{eq:makschmidthsp} allow posterior sampling via Gibbs \citep{Makalic2016b}. These hierarchies developed from understanding that $\tau^2|\xi \sim \mathcal{IG}(1/2,1/\xi)$ and $\xi\sim\mathcal{IG}(1/2,1/a)$ imply $\tau\sim\mathcal{C}^+(0,a)$ \citep{Wand2011}. Expressions $\mathcal{IG}(a,b)$ and $\mathcal{C}^+(0,a)$ represent $inverse-gamma$ and $half-Cauchy$ distributions, respectively. The latent parameter $\tau$ controls overall regularization. Global shrinkage parameter $\tau$ can be fixed \citep{vanderPas2014}, updated via empirical Bayes \citep{Johnstone2004}, or given a hyperprior\citep{Carvalho2009,Carvalho2010}. Prior beliefs on the degree of sparsity in $\bm{\beta}$  should drive the handling of $\tau$ improving regularization \citep{vanderPas2014,Piironen2016}. The additional latent parameters $\lambda_i$ fine tune the regularization induced by $\tau$ for individual $\beta_i$. Heavy-tails of $\mathcal{C}^+(0,1)$ prevent relevant ARMA parameters from being overshrunk to 0.
+\begin{equation}
+\label{eq:makschmidths}
+\begin{split}
+\bm{y}|\bm{X},\bm{\beta},\sigma^2 & \sim \mathcal{N}_{p+q}(\bm{X}\bm{\beta},\sigma^2\bm{I}_{p+q}) \\
+\beta_i|\lambda^2_i,\tau^2,\sigma^2 & \sim \mathcal{N}(0,\lambda^2_i\tau^2\sigma^2) \\
+\sigma^2 & \sim \sigma^{-2}\textrm{d}\sigma^2 \\
+\lambda^2_i|\nu_i & \sim \mathcal{IG}(1/2,1/\nu_i)\\
+\tau^2|\xi & \sim \mathcal{IG}(1/2,1/\xi)\\
+\nu_1,\cdots, \nu_{p+q},\xi & \sim \mathcal{IG}(1/2,1) \\
+\end{split}
+\end{equation}
+\begin{equation}
+\label{eq:makschmidthsp}
+\begin{split}
+\bm{y}|\bm{X},\bm{\beta},\sigma^2 & \sim \mathcal{N}_{p+q}(\bm{X}\bm{\beta},\sigma^2\bm{I}_{p+q}) \\
+\beta_i|\lambda^2_{1,i},\lambda^2_{2,i},\tau^2,\sigma^2 & \sim \mathcal{N}(0,\lambda^2_{1,i}\lambda^2_{2,i}\tau^2\sigma^2) \\
+\sigma^2 & \sim \sigma^{-2}\textrm{d}\sigma^2 \\
+\lambda^2_{1,i}|\nu_{1,i} & \sim \mathcal{IG}(1/2,1/\nu_{1,i})\\
+\lambda^2_{2,i}|\nu_{2,i} & \sim \mathcal{IG}(1/2,1/\nu_{2,i})\\
+\tau^2|\xi & \sim \mathcal{IG}(1/2,1/\xi)\\
+\nu_{1,i},\cdots, \nu_{1,p+q},\nu_{2,i},\cdots, \nu_{2,p+q},\xi & \sim \mathcal{IG}(1/2,1) \\
+\end{split}
+\end{equation}
+
+\subsubsection{PREDICTIVE POSTERIOR PROJECTION METHOD}
+
+Define $\mathcal{V}_F=\{1,2,\cdots,p+q\}$. For the fully saturated ARMA$(p,q)$ model, let $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ correspond to the posterior means of $\bm{\beta}$ under BHS and $\textrm{BHS}^+$, respectively. Both $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ are quality initial estimates of $\bm{\beta}$ but not sparse since $\hat{\beta}_i \neq 0$ for all $i$. Obtaining these estimates is analogous to the first stages of ADLASSO and ADENET. Any $\mathcal{V}_\perp \subset \mathcal{V}_F$ characterizes a particular subset ARMA$(p,q)$ model via indicating the parameters of $\bm{\beta}$ included.
+
+
+
+Whether we use BHS or $\textrm{BHS}^+$, the posterior mean $\hat{\bm{\beta}}=E\{\bm{\beta}|\bm{y},\bm{X}\}$ provides an initial sparse estimate of $\bm{\beta}$ comparable to the first stage in ADLASSO or ADENET.  Both approaches are unlikely to identify the best subset ARMA$(p,q)$ model since $\hat{\beta}_i \neq 0$ for all $i$.  The resulting set $\widehat{\mathcal{V}}=\{1,2,\cdots,p+q\}$
+
+For any $\mathcal{V}_\perp \subset \mathcal{V}_F$,  $\hat{\bm{\beta}}_{B^{+}}(\mathcal{V}_\perp)$ 
+
+ potentially leading to sub-optimal forecasts. 
+
+$$\hat{\bm{\beta}}_{B^{+}}=\hat{\bm{\beta}}_{B^{+}}(\mathcal{V}^*)$$
+$$\hat{\bm{\beta}}_{B}=\hat{\bm{\beta}}_{B^{+}}(\mathcal{V}^*)$$
+
+
+\begin{equation}
+\begin{split}
+	\bm{\beta}^{(s)}_\perp &= (\bm{X}'_\perp\bm{X}_\perp)^{-1}\bm{X}'_\perp\bm{X}\bm{\beta}^{(s)} \\
+	\sigma^{(s)}_\perp &=\sqrt{(\sigma^{(s)})^2+\frac{||(\bm{X}\bm{\beta}-\bm{X}_\perp \bm{\beta}_\perp)||^2}{T-m+1}}
+\end{split}
+\end{equation}
+
+\begin{equation}
+	\delta(\mathcal{V}||\mathcal{V}_\perp)=\frac{1}{S}\sum\limits_{s=1}^S \log\bigg(\frac{\sigma^{(s)}_\perp}{\sigma^{(s)}}\bigg)
+\end{equation}
+
+\subsection{SUMMARY}
+
+In this section, we included OOS and CV techniques for choosing tuning parameters. Table \ref{tab:aicbic} lists the gamut of options discussed and tested in Monte Carlo simulations. For future reference, we abbreviate the 2-stage ADLASSO and ADENET variants $\textrm{AL}_m$ and $\textrm{AE}_m$ where $m \in \{1,2,\cdots,11\}$ identifies the method. 
+
+\begin{table}[!h]
+  \footnotesize
+  \centering
+  \caption{Summary of ADLASSO and ADENET Variants}
+    \begin{tabular}{c|cc}
+    \toprule
+    Method ($m$) & Initial Weights (Stage 1) & Final Model (Stage 2)  \\
+    \midrule
+    1 & AIC & AIC\\
+    2 & AIC & BIC \\
+    3 & BIC & BIC \\
+    \midrule
+    4 & \multicolumn{2}{c}{OOS} \\
+    5 & \multicolumn{2}{c}{depOOS} \\
+    \midrule
+    6 & \multicolumn{2}{c}{CV-5} \\
+    7 & \multicolumn{2}{c}{CV-10} \\
+    8 & \multicolumn{2}{c}{LOOCV} \\
+    \midrule
+    9 & \multicolumn{2}{c}{BCV-5} \\
+    10 & \multicolumn{2}{c}{BCV-10} \\
+    11 & \multicolumn{2}{c}{LOBOCV} \\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:aicbic}%
+\end{table}%
+
+Additional methods considered are from a Bayesian perspective. Initial posterior sampling is based off either BHS or $\textrm{BHS}^+$ priors. Table \ref{tab:bhstypes} lists different options for final model selection in BPM. For future reference, we abbreviate Bayesian options $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ where $m \in \{1,2,\cdots,5\}$. 
+
+\begin{table}[!h]
+  \footnotesize
+  \centering
+  \caption{Summary of PPM Variants After BHS or $\textrm{BHS}^+$}
+    \begin{tabular}{c|cc}
+    \toprule
+    Method ($m$) & Final Model Selection  \\
+    \midrule
+    1 & $RelE(\cdot)>0.90$ \\
+    2 & $RelE(\cdot)>0.95$ \\
+    3 & $RelE(\cdot)>0.98$\\
+    \midrule
+    4 & OOS\\
+    5 & depOOS\\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:bhstypes}%
+\end{table}%
+
+
+
 
 
 
@@ -158,6 +326,11 @@ The errors $\{\epsilon_{1,t}\}$, $\{\epsilon_{2,t}\}$, and $\{\epsilon_{3,t}\}$ 
 The proxy innovations $\{\hat{\epsilon}_{k,t}\}$ are obtained from long AR$(p^\prime)$ models where $p^\prime=10\log_{10}(T)$. Contrary to \cite{Chen2011}, better performance was observed when $p^\prime$ is fixed versus model selection via AIC. Estimation of $\bm{\phi}^\prime$ is obtained from Yule-Walker equations for ADLASSO and ADENET, and from Bayesian linear regression for BPP.
 
 Results from both frequentist approaches heavily depend on the estimated weights $\hat{\bm{w}}=(|\tilde{\bm{\beta}}|+1/T)^{-\eta}$. Suggested by \cite{Zou2006} and used in \cite{Chen2011}, we only consider $\eta=2$. Specifically for ADLASSO, best empirical performance across all experiments occurred when $\tilde{\bm{\beta}}=\tilde{\bm{\beta}}_{LASSO}$ \citep{Chen2011}; therefore, we do not consider LS and RIDGE based weights in our study. In regards to ADENET, we experiment with both ENET and LASSO estimated $\tilde{\bm{\beta}}$.
+
+
+
+
+
 
 
 
@@ -195,6 +368,7 @@ The DGPs of $\{y_{1,t}\}$ and $\{y_{2,t}\}$ are hidden to the observer; therefor
 	MDB_k&=\frac{1}{n_k} \sum\limits_{j=1}^{n_k} \textrm{sgn}(y_{k,j}-\hat{y}_{k,j})\\
 \end{split}
 \end{equation}
+
 
 
 
