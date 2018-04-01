@@ -99,7 +99,7 @@ As we have seen, ADLASSO satisfies the oracle properties \citep{Zou2006} and ENE
 
 
 \subsection{OPTIONS FOR SELECTING TUNING PARAMETERS}
-The adaptive estimators $\hat{\bm{\beta}}_{AL} (\lambda)$ and $\hat{\bm{\beta}}_{AE} (\lambda,\alpha)$ are dependent choices of $\lambda$ and $\alpha$. Given finite sets $\mathcal{L}=\{\lambda_j>0: j=1,\cdots,J\}$ and $\mathcal{A}=\{0<\alpha_k<1: k=1,\cdots,K\}$, full solution paths for both estimators can be produced via LARS algorithm \citep{Efron2004}. Essentially, each $\lambda\in\mathcal{L}$ and $\alpha\in\mathcal{A}$ corresponds to a different subset ARMA$(p,q)$ model, equating to $|\mathcal{L}|$ different ADLASSO models and $|\mathcal{L}|\times|\mathcal{A}|$ different ADENET models. In the time series context, optimal $\lambda^*$ and $\alpha^*$ should be emperically determined by an estimate of forecasting performance. In this section we explore different performance estimating algorithms to select final subset ARMA models, $\hat{\bm{\beta}}_{AL}=\hat{\bm{\beta}}_{AL}(\lambda^*)$ and $\hat{\bm{\beta}}_{AE}=\hat{\bm{\beta}}_{AE}(\lambda^*,\alpha^*)$. See \cite[pg.241]{Hastie2009a} for classic approaches to select tuning parameters.
+The adaptive estimators $\hat{\bm{\beta}}_{AL} (\lambda)$ and $\hat{\bm{\beta}}_{AE} (\lambda,\alpha)$ are dependent choices of $\lambda$ and $\alpha$. Given finite sets $\mathcal{L}=\{\lambda_j>0: j=1,\cdots,J\}$ and $\mathcal{A}=\{0<\alpha_k<1: k=1,\cdots,K\}$, full solution paths for both estimators can be produced via LARS algorithm \citep{Efron2004}. Essentially, each $\lambda\in\mathcal{L}$ and $\alpha\in\mathcal{A}$ corresponds to a different subset ARMA$(p,q)$ model, equating to $|\mathcal{L}|$ different ADLASSO models and $|\mathcal{L}|\times|\mathcal{A}|$ different ADENET models. The optimal $\lambda^*$ and $\alpha^*$ should be empirically chosen based off some estimate of forecasting performance. In this section, we explore different algorithms to select final subset ARMA models, $\hat{\bm{\beta}}_{AL}=\hat{\bm{\beta}}_{AL}(\lambda^*)$ and $\hat{\bm{\beta}}_{AE}=\hat{\bm{\beta}}_{AE}(\lambda^*,\alpha^*)$. See \cite[pg.241]{Hastie2009a} for classic approaches to select tuning parameters.
 
 \subsubsection{SELECTION BASED ON AIC OR BIC}
 
@@ -136,7 +136,7 @@ Following similar notation from \cite{Hastie2009a}, $\kappa:\{m,m+1,\cdots,T\}\t
 \subsubsection{SELECTION BASED ON OUT-OF-SAMPLE EVALUATION}
 
 Applied statisticians prefer CV-K or LOOCV when data is cross-sectional. This approach is not intuitive for time series data where prediction on a randomly selected subset of the full data does not seem like forecasting. For a particular $\tau\in (0,1)$, the out-of-sample (OOS) method estimates $\hat{\bm{\beta}}(\lambda)$ from the first $(1-\tau)\times 100\%$ of the data (TRAIN) and forecasts on the final $\tau\times 100\%$ (TEST). Equation 
-\ref{eq:lassooos} equates to root mean squared forecast error (RMSFE) and is used to optimally select tuning parameters. 
+\ref{eq:lassooos} equates to mean squared forecast error (MSFE) and is used to optimally select tuning parameters. 
 \begin{equation}
 \label{eq:lassooos}
 	\widehat{PE}(\lambda)=\frac{1}{\tau T}\sum\limits_{t\in \textrm{TEST}} \bigg(y_t-\bm{x}_t'\hat{\bm{\beta}}(\lambda)\bigg)^2
@@ -201,7 +201,8 @@ The hierarchical representations of BHS and $\textrm{BHS}^+$ displayed in Equati
 \sigma^2 & \sim \sigma^{-2}\textrm{d}\sigma^2 \\
 \lambda^2_i|\nu_i & \sim \mathcal{IG}(1/2,1/\nu_i)\\
 \tau^2|\xi & \sim \mathcal{IG}(1/2,1/\xi)\\
-\nu_1,\cdots, \nu_{p+q},\xi & \sim \mathcal{IG}(1/2,1) \\
+\nu_1,\cdots, \nu_{p+q}& \sim \mathcal{IG}(1/2,1) \\
+\xi & \sim \mathcal{IG}(1/2,1) \\
 \end{split}
 \end{equation}
 \begin{equation}
@@ -213,36 +214,87 @@ The hierarchical representations of BHS and $\textrm{BHS}^+$ displayed in Equati
 \lambda^2_{1,i}|\nu_{1,i} & \sim \mathcal{IG}(1/2,1/\nu_{1,i})\\
 \lambda^2_{2,i}|\nu_{2,i} & \sim \mathcal{IG}(1/2,1/\nu_{2,i})\\
 \tau^2|\xi & \sim \mathcal{IG}(1/2,1/\xi)\\
-\nu_{1,i},\cdots, \nu_{1,p+q},\nu_{2,i},\cdots, \nu_{2,p+q},\xi & \sim \mathcal{IG}(1/2,1) \\
+\nu_{1,i},\cdots, \nu_{1,p+q} & \sim \mathcal{IG}(1/2,1) \\
+\nu_{2,i},\cdots, \nu_{2,p+q} & \sim \mathcal{IG}(1/2,1) \\
+\xi & \sim \mathcal{IG}(1/2,1) \\
 \end{split}
 \end{equation}
 
 \subsubsection{PREDICTIVE POSTERIOR PROJECTION METHOD}
 
-Define $\mathcal{V}_F=\{1,2,\cdots,p+q\}$. For the fully saturated ARMA$(p,q)$ model, let $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ correspond to the posterior means of $\bm{\beta}$ under BHS and $\textrm{BHS}^+$, respectively. Both $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ are quality initial estimates of $\bm{\beta}$ but not sparse since $\hat{\beta}_i \neq 0$ for all $i$. Obtaining these estimates is analogous to the first stages of ADLASSO and ADENET. Any $\mathcal{V}_\perp \subset \mathcal{V}_F$ characterizes a particular subset ARMA$(p,q)$ model via indicating the parameters of $\bm{\beta}$ included.
+Define $\mathcal{V}_F=\{1,2,\cdots,p+q\}$. For the fully saturated ARMA$(p,q)$ model, let $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ correspond to the posterior means of $\bm{\beta}$ under BHS and $\textrm{BHS}^+$, respectively. Both $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ are quality initial estimates of $\bm{\beta}$ but not sparse since $\hat{\beta}_i \neq 0$ for all $i$. Obtaining these estimates is analogous to the first stages of ADLASSO and ADENET. Any $\mathcal{V}_\perp \subset \mathcal{V}_F$ characterizes a particular subset ARMA$(p,q)$ model via indicating the parameters of $\bm{\beta}$ included.  Although the best model $\mathcal{V}^* \subset \mathcal{V}_F$ may differ under BHS and $\textrm{BHS}^+$, the corresponding final subset ARMA$(p,q)$ models are defined $\hat{\bm{\beta}}_{HS}=\hat{\bm{\beta}}_{HS}(\mathcal{V}^*)$ and $\hat{\bm{\beta}}_{HS^{+}}=\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}^*)$. In this section, we present a Bayesian inspired algorithm to select $\mathcal{V}^*$ after an initial BHS or $\textrm{BHS}^+$ estimation. For simplicity, we generalize an outline of this approach for both BHS and $\textrm{BHS}^+$.
 
-
-
-Whether we use BHS or $\textrm{BHS}^+$, the posterior mean $\hat{\bm{\beta}}=E\{\bm{\beta}|\bm{y},\bm{X}\}$ provides an initial sparse estimate of $\bm{\beta}$ comparable to the first stage in ADLASSO or ADENET.  Both approaches are unlikely to identify the best subset ARMA$(p,q)$ model since $\hat{\beta}_i \neq 0$ for all $i$.  The resulting set $\widehat{\mathcal{V}}=\{1,2,\cdots,p+q\}$
-
-For any $\mathcal{V}_\perp \subset \mathcal{V}_F$,  $\hat{\bm{\beta}}_{B^{+}}(\mathcal{V}_\perp)$ 
-
- potentially leading to sub-optimal forecasts. 
-
-$$\hat{\bm{\beta}}_{B^{+}}=\hat{\bm{\beta}}_{B^{+}}(\mathcal{V}^*)$$
-$$\hat{\bm{\beta}}_{B}=\hat{\bm{\beta}}_{B^{+}}(\mathcal{V}^*)$$
-
-
+After Bayesian estimation, the full model $\mathcal{V}_F$ represents a viable reference model. The sets $\{\bm{\beta}^{(s)}(\mathcal{V}_F)\}_{s=1}^S$ and $\{\sigma^{(s)}(\mathcal{V}_F)\}_{s=1}^S$ are the $S$ posterior samples under the reference model. Given a proposed nested model $\mathcal{V}_\perp \subset \mathcal{V}_F$, \cite{Goutis1998} suggested the Kullback-Leibler (K-L) distance \citep{Kullback1951} to evaluate discrepancy between $\mathcal{V}_F$ and $\mathcal{V}_\perp$. Classic model selection via AIC is based on K-L information and derivable from a Bayesian perspective \citep{Akaike1974,Akaike1985,burnham2003,Burnham2004}. For a future value $\tilde{y}=y_{T+1}$, we measure the loss of explanatory power of using of $\mathcal{V}_\perp$ instead of $\mathcal{V}_F$  by assessing the K-L distance between the posterior predictive distributions listed in Equation \ref{eq:projpreddist}. If the discrepancy between $p(\tilde{y}|\bm{y},\bm{X},V_F)$ and $p(\tilde{y}|\bm{y},\bm{X},V_\perp)$ is small, the more parsimonious $\mathcal{V}_\perp$ is favored.  The foundation of this concept is provided in \cite{Dupuis2003,Nott2010,vehtari2012,Piironen2015b,Piironen2017}.
 \begin{equation}
+\label{eq:projpreddist}
 \begin{split}
-	\bm{\beta}^{(s)}_\perp &= (\bm{X}'_\perp\bm{X}_\perp)^{-1}\bm{X}'_\perp\bm{X}\bm{\beta}^{(s)} \\
-	\sigma^{(s)}_\perp &=\sqrt{(\sigma^{(s)})^2+\frac{||(\bm{X}\bm{\beta}-\bm{X}_\perp \bm{\beta}_\perp)||^2}{T-m+1}}
+p(\tilde{y}|\bm{y},\bm{X},V_F)&=\int\int p(\tilde{y}|\bm{y},\bm{X},\bm{\beta}_F,\sigma_\perp,V_F)p(\bm{\beta}_F,\sigma_F|\bm{y},\bm{X},V_F) \textrm{ d}\bm{\beta}_F \textrm{ d}\sigma_F\\
+p(\tilde{y}|\bm{y},\bm{X},V_\perp)&=\int\int p(\tilde{y}|\bm{y},\bm{X},\bm{\beta}_\perp,\sigma_\perp,V_\perp)p(\bm{\beta}_\perp,\sigma_\perp|\bm{y},\bm{X},V_\perp) \textrm{ d}\bm{\beta}_\perp \textrm{ d}\sigma_\perp\\
 \end{split}
 \end{equation}
 
+
+For Gaussian linear models, $S$ posterior samples $\{\bm{\beta}^{(s)}(\mathcal{V}_\perp)\}_{s=1}^S$ and $\{\sigma^{(s)}(\mathcal{V}_\perp)\}_{s=1}^S$ for a nested submodel $\mathcal{V}_\perp$ are quickly obtained via Equation \ref{eq:projform}  \citep{Piironen2015b}. The matrix $\bm{X}_\perp$ contains the columns of the reference model matrix $\bm{X}$ corresponding to $\mathcal{V}_\perp$. Essentially, we are obtaining $S$ samples from the posterior distribution of a submodel through projecting the fitted values from the full model  onto a smaller parameter space.
 \begin{equation}
-	\delta(\mathcal{V}||\mathcal{V}_\perp)=\frac{1}{S}\sum\limits_{s=1}^S \log\bigg(\frac{\sigma^{(s)}_\perp}{\sigma^{(s)}}\bigg)
+\label{eq:projform}
+\begin{split}
+	\bm{\beta}^{(s)}(\mathcal{V}_\perp) &= (\bm{X}'_\perp\bm{X}_\perp)^{-1}\bm{X}'_\perp\bm{X}\bm{\beta}^{(s)}(\mathcal{V}_F) \\
+	\sigma^{(s)}(\mathcal{V}_\perp) &=\sqrt{[\sigma^{(s)}(\mathcal{V}_\perp)]^2+\frac{||\bm{X}\bm{\beta}^{(s)}(\mathcal{V}_F)-\bm{X}_\perp \bm{\beta}^{(s)}(\mathcal{V}_\perp)||^2}{T-m+1}}
+\end{split}
 \end{equation}
+
+The overall discrepancy between the full ARMA$(p,q)$ model and a subset ARMA$(p,q)$ model is measured in Equation \ref{eq:deltaform}. Here we are estimating the expected KL divergence between the predictive distribution of the $\mathcal{V}_F$ and $\mathcal{V}_\perp$.
+\begin{equation}
+\label{eq:deltaform}
+	D(\mathcal{V}_F||\mathcal{V}_\perp)=\frac{1}{S}\sum\limits_{s=1}^S \log\bigg(\frac{\sigma^{(s)}(\mathcal{V}_\perp)}{\sigma^{(s)}(\mathcal{V}_F)}\bigg)
+\end{equation}
+
+Measuring the discrepancy in Equation \ref{eq:deltaform} for all $2^{p+q}-1$ subset ARMA models is impractical; therefore, we favor the forward stepwise algorithm of \cite{Peltola2014}. If $\mathcal{V}_0$ represents the intercept-only model (empty model in our case), we know $D(\mathcal{V}_F||\mathcal{V}_0)$ is the maximum discrepancy for all possible $\mathcal{V}_\perp$ \citep{Dupuis2003}. Next, we select the best subset ARMA model with one additional parameter by Equation \ref{eq:step1}.
+\begin{equation}
+\label{eq:step1}
+\mathcal{V}_1=\underset{\{\mathcal{V}_0\subset\mathcal{V}_\perp\subset \mathcal{V}_F :|\mathcal{V}_\perp|=1\}}{\textrm{argmin}}D(\mathcal{V}_F||\mathcal{V}_\perp)
+\end{equation}
+Moving forward to models with two additional parameters, we identify the best subset ARMA model with 2 ARMA parameters by Equation \ref{eq:step2}.
+\begin{equation}
+\label{eq:step2}
+\mathcal{V}_2=\underset{\{\mathcal{V}_1\subset\mathcal{V}_\perp\subset \mathcal{V}_F :|\mathcal{V}_\perp|=2\}}{\textrm{argmin}}D(\mathcal{V}_F||\mathcal{V}_\perp)
+\end{equation}
+In general, the best subset ARMA model with $m$ coefficients, identified $\mathcal{V}_m$, where $\mathcal{V}_{m-1}\subset\mathcal{V}_m \subset \mathcal{V}_{m+1}$, based on Equation \ref{eq:step3}. \cite{Piironen2015} present a helpful tutorial of this approach with {\bf R} code and application.
+\begin{equation}
+\label{eq:step3}
+\mathcal{V}_m=\underset{\{\mathcal{V}_{m-1}\subset\mathcal{V}_\perp\subset \mathcal{V}_F :|\mathcal{V}_\perp|=i\}}{\textrm{argmin}}D(\mathcal{V}_F||\mathcal{V}_\perp)
+\end{equation}
+
+
+The forward stepwise algorithm leads to the following sequence of $p+q$ nested models: $\mathcal{V}_1 \subset \cdots \subset \mathcal{V}_F$. Because of the additive property of $D(\cdot||\cdot)$, \cite{Dupuis2003} recommend selecting $\mathcal{V}^* \in \{\mathcal{V}_1,\cdots,\mathcal{V}_F\}$ based on the relative explanatory power ($e$) defined in Equation \ref{eq:RelEform}. 
+\begin{equation}
+\label{eq:RelEform}
+\begin{split}
+e(\mathcal{V}_{m})&=1-\frac{D(\mathcal{V}||\mathcal{V}_m)}{D(\mathcal{V}||\mathcal{V}_0)}\\
+\end{split}
+\end{equation}
+This additive property ensures $0=e(\mathcal{V}_{0}) < e(\mathcal{V}_{m})< e(\mathcal{V}_{F})=1$ for any $m\in\{1,\cdots,p+q-1\}$. For an acceptable explanatory power $e^*$, we select $\mathcal{V}^*=\mathcal{V}_{m^*}$ based on $m^*$ defined in Equation \ref{eq:bestRelEform}. \cite{Piironen2015} suggest $e^*\geq 0.90$.  In our empirical studies, we examine the model selection sensitivity for $e^*\in\{0.9,0.95,0.98\}$.
+\begin{equation}
+\label{eq:bestRelEform}
+m^*=\min \{m: e(\mathcal{V}_{m})>e^*\}
+\end{equation}
+
+In an application to biomarker identification for cardiovascular event risk, \cite{Peltola2014} based model selection from estimating predictive performance via 10-fold CV. Combining Bayesian techniques with multi-fold CV is time consuming, and the validity of general CV in time series analysis is questionable. Using the same OOS and depOOS schemes illustrated in Figure \ref{fig:oosplots}, we intentionally withhold a final portion of the data for forecast evaluation. We estimate PE for each nested model using MSFE according to Equation \ref{eq:hsoos}. Although we lose  $\tau\times 100\%$ of the data in estimation, the final model $\mathcal{V}^*$ must demonstrate superior OOS forecasting performance to the other $p+q$ candidates.
+\begin{equation}
+\label{eq:hsoos}
+	\widehat{PE}(\mathcal{V})=\frac{1}{\tau T}\sum\limits_{t\in \textrm{TEST}} \bigg(y_t-\bm{x}_t'\hat{\bm{\beta}}_{HS}(\mathcal{V})\bigg)^2
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{SUMMARY}
 
@@ -275,19 +327,19 @@ In this section, we included OOS and CV techniques for choosing tuning parameter
   \label{tab:aicbic}%
 \end{table}%
 
-Additional methods considered are from a Bayesian perspective. Initial posterior sampling is based off either BHS or $\textrm{BHS}^+$ priors. Table \ref{tab:bhstypes} lists different options for final model selection in BPM. For future reference, we abbreviate Bayesian options $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ where $m \in \{1,2,\cdots,5\}$. 
+Additional methods considered are from a Bayesian perspective. Initial posterior sampling is based off either BHS or $\textrm{BHS}^+$ priors. Table \ref{tab:bhstypes} lists different options for final model selection in the predictive posterior projection method. For future reference, we abbreviate Bayesian options $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ where $m \in \{1,2,\cdots,5\}$. 
 
 \begin{table}[!h]
   \footnotesize
   \centering
-  \caption{Summary of PPM Variants After BHS or $\textrm{BHS}^+$}
+  \caption{Summary of BHS and $\textrm{BHS}^+$ Variants }
     \begin{tabular}{c|cc}
     \toprule
     Method ($m$) & Final Model Selection  \\
     \midrule
-    1 & $RelE(\cdot)>0.90$ \\
-    2 & $RelE(\cdot)>0.95$ \\
-    3 & $RelE(\cdot)>0.98$\\
+    1 & $e(\cdot)>0.90$ \\
+    2 & $e(\cdot)>0.95$ \\
+    3 & $e(\cdot)>0.98$\\
     \midrule
     4 & OOS\\
     5 & depOOS\\
