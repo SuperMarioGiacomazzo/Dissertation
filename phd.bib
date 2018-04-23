@@ -1160,13 +1160,6 @@
   publisher = {Sage Publications Sage India: New Delhi, India},
 }
 
-@Article{Makalic2016,
-  author  = {Makalic, Enes and Schmidt, Daniel F},
-  title   = {High-Dimensional Bayesian Regularised Regression with the BayesReg Package},
-  journal = {arXiv preprint arXiv:1611.06649},
-  year    = {2016},
-}
-
 @Article{Hans2009,
   author    = {Hans, Chris},
   title     = {Bayesian lasso regression},
@@ -3510,19 +3503,6 @@
   publisher = {Wiley Online Library},
 }
 
-@Article{Zou2009,
-  author    = {Zou, Hui and Zhang, Hao Helen},
-  title     = {ON THE ADAPTIVE ELASTIC-NET WITH A DIVERGING NUMBER OF PARAMETERS.},
-  journal   = {The annals of statistics.},
-  year      = {2009},
-  volume    = {37},
-  number    = {4},
-  pages     = {1733--1751},
-  issn      = {0090-5364},
-  address   = {Hayward, Calif. :},
-  publisher = {Institute of Mathematical Statistics},
-}
-
 @Article{Hoerl1970,
   author    = {Hoerl, Arthur E and Kennard, Robert W},
   title     = {Ridge Regression: Biased Estimation for Nonorthogonal Problems},
@@ -3577,10 +3557,10 @@
 
 @Article{Cryer2008,
   author    = {Cryer, Jonathan D and Chan, Kung-Sik},
-  title     = {Time series regression models},
+  title     = {Seasonal Models},
   journal   = {Time series analysis: with applications in R},
   year      = {2008},
-  pages     = {249--276},
+  pages     = {227--246},
   publisher = {Springer},
 }
 
@@ -3937,16 +3917,12 @@
   keywords     = {stat.ME},
 }
 
-@Article{Makalic2016a,
-  author      = {Enes Makalic and Daniel F. Schmidt},
-  title       = {High-Dimensional Bayesian Regularised Regression with the BayesReg Package},
-  abstract    = {Bayesian penalized regression techniques, such as the Bayesian lasso and the Bayesian horseshoe estimator, have recently received a significant amount of attention in the statistics literature. However, software implementing state-of-the-art Bayesian penalized regression, outside of general purpose Markov chain Monte Carlo platforms such as STAN, is relatively rare. This paper introduces bayesreg, a new toolbox for fitting Bayesian penalized regression models with continuous shrinkage prior densities. The toolbox features Bayesian linear regression with Gaussian or heavy-tailed error models and Bayesian logistic regression with ridge, lasso, horseshoe and horseshoe$+$ estimators. The toolbox is free, open-source and available for use with the MATLAB and R numerical platforms.},
-  date        = {2016-11-21},
-  eprint      = {1611.06649v3},
-  eprintclass = {stat.CO},
-  eprinttype  = {arXiv},
-  file        = {online:http\://arxiv.org/pdf/1611.06649v3:PDF},
-  keywords    = {stat.CO},
+@Manual{bayesreg,
+  title  = {bayesreg: Bayesian Regression Models with Continuous Shrinkage Priors},
+  author = {Daniel F. Schmidt and Enes Makalic},
+  year   = {2016},
+  note   = {R package version 1.0},
+  url    = {https://CRAN.R-project.org/package=bayesreg},
 }
 
 @Article{Kyung2010,
@@ -4531,55 +4507,50 @@
 }
 
 @Article{Dellaportas1997,
-  author        = {Dellaportas, Petros and Karlis, Dimitris and Xekalaki, Evdokia},
-  title         = {Bayesian analysis of finite poisson mixtures},
-  journal       = {Manuscript},
-  year          = {1997},
-  __markedentry = {[mgiac_000:]},
+  author  = {Dellaportas, Petros and Karlis, Dimitris and Xekalaki, Evdokia},
+  title   = {Bayesian analysis of finite poisson mixtures},
+  journal = {Manuscript},
+  year    = {1997},
 }
 
 @Article{Dellaportas2000,
-  author        = {Dellaportas, Petros and Forster, Jonathan J and Ntzoufras, Ioannis},
-  title         = {Bayesian variable selection using the Gibbs sampler},
-  journal       = {BIOSTATISTICS-BASEL-},
-  year          = {2000},
-  volume        = {5},
-  pages         = {273--286},
-  __markedentry = {[mgiac_000:]},
-  publisher     = {MARCEL DEKKER INC},
+  author    = {Dellaportas, Petros and Forster, Jonathan J and Ntzoufras, Ioannis},
+  title     = {Bayesian variable selection using the Gibbs sampler},
+  journal   = {BIOSTATISTICS-BASEL-},
+  year      = {2000},
+  volume    = {5},
+  pages     = {273--286},
+  publisher = {MARCEL DEKKER INC},
 }
 
 @InProceedings{Hoeting1998,
-  author        = {Hoeting, Jennifer A and Madigan, David and Raftery, Adrian E and Volinsky, Chris T},
-  title         = {Bayesian model averaging},
-  booktitle     = {Proceedings of the AAAI Workshop on Integrating Multiple Learned Models},
-  year          = {1998},
-  volume        = {335},
-  pages         = {77--83},
-  organization  = {Citeseer},
-  __markedentry = {[mgiac_000:6]},
+  author       = {Hoeting, Jennifer A and Madigan, David and Raftery, Adrian E and Volinsky, Chris T},
+  title        = {Bayesian model averaging},
+  booktitle    = {Proceedings of the AAAI Workshop on Integrating Multiple Learned Models},
+  year         = {1998},
+  volume       = {335},
+  pages        = {77--83},
+  organization = {Citeseer},
 }
 
 @Article{Hoeting1999,
-  author        = {Hoeting, Jennifer A and Madigan, David and Raftery, Adrian E and Volinsky, Chris T},
-  title         = {Bayesian model averaging: a tutorial},
-  journal       = {Statistical science},
-  year          = {1999},
-  pages         = {382--401},
-  __markedentry = {[mgiac_000:6]},
-  publisher     = {JSTOR},
+  author    = {Hoeting, Jennifer A and Madigan, David and Raftery, Adrian E and Volinsky, Chris T},
+  title     = {Bayesian model averaging: a tutorial},
+  journal   = {Statistical science},
+  year      = {1999},
+  pages     = {382--401},
+  publisher = {JSTOR},
 }
 
 @Article{Raftery1997,
-  author        = {Raftery, Adrian E and Madigan, David and Hoeting, Jennifer A},
-  title         = {Bayesian model averaging for linear regression models},
-  journal       = {Journal of the American Statistical Association},
-  year          = {1997},
-  volume        = {92},
-  number        = {437},
-  pages         = {179--191},
-  __markedentry = {[mgiac_000:6]},
-  publisher     = {Taylor \& Francis},
+  author    = {Raftery, Adrian E and Madigan, David and Hoeting, Jennifer A},
+  title     = {Bayesian model averaging for linear regression models},
+  journal   = {Journal of the American Statistical Association},
+  year      = {1997},
+  volume    = {92},
+  number    = {437},
+  pages     = {179--191},
+  publisher = {Taylor \& Francis},
 }
 
 @Article{Mitchell1988,
@@ -4649,6 +4620,294 @@
   location  = {Quebec, Canada},
   numpages  = {10},
   url       = {http://dl.acm.org/citation.cfm?id=3020299.3020308},
+}
+
+@Article{Akaike1973,
+  author    = {Akaike, Htrotugu},
+  title     = {Maximum likelihood identification of Gaussian autoregressive moving average models},
+  journal   = {Biometrika},
+  year      = {1973},
+  volume    = {60},
+  number    = {2},
+  pages     = {255--265},
+  publisher = {Oxford University Press},
+}
+
+@InCollection{Akaike1987,
+  author    = {Akaike, Hirotugu},
+  title     = {Factor analysis and AIC},
+  booktitle = {Selected Papers of Hirotugu Akaike},
+  publisher = {Springer},
+  year      = {1987},
+  pages     = {371--386},
+}
+
+@Article{DeMol2008,
+  author    = {De Mol, Christine and Giannone, Domenico and Reichlin, Lucrezia},
+  title     = {Forecasting using a large number of predictors: Is Bayesian shrinkage a valid alternative to principal components?},
+  journal   = {Journal of Econometrics},
+  year      = {2008},
+  volume    = {146},
+  number    = {2},
+  pages     = {318--328},
+  publisher = {Elsevier},
+}
+
+@Article{Korobilis2013,
+  author    = {Korobilis, Dimitris},
+  title     = {Bayesian forecasting with highly correlated predictors},
+  journal   = {Economics Letters},
+  year      = {2013},
+  volume    = {118},
+  number    = {1},
+  pages     = {148--150},
+  publisher = {Elsevier},
+}
+
+@Book{Gelman2014,
+  title     = {Bayesian data analysis},
+  publisher = {CRC press Boca Raton, FL},
+  year      = {2014},
+  author    = {Gelman, Andrew and Carlin, John B and Stern, Hal S and Dunson, David B and Vehtari, Aki and Rubin, Donald B},
+  volume    = {2},
+}
+
+@Article{MCMCpack,
+  author  = {Andrew D. Martin and Kevin M. Quinn and Jong Hee Park},
+  title   = {{MCMCpack}: Markov Chain Monte Carlo in {R}},
+  journal = {Journal of Statistical Software},
+  year    = {2011},
+  volume  = {42},
+  number  = {9},
+  pages   = {22},
+  url     = {http://www.jstatsoft.org/v42/i09/},
+}
+
+@Article{glmnet,
+  author    = {Friedman, Jerome and Hastie, Trevor and Tibshirani, Rob},
+  title     = {Regularization paths for generalized linear models via coordinate descent},
+  journal   = {Journal of statistical software},
+  year      = {2010},
+  volume    = {33},
+  number    = {1},
+  pages     = {1},
+  publisher = {NIH Public Access},
+}
+
+@Article{Hyndman2008,
+  author  = {Rob J Hyndman and Yeasmin Khandakar},
+  title   = {Automatic time series forecasting: the forecast package for {R}},
+  journal = {Journal of Statistical Software},
+  year    = {2008},
+  volume  = {26},
+  number  = {3},
+  pages   = {1--22},
+  url     = {http://www.jstatsoft.org/article/view/v027i03},
+}
+
+@Article{Rohan2011,
+  author    = {Rohan, Neelabh and Ramanathan, TV},
+  title     = {Order selection in arma models using the focused information criterion},
+  journal   = {Australian \& New Zealand Journal of Statistics},
+  year      = {2011},
+  volume    = {53},
+  number    = {2},
+  pages     = {217--231},
+  publisher = {Wiley Online Library},
+}
+
+@Article{Monahan1983,
+  author    = {Monahan, John F},
+  title     = {Fully Bayesian analysis of ARMA time series models},
+  journal   = {Journal of Econometrics},
+  year      = {1983},
+  volume    = {21},
+  number    = {3},
+  pages     = {307--331},
+  publisher = {Elsevier},
+}
+
+@Article{Chib1994,
+  author    = {Chib, Siddhartha and Greenberg, Edward},
+  title     = {Bayes inference in regression models with ARMA (p, q) errors},
+  journal   = {Journal of Econometrics},
+  year      = {1994},
+  volume    = {64},
+  number    = {1-2},
+  pages     = {183--206},
+  publisher = {Elsevier},
+}
+
+@Article{Zellner1974,
+  author    = {Zellner, Arnold and Palm, Franz},
+  title     = {Time series analysis and simultaneous equation econometric models},
+  journal   = {Journal of Econometrics},
+  year      = {1974},
+  volume    = {2},
+  number    = {1},
+  pages     = {17--54},
+  publisher = {Elsevier},
+}
+
+@Article{Marriott1996,
+  author    = {Marriott, John and Ravishanker, Nalini and Gelfand, Alan and Pai, Jeffrey},
+  title     = {Bayesian analysis of ARMA processes: Complete sampling-based inference under exact likelihoods},
+  journal   = {Bayesian analysis in statistics and econometrics},
+  year      = {1996},
+  pages     = {243--256},
+  publisher = {New York: Wiley},
+}
+
+@Article{Geman1993,
+  author    = {Geman, Stuart and Geman, Donald},
+  title     = {Stochastic relaxation, Gibbs distributions and the Bayesian restoration of images},
+  journal   = {Journal of Applied Statistics},
+  year      = {1993},
+  volume    = {20},
+  number    = {5-6},
+  pages     = {25--62},
+  publisher = {Taylor \& Francis},
+}
+
+@Article{Bhattacharya2016,
+  author    = {Bhattacharya, Anirban and Chakraborty, Antik and Mallick, Bani K},
+  title     = {Fast sampling with Gaussian scale mixture priors in high-dimensional regression},
+  journal   = {Biometrika},
+  year      = {2016},
+  pages     = {asw042},
+  publisher = {Oxford University Press},
+}
+
+@Article{Hahn2016,
+  author  = {Hahn, P Richard and He, Jingyu and Lopes, Hedibert},
+  title   = {Elliptical slice sampling for Bayesian shrinkage regression with applications to causal inference},
+  journal = {U RL http://faculty. chicagobooth. edu/richard. hahn/research. html},
+  year    = {2016},
+}
+
+@Article{C.S.2009,
+  author    = {C. S. WONG and W. S. CHAN and P. L. KAM},
+  title     = {A Student t -mixture autoregressive model with applications to heavy-tailed financial data},
+  journal   = {Biometrika},
+  year      = {2009},
+  volume    = {96},
+  number    = {3},
+  pages     = {751--760},
+  issn      = {00063444},
+  abstract  = {We introduce the class of Student t-mixture autoregressive models, which is promising for financial time series modelling. The model is able to capture serial correlations, time-varying means and volatilities, and the shape of the conditional distributions can be time varied from short-tailed to long-tailed, or from unimodal to multimodal. The use of t-distributed errors in each component of the model allows conditional leptokurtic distributions that account for the commonly observed excess unconditional kurtosis in financial data. Methods of parameter estimation and model selection are given. Finally, the proposed modelling procedure is illustrated through a real example.},
+  publisher = {[Oxford University Press, Biometrika Trust]},
+  url       = {http://www.jstor.org/stable/27798861},
+}
+
+@Article{Lange1989,
+  author    = {Kenneth L. Lange and Roderick J. A. Little and Jeremy M. G. Taylor},
+  title     = {Robust Statistical Modeling Using the t Distribution},
+  journal   = {Journal of the American Statistical Association},
+  year      = {1989},
+  volume    = {84},
+  number    = {408},
+  pages     = {881--896},
+  issn      = {01621459},
+  abstract  = {The t distribution provides a useful extension of the normal for statistical modeling of data sets involving errors with longer-than-normal tails. An analytical strategy based on maximum likelihood for a general model with multivariate t errors is suggested and applied to a variety of problems, including linear and nonlinear regression, robust estimation of the mean and covariance matrix with missing data, unbalanced multivariate repeated-measures data, multivariate modeling of pedigree data, and multivariate nonlinear regression. The degrees of freedom parameter of the t distribution provides a convenient dimension for achieving robust statistical inference, with moderate increases in computational complexity for many models. Estimation of precision from asymptotic theory and the bootstrap is discussed, and graphical methods for checking the appropriateness of the t distribution are presented.},
+  publisher = {[American Statistical Association, Taylor \& Francis, Ltd.]},
+  url       = {http://www.jstor.org/stable/2290063},
+}
+
+@Article{Brooks2003,
+  author    = {Brooks, Stephen P and Giudici, Paolo and Roberts, Gareth O},
+  title     = {Efficient construction of reversible jump Markov chain Monte Carlo proposal distributions},
+  journal   = {Journal of the Royal Statistical Society: Series B (Statistical Methodology)},
+  year      = {2003},
+  volume    = {65},
+  number    = {1},
+  pages     = {3--39},
+  publisher = {Wiley Online Library},
+}
+
+@Article{Stephens2000,
+  author    = {Stephens, Matthew},
+  title     = {Bayesian analysis of mixture models with an unknown number of components-an alternative to reversible jump methods},
+  journal   = {Annals of statistics},
+  year      = {2000},
+  pages     = {40--74},
+  publisher = {JSTOR},
+}
+
+@Article{Fan2011a,
+  author    = {Fan, Yanan and Sisson, Scott A},
+  title     = {Reversible jump MCMC},
+  journal   = {Handbook of Markov Chain Monte Carlo},
+  year      = {2011},
+  pages     = {67--92},
+  publisher = {Chapman \& Hall/CRC Boca Raton, FL},
+}
+
+@Article{Andrieu2003a,
+  author    = {Andrieu, Christophe and Davy, Manuel and Doucet, Arnaud},
+  title     = {Efficient particle filtering for jump Markov systems. Application to time-varying autoregressions},
+  journal   = {IEEE Transactions on signal processing},
+  year      = {2003},
+  volume    = {51},
+  number    = {7},
+  pages     = {1762--1770},
+  publisher = {IEEE},
+}
+
+@Article{Chib1995,
+  author    = {Siddhartha Chib},
+  title     = {Marginal Likelihood from the Gibbs Output},
+  journal   = {Journal of the American Statistical Association},
+  year      = {1995},
+  volume    = {90},
+  number    = {432},
+  pages     = {1313--1321},
+  issn      = {01621459},
+  abstract  = {In the context of Bayes estimation via Gibbs sampling, with or without data augmentation, a simple approach is developed for computing the marginal density of the sample data (marginal likelihood) given parameter draws from the posterior distribution. Consequently, Bayes factors for model comparisons can be routinely computed as a by-product of the simulation. Hitherto, this calculation has proved extremely challenging. Our approach exploits the fact that the marginal density can be expressed as the prior times the likelihood function over the posterior density. This simple identity holds for any parameter value. An estimate of the posterior density is shown to be available if all complete conditional densities used in the Gibbs sampler have closed-form expressions. To improve accuracy, the posterior density is estimated at a high density point, and the numerical standard error of resulting estimate is derived. The ideas are applied to probit regression and finite mixture models.},
+  publisher = {[American Statistical Association, Taylor \& Francis, Ltd.]},
+  url       = {http://www.jstor.org/stable/2291521},
+}
+
+@Article{doi:10.1080/00031305.2013.791644,
+  author    = {Richard J. Barker and William A. Link},
+  title     = {Bayesian Multimodel Inference by RJMCMC: A Gibbs Sampling Approach},
+  journal   = {The American Statistician},
+  year      = {2013},
+  volume    = {67},
+  number    = {3},
+  pages     = {150-156},
+  doi       = {10.1080/00031305.2013.791644},
+  eprint    = {https://doi.org/10.1080/00031305.2013.791644},
+  publisher = {Taylor \& Francis},
+  url       = { 
+        https://doi.org/10.1080/00031305.2013.791644
+    
+},
+}
+
+@Article{Hsiang1975,
+  author        = {T. C. Hsiang},
+  title         = {A Bayesian View on Ridge Regression},
+  journal       = {Journal of the Royal Statistical Society. Series D (The Statistician)},
+  year          = {1975},
+  volume        = {24},
+  number        = {4},
+  pages         = {267--268},
+  issn          = {00390526, 14679884},
+  __markedentry = {[mgiac_000:]},
+  publisher     = {[Royal Statistical Society, Wiley]},
+  url           = {http://www.jstor.org/stable/2987923},
+}
+
+@Article{Castillo2012,
+  author        = {Castillo, Isma{\"e}l and van der Vaart, Aad and others},
+  title         = {Needles and straw in a haystack: Posterior concentration for possibly sparse sequences},
+  journal       = {The Annals of Statistics},
+  year          = {2012},
+  volume        = {40},
+  number        = {4},
+  pages         = {2069--2101},
+  __markedentry = {[mgiac_000:6]},
+  publisher     = {Institute of Mathematical Statistics},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}

@@ -1,0 +1,466 @@
+\chapter{Bayesian Regularization of Distributed Lag Models}
+\label{appendix3}
+\newpage
+
+\section{Introduction}
+Given a linear regression model represented by $\bm{y}=\mu+\bm{X}\bm{\theta}+\bm{\epsilon}$,  Bayesian regularization methods were developed to achieve sparsity in the posterior estimate $\hat{\bm{\theta}}$ when only a subset of the variables in $\bm{X}$ are considered important \textit{a priori}. Often in practice, information criteria, i.e. AIC, BIC, DIC, or posterior model probabilities, help discriminate between various submodels obtained through re-estimation. Stepwise algorithms are helpful but limited when the set of covariates in $\bm{X}$ in large. Bayesian regularization methods are computationally efficient and bypass the need to explore the entire model space. \cite{Mallick2013} provide a detailed comparison of Bayesian and frequentist variable selection in high dimensional linear models.
+
+Many parametric time series models have a linear matrix form. This includes models with autoregressive, moving average, distributed lag, and exogenous predictors. Beyond the coefficients, order parameters describe the extent to which historical information is relevant for prediction. For cross-sectional studies, the dimensionality of $\bm{\theta}$ for the full model is fixed by the number of available explanatory variables. In the time series context, this dimensionality is a parameter itself. The reversible jump Markov Chain Monte Carlo (RJMCMC) technique of \cite{Green1995} is capable of simultaneously sampling from the posterior distribution for unknown orders and updating the dimension of the full model. We have seen this approach in models defined by a single order parameter $p$ such as autoregressive models AR$(p)$ \citep{Troughton1997,Vermaak2004}, threshold autoregressive models TAR$(p)$ \citep{Campbell2004}, and smooth transition autoregressive models STAR$(p)$ \citep{Lopes2006}. For a model with multiple orders, i.e. autoregressive moving average model ARMA$(p,q)$, RJMCMC becomes less easy to implement.
+
+Subset models can also be represented by $\bm{y}=\mu+\bm{X}\bm{\theta}+\bm{\epsilon}$ where the true $\bm{\theta}$ is sparse. By itself, RJMCMC is incapable of handling this problem. For each covariate $\theta_i$, the uncertainty of relevancy is captured via probalistic spikes at 0 \citep{Mitchell1988}. Bernouilli distributed inclusion parameters with discrete mixture priors automate posterior model selection and estimation \citep{George1993,Carlin1995,Kuo1998,Dellaportas2002}. In high dimensional cases where $\bm{\theta}$ contains many coefficients, exploring the entire model space under this paradigm becomes a computational challenge.
+
+Bayesian regularization techniques approximate sparse estimation by shrinking irrelevant effects to 0. Continuous scale mixture priors concentrated around 0 promote sparsity. Machine learning penalized regression paths, such as ridge \citep{Hoerl1970}, LASSO \citep{Tibshirani1996}, and elastic net \citep{Hastie2009a}, are similar to posterior mean profiles under different hierarchical representations \citep{Hsiang1975,Park2008,Li2010}. These methods and many others fall in the class of global-local shrinkage priors \citep{Polson2010}. 
+
+Misspecification of model orders in time series studies detrimentally impacts forecasting short term forecasting accuracy. Rather than applying distributions to AR, MA, and DL orders, we view these parameters as maximum  restrictions on the model's complexity that are assumed \textit{a priori}. These parameters should be large enough to cover all long-term and seasonal effects. This handling introduces many irrelevant lagged covariates in $\bm{\theta}$, but good shrinkage priors can combat overfitting. In simulation, we illustrate the effectiveness of two options, the horseshoe prior (BHS) of \citep{Carvalho2009,Carvalho2010} and the extended horseshoe+ ($\textrm{BHS}^+$) of \citep{Bhadra2016}, using a distributed lag model (DLM) containing two exogenous time series. Under a very simple data generating process, we examine how these methods perform as the assumed order parameters increase beyond the truth. To fully appreciate the signal detection accuracy of BHS and $\textrm{BHS}^+$, we include the Bayesian LASSO (BLASSO) hierarchy as a baseline \citep{Park2008}. In Section \ref{sec:bayesreg}, we present the prior hierarchies of BHS, $\textrm{BHS}^+$, and BLASSO. Section \ref{sec:dlm} defines the parametric DLM structure and describes its purpose in this context. Monte Carlo experiments comparing all three methods are provided in Section \ref{sec:mcdlm}.
+
+
+
+
+
+\bigskip
+\section{Bayesian Regularization}
+\label{sec:bayesreg}
+In the class of global-local scale mixture priors, the horseshoe prior of \cite{Carvalho2010} has become a preference in sparse signal estimation. Consider the full linear model $\bm{y}\sim \mathcal{N}(\mu+\bm{X}\bm{\theta},\sigma^2)$, where $\bm{\theta}=[\theta_1, \cdots, \theta_i,\cdots, \theta_P]'$. Without loss of generality,  $\bm{X}$ is assumed to be standardized matrix of predictors. Furthermore, Jeffrey's prior is used for the variance and a flat prior for $\mu$. The BHS hierarchy in Equation \ref{eq:bhspriorspec} is specified for each individual coefficient $\theta_i$ where $\mathcal{N}$ and $\mathcal{C}^+$ respectively denote \textit{normal} and \textit{half-Cauchy} distributions.
+\begin{equation}
+\label{eq:bhspriorspec}
+\begin{split}
+	\theta_i|\lambda_i,\tau,\sigma^2 & \sim \mathcal{N}(0,\lambda^2_i\tau^2\sigma^2) \\
+	\lambda_i &\sim \mathcal{C}^+(0,1)\\
+	\tau &\sim \mathcal{C}^+(0,1)\\
+\end{split}
+\end{equation}
+
+Let $\mathcal{IG}$ denote the \textit{inverse-gamma} distribution. Based on the work by \cite{Wand2011}, if $\lambda_i^2|\nu_i\sim \mathcal{IG}(\frac{1}{2},\frac{1}{\nu_i})$ and $\nu_i \sim \mathcal{IG}(\frac{1}{2},1)$, then $\lambda_i^2 \sim \mathcal{C}^+(0,1)$. \cite{Makalic2016b} exploit this scale-mixture decomposition so that posterior sampling of the coefficients can be obtained via Gibbs.
+
+\cite{Bhadra2016} extended BHS to the $\textrm{BHS}^+$ hierarchy expressed in Equation \ref{eq:bhspluspriorspec}. $\textrm{BHS}^+$ priors have a shrinkage profile that improves signal detection when $\bm{\theta}$ is "ultra sparse" or "nearly black." Under $0-1$ loss, both BHS and $\textrm{BHS}^+$ estimation methods are oracle procedures \citep{Datta2013,Bhadra2016}. In high dimensional cases, \cite{Bhadra2016} proved that the posterior mean squared error is lower under $\textrm{BHS}^+$. The additional vector of tuning parameters $\bm{\eta}=[\eta_1,\cdots,\eta_i,\cdots,eta_P]'$ naturally increases the computational cost, but the \textit{inverse-gamma} decomposition of the \textit{half-Cauchy} can be utilized in Gibbs sampling. 
+\begin{equation}
+\label{eq:bhspluspriorspec}
+\begin{split}
+	\theta_i|\lambda_i,\tau,\sigma^2 & \sim \mathcal{N}(0,\lambda^2_i\tau^2\sigma^2) \\
+	\lambda_i &\sim \mathcal{C}^+(0,\eta_i)\\
+	\eta_i & \sim \mathcal{C}^+(0,1)\\
+	\tau &\sim \mathcal{C}^+(0,1)\\
+\end{split}
+\end{equation}
+
+To serve as a baseline, we consider the Bayesian LASSO hierarchy expressed in Equation \ref{eq:lassospec} where \textit{EXP} denotes the \textit{exponential} distribution and $\mathcal{G}$ denotes the \textit{gamma} distribution \citep{Park2008}. The \textit{gamma} prior for $\tau$ maintains conjugacy. Hyperparameters $a$ and $b$ should be small to ensure the prior remains unformative.  Using posterior modes, BLASSO is capable of simultaneously performing model selection and parameter estimation; however, \cite{Castillo2012} showed the full posterior distributions contract at suboptimal rates. Like BHS and $\textit{BHS}^+$, posterior sampling is extremely efficient using Gibbs.
+\begin{equation}
+\label{eq:lassospec}
+\begin{split}
+	\theta_i|\lambda_i,\tau,\sigma^2 & \sim \mathcal{N}(0,\lambda^2_i \sigma^2) \\
+	\lambda^2_i &\sim \textit{EXP}^+(\tau)\\
+	\tau^2 & \sim \mathcal{G}(a,b)
+\end{split}
+\end{equation}
+
+
+
+
+
+
+
+\bigskip
+\section{Distributed Lag Model}
+\label{sec:dlm}
+Suppose our primary interest is the modeling of time series $\{Y_t\}$ using a sample of $T$ realizations $\{y_t:t=1,\cdots,T\}=\{y_t\}$. Endogenous series $\{A_t\}$ and $\{B_t\}$ sampled concurrently are believed to impact the behavior of $\{Y_t\}$ according to the finite DLM in Equation \ref{eq:distlagmod}. 
+\begin{equation}
+\label{eq:distlagmod}
+\begin{split}
+ Y_t=\mu+\sum\limits_{j=1}^{P_1} \alpha_j A_{t-j} +\sum\limits_{k=1}^{P_2} \beta_k B_{t-k}+\epsilon_t 
+\end{split}
+\end{equation}
+The marginal effect $\{A_t\}$ and $\{B_t\}$ have on $\{Y_t\}$ are distributed across multiple lags. In classic DLMs, $A_t$ and $B_t$ are included; but in time series applications, the forecast $\hat{y}_t$ is unobtainable without first predicting unknown inputs $\hat{a}_t$ and $\hat{b}_t$. Without loss of generality, we only include past information in our DL structure.
+
+Let $\bm{y}=[y_m,\cdots,y_{T}]'$, $\bm{\theta}=[\alpha_1,\cdots,\alpha_{P_1},\beta_1,\cdots,\beta_{P_2}]'$, $\bm{\epsilon}=[\epsilon_m,\cdots,\epsilon_{T}]'$, and 
+
+\begin{equation*}
+\bm{X}=[\bm{X}_a,\bm{X}_b]=
+	\begin{bmatrix} a_{m-1} & \cdots & a_{m-P_1} &
+					b_{m-1} & \cdots & b_{m-P_2} \\
+					a_{m} & \cdots & a_{m-P_1+1} &
+					b_{m} & \cdots & b_{m-P_2+1} \\
+					\vdots & \ddots & \vdots &\
+					\vdots &  \ddots & \vdots  \\
+					a_{t-1} & \cdots & a_{t-P_1} &
+					b_{t-1} & \cdots & b_{t-P_2} \\
+					\vdots & \ddots & \vdots &\
+					\vdots &  \ddots & \vdots  \\
+					a_{T-1} & \cdots & a_{T-P_1} &
+					b_{T-2} & \cdots & b_{T-P_2} \\
+	\end{bmatrix} .
+\end{equation*}
+The DLM in Equation \ref{eq:distlagmod} can now be written in matrix form $\bm{y}=\mu+\bm{X}\bm{\theta}+\bm{\epsilon}$.  Ordinary least squares (OLS) regression is the most popular estimation method for linear models. Specifically for DL models, the structure of the model matrix $\bm{X}$ naturally breeds collinearity. Predictors in the submatrices $\bm{X}_a$ and $\bm{X}_b$ are built using lagged values from two separate input time series, and if strong temporal dependency exists within $\{a_t\}$ and $\{b_t\}$, then multicollinearity is invevitable. Furthermore, correlation between $\bm{X}_a$ and $\bm{X}_b$ may be induced by strong cross-correlation between $\{a_t\}$ and $\{b_t\}$. The OLS estimate $\hat{\bm{\theta}}$ remains unbiased but any induced collinearity in the set of $P_1+P_2$ predictors in $\bm{X}$ increases the uncertainty regarding this estimate.
+
+Suppose $\{a_t\}$ and $\{b_t\}$ are generated independently by stationary AR$(1)$ processes seen in Equation \ref{eq:ar1dgps}. The random variables $\{\epsilon_{A,t}\}$ and $\{\epsilon_{B,t}\}$ are uncorrelated Gaussian white noise where $\{\epsilon_{A,t}\}\sim \mathcal{N}(0,\sigma^2_A)$ and $\{\epsilon_{B,t}\}\textrm{i.i.d.}\sim \mathcal{N}(0,\sigma^2_B)$.
+\begin{equation}
+\label{eq:ar1dgps}
+\begin{split}
+ a_t&=\phi_A a_{t-1}+\epsilon_{A,t} \\
+ b_t&=\phi_B b_{t-1}+\epsilon_{B,t} \\
+\end{split}
+\end{equation}
+By construction, the correlation Corr$\{A_{t-j},B_{t-k}\}\approx 0$ $\forall j,k$ since $\{a_t\}$ and $\{b_t\}$ are generated independently; however, the multicollinearity within matrices $\bm{X}_a$ and $\bm{X}_b$ can be approximated using the theoretical autocorrelation function of AR processes. For any $h\in \{1,2,\cdots\}$, Corr$\{A_{t},A_{t+h}\}\approx\phi_A^h$ and Corr$\{B_{t},B_{t+h}\}\approx\phi_B^h$. In simulation studies, the strength of correlation between predictors can be controlled through specifying $\phi_A$ and $\phi_B$ that satisfy regulatory stationary conditions $|\phi_A|<1$ and $|\phi_B|<1$.
+
+DL models were popularized in econometrics to explain dynamic temporal relationships between economic variables. These models become more complex when lags of the endogenous series $\{y_t\}$ are included in $\bm{X}$, infinite representations are used, or nonlinear relationships are explored. The focus of this article is not on new applications of DLMs. We solely seek to use the DLM framework to compare BLASSO, BHS, and $\textrm{BHS}^+$ regression methods for different degrees of sparsity and different strengths of multicollinearity. The results we present can be used to guide Bayesian statisticians towards shrinkage priors in DLMs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\bigskip
+\section{Monte Carlo Experiment}
+\label{sec:mcdlm}
+
+\subsection{Simulation Design}
+Consider the time series $\{y_t\}$ generated according to the DL model in Equation \ref{eq:corrsim} with Gaussian white noise $\{\epsilon_t\}\sim\mathcal{N}(0,10)$. Multicollinearity is introduced and controlled by generating $\{a_t\}$ and $\{b_t\}$ using independent AR$(1)$ processes according to Equation \ref{eq:ar1dgps} with $\sigma^2_A=0.2$ and $\sigma^2_B=1$. Simulated series $\{a_t\}$, $\{b_t\}$, and $\{y_t\}$ of length $T \in \{50,200\}$ are considered.
+\begin{equation}
+\label{eq:corrsim}
+ y_t=80+8a_{t-1}-6a_{t-3}-8b_{t-2}+6b_{t-4}+\epsilon_t
+\end{equation}
+
+Prior to estimation, we assume $P_1=P_2=P$ and safely select $P > 4$. The true DL model is a subset of the overparameterized linear regression $\bm{y}=\mu+\bm{X}\bm{\theta}+\bm{\epsilon}$ where $\bm{\theta}=[\alpha_1,\cdots,\alpha_P,\beta_1,\cdots,\beta_P]'$, $m=P+1$, and
+\begin{equation*}
+\bm{X}=[\bm{X}_a,\bm{X}_b]=
+	\begin{bmatrix} a_{m-1} & \cdots & a_{m-P} &
+					b_{m-1} & \cdots & b_{m-P} \\
+					a_{m} & \cdots & a_{m-P+1} &
+					b_{m} & \cdots & b_{m-P+1} \\
+					\vdots & \ddots & \vdots &
+					\vdots &  \ddots & \vdots  \\
+					a_{t-1} & \cdots & a_{t-P} &
+					b_{t-1} & \cdots & b_{t-P} \\
+					\vdots & \ddots & \vdots &
+					\vdots &  \ddots & \vdots  \\
+					a_{T-1} & \cdots & a_{T-P} &
+					b_{T-2} & \cdots & b_{T-P} \\
+	\end{bmatrix} .
+\end{equation*}
+For choices of $P\in\{5,10,20\}$, BLASSO, BHS, and $\textrm{BHS}^+$ shrinkage priors are applied to each $\theta \in \{\alpha_1,\cdots,\alpha_P,\beta_1,\cdots,\beta_P\}$. The degree of sparsity in $\bm{\theta}$ increases with the uncertainty around $P$.  After Gibbs sampling, we evaluate the three methods using posterior $10\%$, $50\%$, and $90\%$ quantiles abbreviated $\hat{\theta}_{0.1}$, $\hat{\theta}_{0.5}$, and $\hat{\theta}_{0.9}$, respectively.
+
+The high to moderate multicollinearity in $\bm{X}$ is introduced using combinations of $(\phi_A,\phi_B) \in \{(0.9,0.9),(0.9,-0.5),(0.5,-0.5)\}$ in the simulation of exogenous information $\{a_t\}$ and $\{b_t\}$. The correlation existing between lagged predictors in $\bm{X}_a$ and $\bm{X}_b$ is highest when $\phi_A=0.9$ and $\phi_B=-0.9$ and lowest when $\phi_A=0.5$ and $\phi_B=-0.5$.
+
+Experiments are replicated $100$ times under all options of $T$, $P$, $\phi_A$ and $\phi_B$ specified above. All three stages -- simulation, estimation, and evaluation -- are conducted in \textbf{R} \citep{RCORETEAM}. The \textbf{bayesreg} package efficiently implements BLASSO, BHS, and $\textrm{BHS}^+$ methods \citep{bayesreg}. Posterior inference is based on $S=1000$ posterior samples from $p(\mu,\bm{\theta},\sigma^2|\{a_t\},\{b_t\},\{y_t\})$ starting after a burn-in period of $5000$. To reduce autocorrelation within MCMC chains, only every fifth sample is retained.
+
+\subsection{Comparing Methods on the Parameter Level}
+\label{sec:paramcomp}
+For each scenario, 100 posterior medians $\{\hat{\bm{\theta}}^{(1)}_{0.5}, \hat{\bm{\theta}}^{(2)}_{0.5}, \cdots, \hat{\bm{\theta}}^{(100)}_{0.5}\}$ are obtained under each Bayesian regularization method. Across all replications, we evaluate the consistency of each method for each lag weight parameter using root mean squared error (RMSE). Given weight $\theta \in \{\alpha_1,\cdots,\alpha_P,\beta_1,\cdots,\beta_P\}$ and its corresponding estimate $\hat{\theta}_{0.5}$, we define RMSE$(\theta)$ according to Equation \ref{eq:paramrmse}.
+\begin{equation}
+\label{eq:paramrmse}
+\textrm{RMSE}(\theta)=\sqrt{\frac{1}{100}\sum\limits_{r=1}^{100}(\theta^{(r)}-\hat{\theta}^{(r)}_{0.5})^2}
+\end{equation}
+
+Given $P$, there are $2P$ lag weights estimated in each replicated experiment. Since the dimensionality of $\theta$ changes with $P$, we divide our results accordingly. Table \ref{tab:rmseP5} presents results for $P=5$ and Table \ref{tab:rmseP10} for $P=10$. When $P=20$, the vector $\bm{\theta}$ contains 40 predictors; therefore, we split results based on series length $T=50$ and $T=200$ in Tables \ref{tab:rmseP20a} and \ref{tab:rmseP20b}, respectively. 
+
+As expected, RMSE decreases when the length of the time series increases. For each combination of $P$ and $T$, the linear DLM regression is based on $T-P$ observations. This means that estimation is based on a limited 30 joint observations $[y_t,a_{t-1},\cdots,a_{t-20},b_{t-1},\cdots,b_{t-20}]$ in the extreme case when $T=50$ and $P=20$. Naturally, RMSE is highest for this situation. Lowest RMSE occurs for $T=200$ and $P=5$. This pattern is consistent for all Bayesian estimation methods and the three different pairings of $(\phi_A,\phi_B)$.
+
+Interestingly, there is no consistent pattern for the change in RMSE as we move from high to moderately correlated predictors. The strength of correlation within $\bm{X}_a$ and $\bm{X}_b$ are approximately equivalent when $(\phi_A,\phi_B)\in\{(0.9,-0.9),(0.5,-0.5)\}$. The $\textrm{RMSE}(\alpha)>\textrm{RMSE}(\beta)$ indicating better estimation of the lag weights for $\{b_t\}$. This phenomena results from the generation of $\{a_t\}$ and $\{b_t\}$ where $0.2=\sigma^2_A\neq\sigma^2_B=1$. The option to generate input series that perfectly follow AR$(1)$, i.e. $\sigma^2=0$, was a consideration, but this does not reflect real life usage of DLMs.
+
+Most importantly, we discover that BLASSO underperforms both BHS and $\textrm{BHS}^+$ for all lag weights. This difference in RMSE is largest when $P=20$. All methods are computationally equivalent, but BLASSO does a poor job estimating sparse $\bm{\theta}$. The RMSE$(\theta^*)$ for nonzero $\theta^*\in\{\alpha_1,\alpha_3,\beta_2,\beta_4\}$ is considerably larger than RMSE for truly irrelevant lag weights. In terms of percentage change, the reduction in RMSE$(\theta^*)$ when horseshoe priors are utilized is not as staggering as the reduction seen for the zero parameters. However, for the ultra-sparse case $P=20$, this discrepancy is more apparent across all $\theta$. Methods BHS and $\textrm{BHS}^+$ almost cut RMSE$(\theta)$ in half in this extreme case regardless of the strength of correlation. Although the uncertainty around $\theta^*\in\{\alpha_1,\alpha_3,\beta_2,\beta_4\}$ increases with $P$, posteriors under BHS and $\textrm{BHS}^+$ lead to better identification of zero coefficients when more are considered in the model.
+
+Also, we acknowledge the general advantage of using $\textrm{BHS}^+$ over $BHS$, especially when data is limited and the dimension of $\bm{\theta}$ is large. This observation is not caused by changes in correlation strength but more to the change in sample size. In all cases, we advise using the $\textrm{BHS}^+$ hierarchy over the $BHS$ hierarchy if the increase in computational time is reasonable for the user. In all the scenarios we investigate, this is not an issue.
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{Parameter RMSE Comparison When $P=5$}
+\begin{tabular}{ll|ccc|ccc|ccc}
+  \hline
+  \multicolumn{2}{c|}{} & \multicolumn{9}{c}{}\\
+  & & & \multicolumn{7}{c}{Multicollinearity Control: $(\phi_A,\phi_B)$} &  \\
+  \multicolumn{2}{c|}{} & \multicolumn{9}{c}{}\\
+   & & \multicolumn{3}{c}{$\underline{(0.9 ,-0.9)} $} & \multicolumn{3}{c}{$\underline{(0.9 ,-0.5)} $} & \multicolumn{3}{c}{$\underline{(0.5 ,-0.5)} $}   \\
+  \multicolumn{2}{c|}{} & \multicolumn{9}{c}{}\\
+& Truth & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ \\ 
+  \hline
+ \multirow{10}{*}{$T=50$} & $\alpha_1=8$ & 1.18 & 1.12 & 1.09 & 1.13 & 1.04 & 0.98 & 1.25 & 1.20 & 1.15 \\ 
+  & $\alpha_2=0$ & 1.25 & 0.88 & 0.72 & 1.28 & 1.00 & 0.88 & 1.33 & 0.99 & 0.83 \\ 
+  & $\alpha_3=-6$ & 1.56 & 1.46 & 1.37 & 1.48 & 1.45 & 1.35 & 1.45 & 1.40 & 1.33 \\ 
+  & $\alpha_4=0$ & 1.38 & 0.88 & 0.67 & 1.20 & 0.89 & 0.73 & 1.09 & 0.71 & 0.54 \\ 
+  & $\alpha_5=0$ & 1.02 & 0.67 & 0.51 & 0.92 & 0.62 & 0.49 & 0.92 & 0.61 & 0.48 \\ 
+  & $\beta_1=0$ & 0.52 & 0.35 & 0.28 & 0.49 & 0.35 & 0.27 & 0.54 & 0.38 & 0.31 \\ 
+  & $\beta_2=-8$ & 0.72 & 0.56 & 0.51 & 0.68 & 0.55 & 0.50 & 0.68 & 0.53 & 0.47 \\ 
+  & $\beta_3=0$ & 0.57 & 0.37 & 0.29 & 0.54 & 0.39 & 0.31 & 0.57 & 0.39 & 0.31 \\ 
+  & $\beta_4=6$ & 0.65 & 0.49 & 0.44 & 0.55 & 0.46 & 0.42 & 0.59 & 0.48 & 0.44 \\ 
+  & $\beta_5=0$ & 0.41 & 0.28 & 0.22 & 0.43 & 0.31 & 0.25 & 0.34 & 0.22 & 0.16 \\
+  \hline 
+  \multirow{10}{*}{$T=200$} & $\alpha_1=8$ & 0.76 & 0.68 & 0.64 & 0.72 & 0.63 & 0.60 & 0.77 & 0.69 & 0.66 \\ 
+  & $\alpha_2=0$ & 0.96 & 0.68 & 0.55 & 0.87 & 0.60 & 0.48 & 0.92 & 0.69 & 0.59 \\ 
+  & $\alpha_3=-6$ & 1.02 & 0.91 & 0.83 & 1.09 & 0.96 & 0.88 & 0.99 & 0.89 & 0.82 \\ 
+  & $\alpha_4=0$ & 0.96 & 0.65 & 0.51 & 0.84 & 0.54 & 0.41 & 0.85 & 0.56 & 0.43 \\ 
+  & $\alpha_5=0$ & 0.72 & 0.46 & 0.35 & 0.63 & 0.39 & 0.29 & 0.70 & 0.47 & 0.36 \\ 
+  & $\beta_1=0$ & 0.30 & 0.20 & 0.15 & 0.33 & 0.24 & 0.19 & 0.34 & 0.25 & 0.21 \\ 
+  & $\beta_2=-8$ & 0.48 & 0.37 & 0.32 & 0.43 & 0.38 & 0.35 & 0.44 & 0.37 & 0.35 \\ 
+  & $\beta_3=0$ & 0.45 & 0.31 & 0.24 & 0.38 & 0.28 & 0.22 & 0.37 & 0.26 & 0.20 \\ 
+  & $\beta_4=6$ & 0.48 & 0.39 & 0.35 & 0.40 & 0.34 & 0.32 & 0.41 & 0.34 & 0.31 \\ 
+  & $\beta_5=0$ & 0.29 & 0.20 & 0.16 & 0.30 & 0.21 & 0.16 & 0.29 & 0.20 & 0.15 \\ 
+   \hline
+\end{tabular}
+\label{tab:rmseP5}
+\end{table}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{Parameter RMSE Comparison When $P=10$}
+\begin{tabular}{ll|ccc|ccc|ccc}
+\hline
+  \multicolumn{2}{c|}{} & \multicolumn{9}{c}{}\\
+  & & & \multicolumn{7}{c}{Multicollinearity Control: $(\phi_A,\phi_B)$} &  \\
+  \multicolumn{2}{c|}{} & \multicolumn{9}{c}{}\\
+   & & \multicolumn{3}{c}{$\underline{(0.9 ,-0.9)} $} & \multicolumn{3}{c}{$\underline{(0.9 ,-0.5)} $} & \multicolumn{3}{c}{$\underline{(0.5 ,-0.5)} $}   \\
+  \multicolumn{2}{c|}{} & \multicolumn{9}{c}{}\\
+& Truth & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ \\ 
+  \hline
+ \multirow{20}{*}{$T=50$} & $\alpha_1=8$ & 1.35 & 1.26 & 1.19 & 1.55 & 1.32 & 1.24 & 1.54 & 1.37 & 1.30 \\ 
+  & $\alpha_2=0$ & 1.28 & 0.84 & 0.76 & 1.11 & 0.80 & 0.76 & 1.33 & 0.90 & 0.82 \\ 
+  & $\alpha_3=-6$ & 1.82 & 1.73 & 1.61 & 1.83 & 1.75 & 1.62 & 1.71 & 1.60 & 1.49 \\ 
+  & $\alpha_4=0$ & 1.37 & 0.77 & 0.66 & 1.15 & 0.79 & 0.74 & 1.03 & 0.60 & 0.50 \\ 
+  & $\alpha_5=0$ & 1.35 & 0.64 & 0.51 & 0.93 & 0.42 & 0.33 & 1.05 & 0.53 & 0.42 \\ 
+  & $\alpha_6=0$ & 1.21 & 0.55 & 0.40 & 1.05 & 0.50 & 0.40 & 1.18 & 0.63 & 0.54 \\ 
+  & $\alpha_7=0$ & 1.13 & 0.51 & 0.40 & 0.95 & 0.45 & 0.34 & 1.04 & 0.48 & 0.35 \\ 
+  & $\alpha_8=0$ & 1.04 & 0.45 & 0.33 & 1.04 & 0.46 & 0.37 & 1.28 & 0.65 & 0.50 \\ 
+  & $\alpha_9=0$ & 1.13 & 0.51 & 0.40 & 0.94 & 0.42 & 0.34 & 1.15 & 0.54 & 0.37 \\ 
+  & $\alpha_{10}=0$ &  1.13 & 0.56 & 0.43 & 1.00 & 0.54 & 0.48 & 0.92 & 0.50 & 0.42 \\ 
+  & $\beta_1=0$ & 0.59 & 0.28 & 0.23 & 0.50 & 0.25 & 0.20 & 0.58 & 0.32 & 0.27 \\ 
+  & $\beta_2=-8$ &  0.91 & 0.55 & 0.52 & 0.75 & 0.50 & 0.47 & 0.89 & 0.58 & 0.54 \\ 
+  & $\beta_3=0$ & 0.53 & 0.28 & 0.24 & 0.54 & 0.32 & 0.27 & 0.53 & 0.32 & 0.27 \\ 
+  & $\beta_4=6$ & 0.86 & 0.55 & 0.51 & 0.77 & 0.52 & 0.48 & 0.74 & 0.51 & 0.48 \\ 
+  & $\beta_5=0$ & 0.50 & 0.21 & 0.17 & 0.50 & 0.25 & 0.20 & 0.45 & 0.22 & 0.16 \\ 
+  & $\beta_6=0$ & 0.55 & 0.25 & 0.19 & 0.44 & 0.24 & 0.20 & 0.48 & 0.23 & 0.19 \\ 
+  & $\beta_7=0$ & 0.59 & 0.27 & 0.20 & 0.47 & 0.23 & 0.18 & 0.43 & 0.19 & 0.15 \\ 
+  & $\beta_8=0$ & 0.48 & 0.21 & 0.17 & 0.47 & 0.24 & 0.18 & 0.50 & 0.23 & 0.19 \\ 
+  & $\beta_9=0$ & 0.54 & 0.25 & 0.18 & 0.54 & 0.28 & 0.23 & 0.38 & 0.16 & 0.13 \\ 
+  & $\beta_{10}=0$ & 0.45 & 0.21 & 0.17 & 0.40 & 0.23 & 0.19 & 0.42 & 0.25 & 0.22 \\ 
+  \hline
+  \multirow{20}{*}{$T=200$} & $\alpha_1=8$ & 0.82 & 0.67 & 0.65 & 0.78 & 0.65 & 0.63 & 0.78 & 0.67 & 0.65 \\ 
+  & $\alpha_2=0$ & 0.89 & 0.48 & 0.42 & 0.75 & 0.39 & 0.34 & 0.89 & 0.54 & 0.49 \\ 
+  & $\alpha_3=-6$ & 1.06 & 0.85 & 0.79 & 1.15 & 0.88 & 0.82 & 1.06 & 0.86 & 0.80 \\ 
+  & $\alpha_4=0$ & 0.89 & 0.42 & 0.35 & 0.80 & 0.34 & 0.27 & 0.85 & 0.42 & 0.35 \\ 
+  & $\alpha_5=0$ & 0.80 & 0.35 & 0.28 & 0.68 & 0.29 & 0.25 & 0.79 & 0.37 & 0.31 \\ 
+  & $\alpha_6=0$ & 0.76 & 0.31 & 0.24 & 0.65 & 0.24 & 0.18 & 0.64 & 0.27 & 0.21 \\ 
+  & $\alpha_7=0$ & 0.83 & 0.31 & 0.23 & 0.66 & 0.24 & 0.19 & 0.75 & 0.33 & 0.27 \\ 
+  & $\alpha_8=0$ & 0.82 & 0.30 & 0.22 & 0.67 & 0.22 & 0.17 & 0.62 & 0.29 & 0.25 \\ 
+  & $\alpha_9=0$ & 0.80 & 0.27 & 0.19 & 0.65 & 0.24 & 0.19 & 0.67 & 0.28 & 0.22 \\ 
+  & $\alpha_{10}=0$ & 0.72 & 0.31 & 0.24 & 0.52 & 0.23 & 0.18 & 0.62 & 0.30 & 0.25 \\ 
+  & $\beta_1=0$ & 0.30 & 0.14 & 0.11 & 0.33 & 0.18 & 0.15 & 0.36 & 0.22 & 0.20 \\ 
+  & $\beta_2=-8$ & 0.50 & 0.31 & 0.30 & 0.47 & 0.36 & 0.34 & 0.50 & 0.37 & 0.36 \\ 
+  & $\beta_3=0$ & 0.44 & 0.23 & 0.21 & 0.38 & 0.21 & 0.18 & 0.35 & 0.19 & 0.17 \\ 
+  & $\beta_4=6$ & 0.55 & 0.39 & 0.37 & 0.45 & 0.34 & 0.32 & 0.46 & 0.34 & 0.33 \\ 
+  & $\beta_5=0$ & 0.38 & 0.15 & 0.12 & 0.39 & 0.20 & 0.16 & 0.32 & 0.15 & 0.12 \\ 
+  & $\beta_6=0$ & 0.36 & 0.15 & 0.12 & 0.35 & 0.16 & 0.13 & 0.33 & 0.16 & 0.14 \\ 
+  & $\beta_7=0$ & 0.28 & 0.11 & 0.08 & 0.30 & 0.14 & 0.12 & 0.31 & 0.13 & 0.11 \\ 
+  & $\beta_8=0$ & 0.33 & 0.12 & 0.09 & 0.34 & 0.14 & 0.11 & 0.32 & 0.13 & 0.10 \\ 
+  & $\beta_9=0$ & 0.36 & 0.12 & 0.08 & 0.39 & 0.16 & 0.12 & 0.33 & 0.15 & 0.13 \\ 
+  & $\beta_{10}=0$ & 0.28 & 0.10 & 0.08 & 0.33 & 0.18 & 0.15 & 0.29 & 0.15 & 0.12 \\ 
+   \hline
+\end{tabular}
+\label{tab:rmseP10}
+\end{table}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{Parameter RMSE Comparison When $P=20$ and $T=50$}
+\begin{tabular}{l|ccc|ccc|ccc}
+  \hline
+  \multicolumn{1}{c|}{} & \multicolumn{9}{c}{}\\
+  & & \multicolumn{7}{c}{Multicollinearity Control: $(\phi_A,\phi_B)$} &  \\
+  \multicolumn{1}{c|}{} & \multicolumn{9}{c}{}\\
+    & \multicolumn{3}{c}{$\underline{(0.9 ,-0.9)} $} & \multicolumn{3}{c}{$\underline{(0.9 ,-0.5)} $} & \multicolumn{3}{c}{$\underline{(0.5 ,-0.5)} $}   \\
+  \multicolumn{1}{c|}{} & \multicolumn{9}{c}{}\\
+ Truth & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ \\ 
+\hline
+  $\alpha_1=8$ & 3.31 & 2.01 & 1.86 & 3.66 & 2.48 & 2.29 & 3.18 & 2.54 & 2.41 \\ 
+  $\alpha_2=0$ & 1.14 & 0.77 & 0.74 & 1.04 & 0.85 & 0.89 & 1.19 & 0.86 & 0.92 \\ 
+  $\alpha_3=-6$ & 3.33 & 2.42 & 2.29 & 3.51 & 2.67 & 2.47 & 2.96 & 2.55 & 2.45 \\ 
+  $\alpha_4=0$ & 1.12 & 0.67 & 0.65 & 1.12 & 0.76 & 0.73 & 1.39 & 0.74 & 0.68 \\ 
+  $\alpha_5=0$ & 1.05 & 0.44 & 0.36 & 0.95 & 0.42 & 0.37 & 1.06 & 0.44 & 0.37 \\ 
+  $\alpha_6=0$ & 1.21 & 0.53 & 0.50 & 1.11 & 0.56 & 0.50 & 1.23 & 0.52 & 0.44 \\ 
+  $\alpha_7=0$ & 1.28 & 0.64 & 0.57 & 0.92 & 0.37 & 0.31 & 1.10 & 0.51 & 0.48 \\ 
+  $\alpha_8=0$ & 0.97 & 0.34 & 0.28 & 0.88 & 0.42 & 0.34 & 1.35 & 0.56 & 0.46 \\ 
+  $\alpha_9=0$ & 1.04 & 0.44 & 0.38 & 0.91 & 0.46 & 0.40 & 1.16 & 0.52 & 0.42 \\ 
+  $\alpha_{10}=0$ & 1.14 & 0.41 & 0.37 & 0.99 & 0.50 & 0.49 & 1.12 & 0.55 & 0.51 \\ 
+  $\alpha_{11}=0$ & 1.10 & 0.53 & 0.50 & 0.85 & 0.35 & 0.29 & 1.20 & 0.69 & 0.67 \\ 
+  $\alpha_{12}=0$ & 1.27 & 0.60 & 0.51 & 0.87 & 0.48 & 0.47 & 1.17 & 0.51 & 0.43 \\ 
+  $\alpha_{13}=0$ & 1.19 & 0.54 & 0.46 & 1.09 & 0.44 & 0.39 & 1.05 & 0.42 & 0.38 \\ 
+  $\alpha_{14}=0$ & 1.01 & 0.53 & 0.50 & 0.82 & 0.32 & 0.26 & 1.02 & 0.41 & 0.35 \\ 
+  $\alpha_{15}=0$ & 1.12 & 0.46 & 0.37 & 0.81 & 0.37 & 0.33 & 1.04 & 0.45 & 0.40 \\ 
+  $\alpha_{16}=0$ & 1.08 & 0.50 & 0.38 & 1.03 & 0.34 & 0.25 & 1.02 & 0.49 & 0.45 \\ 
+  $\alpha_{17}=0$ & 1.49 & 0.49 & 0.39 & 0.91 & 0.44 & 0.38 & 1.05 & 0.44 & 0.37 \\ 
+  $\alpha_{18}=0$ & 1.09 & 0.37 & 0.27 & 1.06 & 0.41 & 0.33 & 1.29 & 0.70 & 0.66 \\ 
+  $\alpha_{19}=0$ & 1.31 & 0.50 & 0.36 & 0.91 & 0.44 & 0.40 & 1.02 & 0.57 & 0.55 \\ 
+  $\alpha_{20}=0$ & 1.12 & 0.49 & 0.44 & 1.07 & 0.48 & 0.40 & 1.21 & 0.61 & 0.59 \\ 
+  $\beta_1=0$ & 0.71 & 0.20 & 0.15 & 0.65 & 0.23 & 0.21 & 0.56 & 0.28 & 0.25 \\ 
+  $\beta_2=-8$ & 3.09 & 0.68 & 0.61 & 2.00 & 0.69 & 0.65 & 1.92 & 0.64 & 0.61 \\ 
+  $\beta_3=0$ & 0.34 & 0.29 & 0.28 & 0.47 & 0.27 & 0.24 & 0.47 & 0.34 & 0.32 \\ 
+  $\beta_4=6$ & 2.90 & 0.68 & 0.60 & 2.02 & 0.79 & 0.73 & 1.88 & 0.76 & 0.73 \\ 
+  $\beta_5=0$ & 0.59 & 0.24 & 0.18 & 0.62 & 0.30 & 0.29 & 0.55 & 0.22 & 0.19 \\ 
+  $\beta_6=0$ & 0.37 & 0.13 & 0.12 & 0.49 & 0.29 & 0.28 & 0.43 & 0.19 & 0.16 \\ 
+  $\beta_7=0$ & 0.40 & 0.16 & 0.14 & 0.41 & 0.18 & 0.14 & 0.41 & 0.19 & 0.16 \\ 
+  $\beta_8=0$ & 0.37 & 0.16 & 0.12 & 0.42 & 0.20 & 0.16 & 0.52 & 0.24 & 0.22 \\ 
+  $\beta_9=0$ & 0.35 & 0.16 & 0.11 & 0.50 & 0.30 & 0.28 & 0.45 & 0.31 & 0.31 \\ 
+  $\beta_{10}=0$ & 0.31 & 0.14 & 0.12 & 0.37 & 0.19 & 0.16 & 0.46 & 0.25 & 0.24 \\ 
+  $\beta_{11}=0$ & 0.33 & 0.13 & 0.10 & 0.45 & 0.24 & 0.21 & 0.41 & 0.18 & 0.17 \\ 
+  $\beta_{12}=0$ & 0.35 & 0.13 & 0.10 & 0.44 & 0.21 & 0.17 & 0.39 & 0.22 & 0.19 \\ 
+  $\beta_{13}=0$ & 0.30 & 0.13 & 0.11 & 0.44 & 0.21 & 0.16 & 0.50 & 0.30 & 0.28 \\ 
+  $\beta_{14}=0$ & 0.37 & 0.19 & 0.18 & 0.40 & 0.20 & 0.18 & 0.39 & 0.24 & 0.25 \\ 
+  $\beta_{15}=0$ & 0.39 & 0.15 & 0.12 & 0.41 & 0.20 & 0.18 & 0.41 & 0.25 & 0.24 \\ 
+  $\beta_{16}=0$ & 0.39 & 0.18 & 0.17 & 0.35 & 0.17 & 0.15 & 0.36 & 0.16 & 0.14 \\ 
+  $\beta_{17}=0$ & 0.30 & 0.14 & 0.12 & 0.43 & 0.19 & 0.15 & 0.36 & 0.22 & 0.20 \\ 
+  $\beta_{18}=0$ & 0.34 & 0.16 & 0.13 & 0.38 & 0.16 & 0.12 & 0.42 & 0.19 & 0.17 \\ 
+  $\beta_{19}=0$ & 0.30 & 0.13 & 0.11 & 0.48 & 0.23 & 0.18 & 0.47 & 0.25 & 0.23 \\ 
+  $\beta_{20}=0$ & 0.31 & 0.11 & 0.09 & 0.45 & 0.25 & 0.24 & 0.42 & 0.19 & 0.17 \\ 
+\hline
+\end{tabular}
+\label{tab:rmseP20a}
+\end{table}
+
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{Parameter RMSE Comparison When $P=20$ and $T=200$}
+\begin{tabular}{l|ccc|ccc|ccc}
+  \hline
+  \multicolumn{1}{c|}{} & \multicolumn{9}{c}{}\\
+  & & \multicolumn{7}{c}{Multicollinearity Control: $(\phi_A,\phi_B)$} &  \\
+  \multicolumn{1}{c|}{} & \multicolumn{9}{c}{}\\
+    & \multicolumn{3}{c}{$\underline{(0.9 ,-0.9)} $} & \multicolumn{3}{c}{$\underline{(0.9 ,-0.5)} $} & \multicolumn{3}{c}{$\underline{(0.5 ,-0.5)} $}   \\
+  \multicolumn{1}{c|}{} & \multicolumn{9}{c}{}\\
+ Truth & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ & BLASSO & BHS & $\textrm{BHS}^+$ \\ 
+\hline
+  $\alpha_1=8$ & 0.97 & 0.69 & 0.68 & 1.00 & 0.72 & 0.70 & 0.91 & 0.68 & 0.66 \\ 
+  $\alpha_2=0$ & 0.90 & 0.34 & 0.32 & 0.66 & 0.26 & 0.25 & 0.83 & 0.38 & 0.37 \\ 
+  $\alpha_3=-6$ & 1.27 & 0.85 & 0.81 & 1.47 & 0.93 & 0.90 & 1.33 & 0.86 & 0.82 \\ 
+  $\alpha_4=0$ & 0.86 & 0.28 & 0.24 & 0.79 & 0.33 & 0.32 & 0.74 & 0.25 & 0.23 \\ 
+  $\alpha_5=0$ & 0.73 & 0.22 & 0.18 & 0.56 & 0.17 & 0.15 & 0.77 & 0.27 & 0.24 \\ 
+  $\alpha_6=0$ & 0.73 & 0.19 & 0.17 & 0.51 & 0.14 & 0.13 & 0.66 & 0.21 & 0.19 \\ 
+  $\alpha_7=0$ & 0.84 & 0.20 & 0.16 & 0.60 & 0.15 & 0.13 & 0.68 & 0.27 & 0.23 \\ 
+  $\alpha_8=0$ & 0.79 & 0.21 & 0.18 & 0.57 & 0.14 & 0.12 & 0.57 & 0.19 & 0.16 \\ 
+  $\alpha_9=0$ & 0.73 & 0.19 & 0.16 & 0.59 & 0.17 & 0.14 & 0.73 & 0.24 & 0.21 \\ 
+  $\alpha_{10}=0$ & 0.70 & 0.15 & 0.13 & 0.66 & 0.18 & 0.16 & 0.78 & 0.27 & 0.24 \\ 
+  $\alpha_{11}=0$ & 0.57 & 0.17 & 0.14 & 0.57 & 0.13 & 0.11 & 0.62 & 0.17 & 0.14 \\ 
+  $\alpha_{12}=0$ & 0.64 & 0.18 & 0.14 & 0.49 & 0.12 & 0.10 & 0.64 & 0.20 & 0.18 \\ 
+  $\alpha_{13}=0$ & 0.80 & 0.20 & 0.17 & 0.57 & 0.16 & 0.14 & 0.64 & 0.24 & 0.23 \\ 
+  $\alpha_{14}=0$ & 0.72 & 0.18 & 0.15 & 0.61 & 0.16 & 0.14 & 0.67 & 0.24 & 0.21 \\ 
+  $\alpha_{15}=0$ & 0.78 & 0.16 & 0.12 & 0.60 & 0.17 & 0.15 & 0.69 & 0.22 & 0.18 \\ 
+  $\alpha_{16}=0$ & 0.72 & 0.15 & 0.12 & 0.71 & 0.21 & 0.19 & 0.67 & 0.21 & 0.17 \\ 
+  $\alpha_{17}=0$ & 0.78 & 0.28 & 0.27 & 0.66 & 0.17 & 0.15 & 0.75 & 0.25 & 0.22 \\ 
+  $\alpha_{18}=0$ & 0.83 & 0.22 & 0.20 & 0.60 & 0.16 & 0.13 & 0.62 & 0.17 & 0.15 \\ 
+  $\alpha_{19}=0$ & 0.71 & 0.19 & 0.16 & 0.50 & 0.13 & 0.11 & 0.71 & 0.26 & 0.25 \\ 
+  $\alpha_{20}=0$ & 0.50 & 0.13 & 0.10 & 0.49 & 0.15 & 0.13 & 0.58 & 0.24 & 0.21 \\ 
+  $\beta_{1}=0$ & 0.33 & 0.10 & 0.09 & 0.32 & 0.12 & 0.11 & 0.35 & 0.15 & 0.14 \\ 
+  $\beta_{2}=-8$ & 0.59 & 0.30 & 0.29 & 0.53 & 0.35 & 0.34 & 0.64 & 0.37 & 0.36 \\ 
+  $\beta_{3}=0$ & 0.37 & 0.12 & 0.12 & 0.37 & 0.17 & 0.17 & 0.33 & 0.13 & 0.12 \\ 
+  $\beta_{4}=6$ & 0.68 & 0.39 & 0.38 & 0.54 & 0.35 & 0.35 & 0.58 & 0.35 & 0.34 \\ 
+  $\beta_{5}=0$ & 0.33 & 0.08 & 0.08 & 0.34 & 0.11 & 0.10 & 0.28 & 0.08 & 0.07 \\ 
+  $\beta_{6}=0$ & 0.33 & 0.08 & 0.08 & 0.30 & 0.09 & 0.08 & 0.34 & 0.13 & 0.13 \\ 
+  $\beta_{7}=0$ & 0.29 & 0.09 & 0.08 & 0.28 & 0.09 & 0.08 & 0.30 & 0.12 & 0.12 \\ 
+  $\beta_{8}=0$ & 0.28 & 0.07 & 0.07 & 0.31 & 0.09 & 0.08 & 0.26 & 0.08 & 0.07 \\ 
+  $\beta_{9}=0$ & 0.33 & 0.07 & 0.06 & 0.30 & 0.09 & 0.08 & 0.30 & 0.10 & 0.09 \\ 
+  $\beta_{10}=0$ & 0.31 & 0.06 & 0.05 & 0.27 & 0.09 & 0.07 & 0.34 & 0.11 & 0.10 \\ 
+  $\beta_{11}=0$ & 0.25 & 0.09 & 0.08 & 0.32 & 0.10 & 0.09 & 0.28 & 0.09 & 0.08 \\ 
+  $\beta_{12}=0$ & 0.30 & 0.07 & 0.06 & 0.35 & 0.17 & 0.16 & 0.28 & 0.09 & 0.07 \\ 
+  $\beta_{13}=0$ & 0.31 & 0.10 & 0.09 & 0.32 & 0.10 & 0.09 & 0.28 & 0.07 & 0.05 \\ 
+  $\beta_{14}=0$ & 0.33 & 0.08 & 0.07 & 0.33 & 0.10 & 0.08 & 0.29 & 0.09 & 0.07 \\ 
+  $\beta_{15}=0$ & 0.28 & 0.06 & 0.05 & 0.33 & 0.12 & 0.11 & 0.29 & 0.11 & 0.10 \\ 
+  $\beta_{16}=0$ & 0.29 & 0.08 & 0.07 & 0.30 & 0.09 & 0.07 & 0.27 & 0.09 & 0.08 \\ 
+  $\beta_{17}=0$ & 0.29 & 0.07 & 0.06 & 0.30 & 0.10 & 0.09 & 0.31 & 0.10 & 0.09 \\ 
+  $\beta_{18}=0$ & 0.31 & 0.07 & 0.05 & 0.27 & 0.09 & 0.07 & 0.29 & 0.09 & 0.08 \\ 
+  $\beta_{19}=0$ & 0.34 & 0.06 & 0.05 & 0.30 & 0.09 & 0.08 & 0.27 & 0.09 & 0.08 \\ 
+  $\beta_{20}=0$ & 0.29 & 0.07 & 0.05 & 0.25 & 0.09 & 0.07 & 0.24 & 0.08 & 0.07 \\ 
+\hline
+\end{tabular}
+\label{tab:rmseP20b}
+\end{table}
+
+
+\subsection{Comparing Methods on Overall Accuracy}
+For each replication $r$ and choice of $P$, the resulting vector of posterior medians $\hat{\bm{\theta}}^{(r)}_{0.5}=[\hat{\alpha}^{(r)}_{1,0.5},\cdots,\hat{\alpha}^{(r)}_{P,0.5},\hat{\beta}^{(r)}_{1,0.5},\cdots,\hat{\beta}^{(r)}_{P,0.5}]'$ acts as a point estimate of the unknown parameter vector $\bm{\theta}=[\alpha_1,\cdots,\alpha_P,\beta_1,\cdots,\beta_P]'$. In Section \ref{sec:paramcomp}, we quantified the error between $\hat{\bm{\theta}}^{(r)}_{0.5}$ and $\bm{\theta}$ separately for each parameter using RMSE. Along with $\hat{\bm{\theta}}^{(r)}_{0.5}$, Bayesian $80\%$ credible regions for $\bm{\theta}$ constructed from $$\hat{\bm{\theta}}^{(r)}_{0.1}=[\hat{\alpha}^{(r)}_{1,0.1},\cdots,\hat{\alpha}^{(r)}_{P,0.1},\hat{\beta}^{(r)}_{1,0.1},\cdots,\hat{\beta}^{(r)}_{P,0.1}]' \textrm{  and }$$ $$\bm{\hat{\theta}}^{(r)}_{0.9}=[\hat{\alpha}^{(r)}_{1,0.9},\cdots,\hat{\alpha}^{(r)}_{P,0.9},\hat{\beta}^{(r)}_{1,0.9},\cdots,\hat{\beta}^{(r)}_{P,0.9}]'$$ quantify the posterior uncertainty regarding the unknown lag weights. 
+
+Using these $80\%$ bounds per replication, we observe the proportion of credible regions containing the true parameter. Denoting this proportion $E_1^{(r)}$, the associated formula is seen in Equation \ref{eq:E1r} where the indicator function $\mathbbm{1}_{\{L< x <U\}}(x)=1$ if $L<x<U$ and $0$ otherwise.
+\begin{equation}
+	\label{eq:E1r}
+	\begin{split}
+	E^{(r)}_1&=\frac{1}{2P}\Bigg[\sum\limits_{j=1}^P \mathbbm{1}_{\{ \hat{\alpha}^{(r)}_{j,0.1}<\alpha_j<\hat{\alpha}^{(r)}_{j,0.9}  \}} (\alpha_j) + \sum\limits_{k=1}^P \mathbbm{1}_{\{ \hat{\beta}^{(r)}_{k,0.1}<\beta_k<\hat{\beta}^{(r)}_{k,0.9}  \}} (\beta_k)\Bigg]\\
+	\end{split}
+\end{equation}
+
+The number of relevant lag weights is always $4$, but the number of irrelevant lag weights depends on $P$. Still using the $80\%$ credible regions, we calculate the proportion of relevant parameters contained in their corresponding intervals ($E_2^{(r)}$) and the proportion of irrelevant parameters (truly zero) contained in their corresponding intervals ($E_3^{(r)}$). Formulations for $E_2^{(r)}$ and $E_3^{(r)}$ are defined in Equation \ref{eq:E2r}. 
+\begin{equation}
+\label{eq:E2r}
+	\begin{split}
+	E^{(r)}_2&=\frac{1}{4}\Bigg[\sum\limits_{j=1}^P \mathbbm{1}_{\{\alpha_j\neq 0 \cap \hat{\alpha}^{(r)}_{j,0.1}<\alpha_j<\hat{\alpha}^{(r)}_{j,0.9}  \}} (\alpha_j) + \sum\limits_{k=1}^P \mathbbm{1}_{\{ \beta_k\neq 0 \cap \hat{\beta}^{(r)}_{k,0.1}<\beta_k<\hat{\beta}^{(r)}_{k,0.9}  \}} (\beta_k)\Bigg]\\
+	E^{(r)}_3&=\frac{\sum\limits_{j=1}^P \mathbbm{1}_{\{\alpha_j= 0 \cap \hat{\alpha}^{(r)}_{j,0.1}<\alpha_j<\hat{\alpha}^{(r)}_{j,0.9}  \}} (\alpha_j) + \sum\limits_{k=1}^P \mathbbm{1}_{\beta_k= 0 \cap\{ \hat{\beta}^{(r)}_{k,0.1}<\beta_k<\hat{\beta}^{(r)}_{k,0.9}  \}} (\beta_k)}{2P-4}\\
+	\end{split}
+\end{equation}
+
+Next, to evaluate the overall difference between the point estimate $\hat{\bm{\theta}}_{0.5}$ and the true $\bm{\theta}$, we consider the geometric distance measure ($D^{(r)}$) in Equation \ref{eq:Dr}. This measure allows us to assess the inaccuracy in our point estimate across all lag weights in high dimension $\mathbb{R}^{2P}$. 
+\begin{equation}
+\label{eq:Dr}
+	\begin{split}
+	D^{(r)}&=\sqrt{\sum\limits_{j=1}^P (\alpha_j-\hat{\alpha}^{(r)}_{j,0.5})^2+\sum\limits_{k=1}^P (\beta_k-\hat{\beta}^{(r)}_{k,0.5})^2}\\
+	\end{split}
+\end{equation}
+
+Table \ref{tab:errorcomp} reports means and standard deviations of $E^{(r)}_1$, $E^{(r)}_2$, $E^{(r)}_3$, and $D^{(r)}$ across the 100 replications. Under all circumstances, horseshoe priors not only produce better credible regions, but they also lead to better posterior point estimates. In the comparison of BHS to $\textrm{BHS}^+$, the horseshoe+ hierarchy  results in larger $E_1$, $E_2$, and $E_3$, and lower $D$ across all scenarios. 
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{Overall Measures of Error: Mean (SD) Reported from 100 Replications}
+\begin{tabular}{ccc|ccc|ccc}
+  \hline
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+  & & & & \multicolumn{4}{c}{Multicollinearity Control: $(\phi_A,\phi_B)$} &  \\
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+   &  & & \multicolumn{3}{c}{$\underline{(0.9 ,-0.9)} $} & \multicolumn{3}{c}{$\underline{(0.5 ,-0.5)} $}   \\
+ \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+ $P$ & $T$ & Error & BLASSO & BHS & BHS+ & BLASSO & BHS & BHS+ \\ 
+  \hline
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+  \multirow{8}{*}{5} & \multirow{4}{*}{50} & $E_1$ & 0.84 (0.14) & 0.9 (0.1) & 0.92 (0.1) & 0.83 (0.14) & 0.89 (0.1) & 0.92 (0.08) \\ 
+  & & $E_2$ & 0.83 (0.19) & 0.83 (0.2) & 0.82 (0.22) & 0.8 (0.21) & 0.82 (0.18) & 0.84 (0.17) \\ 
+  & & $E_3$ & 0.84 (0.17) & 0.95 (0.09) & 0.98 (0.06) & 0.86 (0.14) & 0.94 (0.1) & 0.98 (0.06) \\ 
+  & & $D$ & 3 (1.03) & 2.33 (0.9) & 2.05 (0.87) & 2.83 (1) & 2.3 (0.91) & 2.05 (0.88) \\ 
+  & \multirow{4}{*}{200} & $E_1$ & 0.8 (0.16) & 0.89 (0.12) & 0.92 (0.1) & 0.82 (0.15) & 0.89 (0.12) & 0.92 (0.1) \\ 
+  & & $E_2$ & 0.79 (0.21) & 0.83 (0.2) & 0.83 (0.21) & 0.8 (0.21) & 0.83 (0.21) & 0.84 (0.2) \\ 
+  & & $E_3$ & 0.81 (0.18) & 0.93 (0.11) & 0.97 (0.07) & 0.84 (0.17) & 0.93 (0.11) & 0.97 (0.08) \\ 
+  & & $D$ & 2.02 (0.85) & 1.52 (0.72) & 1.3 (0.66) & 1.96 (0.7) & 1.52 (0.63) & 1.32 (0.61) \\ 
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+  \hline
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+  \multirow{8}{*}{10} & \multirow{4}{*}{50} & $E_1$ & 0.87 (0.1) & 0.95 (0.06) & 0.96 (0.05) & 0.87 (0.11) & 0.94 (0.06) & 0.96 (0.05) \\ 
+  & & $E_2$ & 0.8 (0.22) & 0.82 (0.21) & 0.82 (0.22) & 0.76 (0.23) & 0.82 (0.2) & 0.82 (0.21) \\ 
+  & & $E_3$ & 0.89 (0.11) & 0.98 (0.05) & 0.99 (0.03) & 0.9 (0.11) & 0.98 (0.05) & 0.99 (0.03) \\ 
+  & & $D$ & 4.36 (1.26) & 2.75 (1.08) & 2.42 (1.04) & 4.17 (1.16) & 2.75 (1) & 2.44 (0.96) \\ 
+  & \multirow{4}{*}{200} & $E_1$ & 0.85 (0.1) & 0.96 (0.05) & 0.96 (0.04) & 0.86 (0.09) & 0.95 (0.06) & 0.96 (0.05) \\ 
+  & & $E_2$ & 0.79 (0.21) & 0.83 (0.2) & 0.83 (0.2) & 0.79 (0.21) & 0.83 (0.2) & 0.82 (0.2) \\ 
+  & & $E_3$ & 0.86 (0.1) & 0.99 (0.03) & 0.99 (0.02) & 0.88 (0.09) & 0.98 (0.04) & 0.99 (0.03) \\ 
+  & & $D$ & 2.82 (0.81) & 1.5 (0.59) & 1.31 (0.56) & 2.63 (0.66) & 1.53 (0.59) & 1.37 (0.57) \\
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\  
+  \hline
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+  \multirow{8}{*}{20} & \multirow{4}{*}{50} & $E_1$ & 0.92 (0.05) & 0.97 (0.03) & 0.97 (0.03) & 0.92 (0.06) & 0.97 (0.04) & 0.97 (0.03) \\ 
+  & & $E_2$ & 0.54 (0.32) & 0.78 (0.23) & 0.78 (0.22) & 0.61 (0.3) & 0.77 (0.24) & 0.78 (0.24) \\ 
+  & & $E_3$ & 0.96 (0.04) & 0.99 (0.02) & 1 (0.01) & 0.96 (0.05) & 0.99 (0.02) & 0.99 (0.02) \\ 
+  & & $D$ & 7.84 (2.35) & 3.65 (1.73) & 3.31 (1.66) & 7.08 (1.87) & 4.16 (1.87) & 3.87 (1.91) \\ 
+  & \multirow{4}{*}{200} & $E_1$ & 0.9 (0.07) & 0.98 (0.02) & 0.98 (0.02) & 0.9 (0.06) & 0.98 (0.02) & 0.98 (0.02) \\ 
+  & & $E_2$ & 0.77 (0.2) & 0.81 (0.24) & 0.8 (0.24) & 0.74 (0.23) & 0.82 (0.21) & 0.82 (0.2) \\ 
+  & & $E_3$ & 0.91 (0.07) & 1 (0.01) & 1 (0) & 0.91 (0.07) & 1 (0.01) & 1 (0.01) \\ 
+  & & $D$ & 3.8 (0.84) & 1.42 (0.56) & 1.32 (0.54) & 3.58 (0.81) & 1.56 (0.52) & 1.45 (0.5) \\ 
+  \multicolumn{3}{c|}{} & \multicolumn{6}{c}{} \\ 
+   \hline
+\end{tabular}
+\label{tab:errorcomp}
+\end{table}
+
+
+

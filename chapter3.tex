@@ -1,7 +1,7 @@
-\chapter{SPARSE BAYESIAN LINEAR AND NONLINEAR MODELS ESTIMATED FOR SHORT-TERM FORECASTING OF TRAFFIC OCCUPANCY}
+\chapter{MULTIPLE REGIME THRESHOLD AUTOREGRESSIVE MODEL FOR SHORT-TERM FORECASTING OF TRAFFIC OCCUPANCY}
 \label{chap:traffic}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{INTRODUCTION}
+\section{Introduction}
 Rising populations in major cities add stress to advanced traffic management systems (ATMS) tasked with monitoring real-time traffic variables to proactively reduce congestion. Ever since \cite{Ahmed1979} used basic ARIMA strategies to model freeway traffic networks in large US cities -- Los Angeles, Minneapolis, and Detroit -- significant research has accumulated to appropriately utilize the massive amount of data obtained in transportation networks. The global concern has manifested through independent research in major cities in places such as the United Kingdom \citep{Queen2009,Dunne2012}, Greece \citep{Stathopoulos2003, Kamarianakis2012,Theofilatos2017}, Italy \citep{Annunziato2013,Moretti2015}, China \citep{Shang2006,Jun2007,Min2010}, and Ethiopia \citep{Hellendoorn2011}. Technological advances over this time period have not only improved the gathering of the data but also in the quick distribution of pertinent information to drivers. The speed and accuracy between the detection to the correction relies on efficient modeling and accurate short-term forecasting of important traffic characteristics. 
 
 Three traffic variables have been used to quantify traffic congestion per unit of time: flow (volume per time), speed (distance per time), and occupancy (percent of time occupied) \cite{Hall1992}. \cite{Smith1997} provide insight into the state of traffic modeling 20 years ago while \cite{Vlahogianni2014} do an excellent job summarizing recent advancements in short-term traffic forecasting by posing 10 interesting challenges for future researchers. The scarcity of forecast procedures for traffic occupancy may stem from the instability acknowledged in \cite{Levin1980}. Traffic occupancy, the percent of time a detection zone is occupied, has been described as ``quality assessment measure'' as it quantifies how well traffic is moving through a network \citep{Klein1996}.  We comprehensively present univariate approaches for modeling traffic occupancy with the aim of evaluating forecasts at multiple horizons. The next section describes the traffic occupancy data from Athens, Greece used as an empirical example for the aforementioned approaches.
@@ -19,7 +19,7 @@ Section 5  identifies the metrics used to compare all final models. Then, Sectio
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{DATA}
+\section{Data}
 Real-time traffic data are obtained from the major Athen's arterial, Alexandras Avenue, along the westbound direction. Every 90 seconds in April 2000, traffic occupancy is captured from 3 loop detectors identified as $A$,$B$, and $C$ from west to east.  The National Technical University of Athens is credited for the gathering of this data. The 2013 Traffic Research Board's (TRB) Annual Meeting Workshop used a larger ecompassing dataset in their TRANSportation Data FORecasting Competition (TRANSFOR). This competition was organized by the Aritificial Intelligence and Advanced Computing Applications Committee.  Many of the inherent characteristics in this dataset make short-term forecasting quite challenging. The winning methodology applied adaptive lasso to high-dimensional nonlinear space-time models \citep{Kamarianakis2012}.   Figure \ref{fig:trafficdatamap} was created using Google Maps to provide a visual depiction of this small network.
 
 \begin{figure}[!h]
@@ -45,7 +45,7 @@ Define random variable $O_{L,t}$ as the traffic occupancy for location $L \in\{A
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{MODELS}
+\section{Models}
 \label{sec:models}
 For each day of the week $D\in\{M,T,W,Th,F\}$ and forecasting horizon $h \in \{1,3,5\}$ , we aim to fit and validate $(D,h)$-specific models to obtain forecast $\widehat{O}_{B,t}=E[O_{B,t}|\mathcal{I}_t]$ where $\mathcal{I}_t=\{o_{A,k},o_{B,k},o_{C,k}|k\in\{t-h,t-h-1,\cdots,t-h-P+1\}$.  The chosen horizons  $h \in \{1,3,5\}$ correspond to 3-minute, 9-minute, and 15-minute forecasts. The additional parameter $P\in\mathbb{N}$ represents the maximum number of lags considered across locations A,B, and C. To control the parameter dimensionality, we fix $P=7$ corresponding to 21 minutes of known information across the traffic network. 
 
@@ -53,16 +53,16 @@ Acknowledging spatio-temporal dependencies downstream and upstream aids in model
 
 Using function $\phi(x):(0,1)\to\mathbb{R}$ such that $\phi(x)=\log [x/(1-x)]$, we define a new logit transformed variable $Y_{L,t}=\phi(O_{L,t})$. The true variable occupancy resides on the more inclusive $[0,1]$ interval. Values at the boundaries are extremely rare after 3-min temporal aggregation. Recoding $0$ with $0.0001$ and $1$ with $0.9999$ is a nonevasive technique to handle traffic occupancy prior to transformation. If boundary values were more prevalent or provided evidence of important latent effects, we could operate our modeling under a $[0,1]$-inflated distribution. All time series models are defined using the new variables $Y_{A,t}$, $Y_{B,t}$, and $Y_{C,t}$, an approach used for proportional time series since \cite{Wallis1987}. 
 
-\subsection{BASELINE MODELS}
+\subsection{Baseline Models}
 
-\subsubsection{HORIZON SPECIFIC RANDOM WALKS ($\mathcal{W}(D,h)$)}
+\subsubsection{Horizon Specific Random Walks ($\mathcal{W}(D,h)$)}
 The most naive method to obtain an $h$-step ahead forecast $\widehat{Y}_{B,t}$ is with the last known observation $Y_{B,t-h}$. The $h$-specific random walk model in Equation \ref{eq:rwh} does not require any estimation. If a random walk efficiently forecasts traffic occupancy, more complicated modeling schemes become inappropriate for an ATMS striving for urgency.
 \begin{equation}
 \label{eq:rwh}
 Y_{B,t}=Y_{B,t-h}+\epsilon_t
 \end{equation}
 
-\subsubsection{HARMONIC SEASONAL PROFILE ($\mathcal{S}_L(D)$)}
+\subsubsection{Harmonic Seasonal Profile ($\mathcal{S}_L(D)$)}
 Seasonal models allow us to understand the long-run relationship of a variable over time through repetitive cycles. It is common practice in time series analysis to deseasonalize data prior to model buiding through smoothing or seasonal differencing. In many studies, seasonal autoregressive integrated moving average models (SARIMA) have been used to analyze traffic characteristics \citep{Williams2003, Ghosh2005, Zhang2011}. As detailed in \cite{Kumar2015}, these models require large databases of historical data to capture seasonal phenomenon. Similar to \cite{Kumar2015}, we are operating under 3 day period for model training. From a similar dataset, \cite{Kamarianakis2010} used a smoothing spline with 150 degrees of freedom to magnify weekly seasonal patterns and identify structural changes. Smoothing approaches can lead to simple models that can forecast at all horizons.
 
 We expose the daily periodic signal using a harmonic regression model. Harmonic regression estimates a periodic signal from a linear regression over a Fourier basis \citep{Metcalfe2009}. For 3-min data, the seasonal period has a length of 480 discrete measures. Using harmonic regression, we estimate seasonal profiles of $Y_{L,t}$ at all three locations $L \in \{A,B,C\}$.  As expressed in Equation \ref{eq:seas}, we consider a harmonic seasonal model containing the first $H$ terms of the Fourier series.  This model is not considered a baseline model for its simplicity in estimation but for its simplicity in multistep forecasting at all horizons. Notate $\mathcal{S}_L(D)$ as the baseline seasonal model for $Y_{L,t}$. Since forecasts are obtained for location $B$, we mainly discuss model comparisons to seasonal baseline model $\mathcal{S}_B(D)$.
@@ -72,17 +72,17 @@ We expose the daily periodic signal using a harmonic regression model. Harmonic 
 Y_{L,t}=\mu_{L,t}+\sum\limits_{t=1}^{S} \Big[\alpha_{L,t}\sin\Big(\frac{2\pi t}{480}\Big)+\beta_{L,t}\cos\Big(\frac{2\pi t}{480}\Big)\Big]+\epsilon_{L,t}
 \end{equation}
 
-\subsection{MODELS USING LOCAL AND RECENT TRAFFIC OCCUPANCIES}
+\subsection{Models Using Local and Recent Traffic Occupancies}
 Define $\bm{Y_{L,t-h}}=[Y_{L,t-h},Y_{L,t-h-1},\cdots,Y_{L,t-h-P+1}]'$. To forecast $Y_{B,t}$, we build models using recent information from the location of interest  $\bm{Y_{B,t-h}}$, the location downstream $\bm{Y_{A,t-h}}$, and the location upstream $\bm{Y_{C,t-h}}$ up to maximum lag order P. 
 
-\subsubsection{LINEAR MODEL ($\mathcal{L}_1(D,h)$)}
+\subsubsection{Linear Model ($\mathcal{L}_1(D,h)$)}
 Under the current setting, the most obvious model is the linear autoregressive distributed lag (ARDL) model seen in Equation \ref{eq:ardl1}. We operate under the assumption that $\epsilon_t \overset{iid}\sim N(0,\sigma^2)$ implying homoskedasticity. Historically, ARDL models have been used to explain long run relationships between time series through distributing the effect of input time series $x_t$ on output time series $y_t$ across lagged terms, even when both time series are cointegrated  \citep{Pesaran1998,Hassler2006}.
 \begin{equation}
 \label{eq:ardl1}
 Y_{B,t}=\mu+\bm{\alpha}'\bm{Y_{A,t-h}}+\bm{\beta}'\bm{Y_{B,t-h}}+\bm{\gamma}'\bm{Y_{C,t-h}}+\epsilon_t
 \end{equation}
 
-\subsubsection{NONLINEAR REGIME-SWITCHING MODEL  ($\mathcal{R}_1(D,h)$)}
+\subsubsection{Nonlinear Regime-Switching Model  ($\mathcal{R}_1(D,h)$)}
 Dynamical \citep{Queen2009} and volatility changes \citep{Vlahogianni2011} in traffic data decrease the effectiveness of basic time series models \citep{Vlahogianni2004}. Many variants of neural networks were the earliest attempts to capturing the nonlinear dynamics inherent to traffic flow data \cite{Smith1997}. Practical justification popularized neural nets, making them an industry standard technique \citep{Ledoux1997}. For a while, traffic data analysts have filtered traffic data through a prism to understand dynamics through different regimes. Given the regimes, forecasting techniques can be tailored specifically to the current traffic state\citep{Danech1991,Voort1996}. \cite{Zhu2012} defined five states of traffic flow: light, stable, increasing, congested, decreasing. \cite{Xu2012}, then later\cite{Theofilatos2017},  identified nine distinct regimes based on local traffic occupancy to understand accident likelihood.
  
 Regime-switching traffic models not only help in cluster identification\citep{Kamarianakis2010,Kamarianakis2012} but also in  regime-based forecasting\citep{Dunne2012}. Combining the self-exciting threshold autoregressive (SETAR) model of \cite{Ghaddar1981} with the linear ARDL model in Equation \ref{eq:ardl1} results in the nonlinear SETARDL model in Equation \ref{eq:setardl1}. The term ``self-exciting'' implies that regime changes are based on recent knowledge about the modeled time series. This model is characterized by abrupt transitions from an ARDL model under low occupancy to a different ARDL model under high occupancy as $Y_{B,t}$ fluctuates around threshold parameter $\delta$.  Assuming $\epsilon_{t,L} \overset{iid}\sim N(0,\sigma_L^2)$ and $\epsilon_{t,H} \overset{iid}\sim N(0,\sigma_H^2)$ permits heteroskedasticity.
@@ -97,18 +97,18 @@ Y_{B,t}=
   \end{cases}
 \end{equation}
 
-\subsection{MODELS USING DEVIATIONS FROM SEASONAL PROFILES}
+\subsection{Models Using Deviations from Seasonal Profiles}
 The previous models in Equations \ref{eq:ardl1}-\ref{eq:setardl1} ignore daily seasonality. Suppose $\widehat{Y}_{L,t}$ is the posterior expectation on location $L$ at time $t$ from the seasonal model in Equation \ref{eq:seas}. The newly defined  $\Delta_{L,t}=Y_{L,t}-\widehat{Y}_{L,t}$ is interpreted as a deviation from the seasonal profile for location $L$ at time $t$. At time $t$, the vector $\bm{\Delta_{L,t-h}}=[\Delta_{L,t-h},\Delta_{L,t-h-1},\cdots,\Delta_{L,t-h-P+1}]'$ represent the last $P$ known deviations from the seasonal profile at location $L$. The next two models attempt to find underlying short run relationships between seasonally adjusted time series at all three locations.
 
 Often, seasonal adjustment means seasonal differencing. Since weekday traffic occupancy clearly exhibits weekly patterns, harmonic regression analysis has value for understanding average behavior for a particular day. Diversions of traffic occupancy away from average behavior indicate future diversions.  Equations \ref{eq:ardl2}-\ref{eq:setardl2} are ARDL and SETARDL models applied to the deviations from seasonal profiles. For consistency, regime changes in Equation \ref{eq:setardl2} are based on $Y_{B,t-h}$. Horizon-specific forecasts of $Y_{B,t}$ from these models are easily obtained by adding the fitted seasonal component to the forecasted deviation. 
 
-\subsubsection{LINEAR MODEL ($\mathcal{L}_2(D,h)$)}
+\subsubsection{Linear Model ($\mathcal{L}_2(D,h)$)}
 \begin{equation}
 \label{eq:ardl2}
 \Delta_{B,t}=\mu+\bm{\alpha}'\bm{\Delta_{A,t-h}}+\bm{\beta}'\bm{\Delta_{B,t-h}}+\bm{\gamma}'\bm{\Delta_{C,t-h}}+\epsilon_t
 \end{equation}
 
-\subsubsection{NONLINEAR REGIME-SWITCHING MODEL ($\mathcal{R}_2(D,h)$)}
+\subsubsection{Nonlinear Regime-Switching Model ($\mathcal{R}_2(D,h)$)}
 \begin{equation}
 \label{eq:setardl2}
 \Delta_{B,t}=
@@ -126,7 +126,7 @@ Often, seasonal adjustment means seasonal differencing. Since weekday traffic oc
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{ESTIMATION, DISCRIMINATION, AND SELECTION}
+\section{Estimation, Discrimination, and Selection}
 \label{sec:bayesest}
 In Section \ref{sec:models}, we presented the following $(D,h)$-specific models: $\mathcal{W}(D,h)$, $\mathcal{S}_B(D)$, $\mathcal{L}_1(D,h)$, $\mathcal{R}_1(D,h)$, $\mathcal{L}_2(D,h)$, and $\mathcal{R}_2(D,h)$. Models $\mathcal{W}(D,h)$ and $\mathcal{S}_B(D)$ are set aside for baseline comparisons. Given day $D$ and forecasting horizon $h$, full model $\mathcal{M} \in \{L_1(D,h),R_1(D,h),L_2(D,h),R_2(D,h)\}$ is fully defined by a corresponding parameter vector $\bm{\theta}_{\mathcal{M}}\in \bm{\Theta}_\mathcal{M}$. For all $\mathcal{M}$, the dimensionality $\dim(\bm{\Theta}_\mathcal{M})$ increases with order $P$. Furthermore, the number of harmonic frequencies $S$ considered in $\mathcal{S}_B(D)$ increases the $\dim(\bm{\Theta}_\mathcal{M})$ for $\mathcal{L}_2(D,h)$ and $\mathcal{R}_2(D,h)$. Table \ref{tab:dimtheta} summarizes the size of the parameter space of each full model for fixed $S$ and $P$.
 
@@ -191,7 +191,7 @@ Besides the issues with RJMCMC, operating under the assumption that model comple
 Next, we outline a three step Bayesian procedure combining Bayesian shrinkage with projection predictive variable selection for the general nonlinear TAR($P$) model $\mathcal{M}_R$. \cite{vehtari2012,Piironen2015,Piironen2017}  illustrated the efficacy of this approach in linear Gaussian models for cross-sectional data. For this reason, we present the procedures for the nonlinear case only. The conditional linear nature of $\mathcal{M}_R$  allows us to perform regime-specific regularization and model selection. Where cross-validation was used in \cite{Piironen2015,Piironen2017}, final model selection is based on forecasting accuracy.
 
 
-\subsection{BAYESIAN SHRINKAGE ESTIMATION}
+\subsection{Bayesian Shrinkage Estimation}
 Bayesian shrinkage is characterized by continuous prior specifications expressed through scale mixture of normal distributions, dating back to\cite{Andrews1974} and \cite{West1987}.  Bayesian LASSO (BLASSO) \citep{Yuan2005,Park2008,Hans2009,Hans2010,Rajaratnam2015} applied a $double-exponential$ prior specification to mimic the $L1$-regularization of \cite{Tibshirani1994}, while the Bayesian horseshoe (BHS)  \cite{Carvalho2009,Carvalho2010} hinges on a $half-cauchy$ hierarchy.  Of the broad class of global-local shrinkage priors \citep{Polson2010}, BLASSO and BHS have become the most popular choices. As noted in \cite{Bhadra2017}, recent computational developments and modifications in BHS have led to fast sampling algorithms and better handling of high-dimensional scenarios \citep{Bhadra2016,Makalic2016b}.  Similar to the LASSO of \cite{Tibshirani1994}, the combination of parameter shrinkage and selection makes BLASSO an enticing pick. As we often see in time series modeling, high-dimensionality is usually not the problem. Typically, models can be expressed using a few lags; therefore, not many are considered. The major issue with the ARDL($P$) and SETARDL($P$) models is the inherent multicollinearity existent in the covariates. As discussed in \cite{Friedman2001,Zou2005,Mallick2013}, LASSO-type penalization typically stumbles in the presence of multicollinearity. Purposefully, we adapt BHS for initial sparse estimation of autoregressive coefficients under the full model.
 
 The full TAR($P$) model $\mathcal{M}_R$ is defined by parameter vector $\bm{\theta}_{\mathcal{M}_R}=[\bm{\alpha},\bm{\beta},\delta,\sigma_\alpha,\sigma_\beta]'$. If the threshold $\delta$ is known, $\mathcal{M}_R$ becomes a linear model conditional on $z_t$. If $z_t<\delta$, $y_t=\bm{\alpha}'\bm{y_{t-1}}+\epsilon_{\alpha,t}$, and if $z_t<\delta$, $y_t=\bm{\beta}'\bm{y_{t-1}}+\epsilon_{\beta,t}$. For future reference, we abbreviate the low-regime model $\mathcal{M}_{LR}$ and the high-regime model $\mathcal{M}_{HR}$.
@@ -210,7 +210,7 @@ Bayesian variable shrinkage and selection specifically targets the non-intercept
 
 Posterior sampling under these prior specifications is easily conducted using popular Bayesian software packages. The smooth integration of JAGS \cite{Plummer2003} with R makes JAGS our favored option for MCMC. JAGS model code for Bayesian horseshoe estimation of both linear and nonlinear models is provided in the appendix. To capture convergence, multiple chains with different starting values are constantly assessed. Posterior samples prior to convergence are dropped and effective sample size is measured to ensure posterior quantiles can be adequately assessed.
 
-\subsection{KULLBACK-LEIBLER DISCRIMINATION}
+\subsection{Kullback-Leibler Discrimination}
 The joint posterior distribution $f(\bm{\theta}_{\mathcal{M}_R}|\mathcal{M}_R,\mathcal{I})$ obtained through BHS priors is  a good starting point. Although BHS priors separately invoked on $\bm{\alpha}$ and $\bm{\beta}$ lead to regime-specific sparse estimation, it is unlikely posterior means $E[\bm{\alpha}|\mathcal{M}_R,\mathcal{I}]$ and $E[\bm{\beta}|\mathcal{M}_R,\mathcal{I}]$ contain true $0$ values.   Assuming the data follows some TAR process, the model space containing all submodels of $\mathcal{M}_R$ contains $2^{2(P+1)}$ different alternatives. Naively exploring this model space to find the best reduced model $\mathcal{M}^*_R$ is an inefficient approach.
 
 The Kullback-Leibler (KL) divergence is an asymmetric measure of distance between two probability distributions\citep{Kullback1951}. \cite{burnham2003} provides a nice discussion connecting KL divergence to subset model selection based on Aikaike information criteria (AIC). \cite{Goutis1998} and \cite{Dupuis2003} use KL divergence to compare a proposed submodel to a larger reference model based on conditional likelhoods. If minor discrepancy is detected between the reference model and a particular submodel, the simpler submodel can be considered. The proposed method derives a posterior distribution for a submodel through projection from the information in the sampled posterior distribution for the larger reference model. \cite{Piironen2017} provided analytical solutions to obtain the projected parameters and evaluate the resulting KL divergence for Gaussian linear models. For $\mathcal{M}_R$, we treat $\mathcal{M}_{LR}$ and $\mathcal{M}_{HR}$ as reference models for the corresponding regimes. Both $\mathcal{M}_{LR}$ and $\mathcal{M}_{HR}$ are conditionally linear Gaussian models; therefore we extend the methods of \cite{Piironen2017} to the general TAR($P$). 
@@ -250,7 +250,7 @@ Using these concepts, we avoid surveying the entire  $2^{2(P+1)}$ model space by
 
 For each level of flexibility $p \in \{1,2,\cdots,P\}$, we find the best regime-specific submodels $\mathcal{M}^p_{LR}$ and $\mathcal{M}^p_{HR}$. Starting with $p=1$, we consider all two dimensional submodels including the intercept and one lagged term. $\mathcal{M}^1_{LR}$ and $\mathcal{M}^1_{HR}$ are chosen based on minimized discrepancy when compared to the full model. Then for $p=2$, all three dimensional regime-specific submodels nesting $\mathcal{M}^1_{LR}$ and $\mathcal{M}^1_{HR}$ are compared to the corresponding full models to find $\mathcal{M}^2_{LR}$ and $\mathcal{M}^2_{HR}$. Continuing this process results in $P+1$ considerations for $\mathcal{M}_{LR}$ and $P+1$ considerations for $\mathcal{M}_{HR}$. 
 
-\subsection{FINAL MODEL SELECTION}
+\subsection{Final Model Selection}
 The final reduced models $\mathcal{M}^*_{LR}$ and $\mathcal{M}^*_{HR}$ are chosen from the $2P+2$ options identified through the forward stepwise algorithm. \cite{Dupuis2003} utilized the additive properties of KL divergence for nested models to choose the best model based on relative explanatory power defined in Equation \ref{eq:rep}. As $p$ goes from $0$ to $P$, RelE strictly increases from 0 to 1. As noted by \cite{Dupuis2003} and \cite{Piironen2017}, $\mathcal{M}^*_{LR}$ and $\mathcal{M}^*_{HR}$ can be the smallest submodels that achieve a $RelE > E^*$, where $E^*$ is a predetermined threshold. It is recommended $E^*$ be large i.e. $>90\%$.
 \begin{equation}
 \label{eq:rep}
@@ -275,7 +275,7 @@ RelE(\mathcal{M}^p)&=1-\frac{D(\mathcal{M}||\mathcal{M}^p)}{D(\mathcal{M}||\math
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{FORECASTING EVALUATION}
+\section{Forecasting Evaluation}
 Threshold autoregressive models for traffic occupancy are obvious, considering the structural differences between free flow and congested states. Although practice invites these considerations, it is not necessary that TAR models achieve optimal forecasting accuracy over linear models. Even under nonlinear simulated data, \cite{Davies1988} and \cite{Pemberton1989} illustrated that linear models can occasionally achieve equivalent or better forecasting accuracy than nonlinear competitors \citep{Guo1997,Stock1998a,Dacco1999}.
 
 Given arbitrary full model  $\mathcal{M}$, the methods in Section \ref{sec:bayesest} lead us to final submodel $\mathcal{M}^*$. Final selection of $\mathcal{M}^*$ was indicative of optimal forecasting performance at a specific horizon $h$. By design, optimal forecasts and credible regions for $y_{B,t+h}$ are based on the simulated predictive posterior distribution $f_Y(y_{B,t+h}|\mathcal{I})$ defined on $\mathbb{R}$. The inverse logit function $\phi^{-1}(x):\mathbb{R}\to (0,1)$ where $\phi^{-1}(x)=\exp(x)/[1+\exp(x)]$ provides a path from $f_Y(y_{B,t+h}|\mathcal{I})$ to $f_O(o_{B,t+h}|\mathcal{I})$. Let $\widehat{Y}_{B,t+h}=E[Y_{B,t+h}|\mathcal{I}]$. Because $\phi(x)$ is a nonlinear transformation, $\widehat{O}_{B,t+h}=E[O_{B,t+h}|\mathcal{I}] \neq \phi^{-1}(\widehat{Y}_{B,t+h})$. The natural bias and correction method introduced from nonlinear transformations (i.e. general log function) is discussed in \cite{Metcalfe2009}. For $s \in \{1,2,\cdots, S\}$, we simulate $f_O(o_{B,t+h}|\mathcal{I})$ using posterior draws $y^{(s)}_{B,t+h}$ from $f_Y(y_{B,t+h}|\mathcal{I})$. Figure \ref{fig:posttrans} graphically portrays this process.

@@ -1,11 +1,11 @@
-#######################################################################################
+###################################################################################
 #Paper:"BAYESIAN SHRINKAGE ESTIMATES OF LOGISTIC SMOOTH TRANSITION AUTOREGRESSIONS"
 #Authors:Mario Giacomazzo (Arizona State University) 
 #        Yiannis Kamarianakis (Arizona State University)
 #Year:2017
 #
 #Comments: This code requires a working installation of JAGS by Martyn Plummer
-#######################################################################################
+###################################################################################
 
 ####################
 #Required R Packages
@@ -50,7 +50,8 @@ generate.func<-function(x){
   e=rnorm((N+burn),0,sigma) #Create iid Errors
   for(i in 4:(N+burn)){
     wt=1/(1+exp(-slope*(y[i-delay]-thresh))) 
-    y[i]=(a0+a1*y[i-1]+a2*y[i-2]+a3*y[i-3])*(1-wt)+(b0+b1*y[i-1]+b2*y[i-2]+b3*y[i-3])*wt+e[i]
+    y[i]=(a0+a1*y[i-1]+a2*y[i-2]+a3*y[i-3])*(1-wt)+
+      (b0+b1*y[i-1]+b2*y[i-2]+b3*y[i-3])*wt+e[i]
   }
   return(y[-(1:burn)]) #Output Time Series After Beginning Burn-in Period
 }
@@ -99,14 +100,17 @@ datafunction<-function(i){
               #Matrix Containing All Delays Considered for Threshold Variable
               X2=X[,-1],
               #Hyperparameter for Dirichlet Distribution
-              #(length must equal number of columns in X2; elements must sum to 1)
+              #(length must equal number of columns in X2;
+              #   elements must sum to 1)
               prop.prior=c(.25,.25,.25,.25))) 
                                               
 }
 
 #JAGS Model Represented as a String 
-#(Horseshoe Priors are Used for Shrinkage and Dirichlet Used for Threshold Variable)
-#Notice: We do not Monitor Tuning Parameters and We Monitor the Raw Unscaled Slope
+#(Horseshoe Priors are Used for Shrinkage and
+#Dirichlet Used for Threshold Variable)
+#Notice: We do not Monitor Tuning Parameters and
+#We Monitor the Raw Unscaled Slope
 MOD<-"model{
     #Likelihood Function (Starts at p+1 Which in Our Case is 5)
     for(i in 5:N){
@@ -187,8 +191,8 @@ hs.out=foreach(v=1:S,.packages=c("runjags","parallel")) %dopar%{
   cl<-makeCluster(3)
   #Initialize JAGS Model for Specific Replication Using 3 Chains
   model2<-run.jags(MOD,data=datafunction(v),n.chains=3,inits=initsfunction,
-            mutate=list(prec2sd, 'tau'),adapt=5000,burnin=10000,sample=1000,thin=10,
-            method="rjparallel",method.options=list(cl=cl))
+            mutate=list(prec2sd, 'tau'),adapt=5000,burnin=10000,sample=1000,
+            thin=10,method="rjparallel",method.options=list(cl=cl))
   #Obtain Initial Maximum PSRF Convergence Statistic 
   #for Chain Convergence Across All Parameters
   max.psrf=max(summary(model2)[,"psrf"],na.rm=T)
@@ -201,7 +205,8 @@ hs.out=foreach(v=1:S,.packages=c("runjags","parallel")) %dopar%{
   #(Could Take a Long Time)
   #The Maximum Number of Updates is currently 20 but may be reduced
   while((max.psrf>1.05|min.ess<150)&i<20){
-    model2<-extend.jags(model2,adapt=1000,burnin=0,sample=1000*i,silent.jags=T)
+    model2<-extend.jags(model2,adapt=1000,burnin=0,
+                        sample=1000*i,silent.jags=T)
     max.psrf=max(summary(model2)[,"psrf"],na.rm=T)
     min.ess=min(summary(model2)[,"SSeff"],na.rm=T)
     i=i+1
@@ -386,9 +391,9 @@ initsfunction1<-function(chain){
   .RNG.seed<-c(1,2,3)[chain]
   .RNG.name<-c("base::Super-Duper","base::Wichmann-Hill","base::Super-Duper")
   return(list(tau=tau,preslope=preslope,thresh=thresh,
-              alpha=alpha,beta=beta,alphatau=alphatau,betatau=betatau,
-              lambda1.squared=lambda1.squared,lambda2.squared=lambda2.squared,
-              .RNG.seed=.RNG.seed,.RNG.name=.RNG.name))
+            alpha=alpha,beta=beta,alphatau=alphatau,betatau=betatau,
+            lambda1.squared=lambda1.squared,lambda2.squared=lambda2.squared,
+            .RNG.seed=.RNG.seed,.RNG.name=.RNG.name))
 }
 
 #Bayesian Horseshoe Model
@@ -440,8 +445,8 @@ initsfunction2<-function(chain){
   .RNG.seed<-c(1,2,3)[chain]
   .RNG.name<-c("base::Super-Duper","base::Wichmann-Hill","base::Super-Duper")
   return(list(tau=tau,preslope=preslope,thresh=thresh,
-              alpha=alpha,beta=beta,local1=local1,local2=local2,global=global,
-              .RNG.seed=.RNG.seed,.RNG.name=.RNG.name))
+            alpha=alpha,beta=beta,local1=local1,local2=local2,global=global,
+            .RNG.seed=.RNG.seed,.RNG.name=.RNG.name))
 }
 
 #Loop Through the Two Different Models
@@ -462,7 +467,8 @@ sunspot.out=foreach(v=1:2,.packages=c("runjags","parallel")) %dopar%{
   i=1
   
   while((max.psrf>1.05|min.ess<150)&i<20){
-    model2<-extend.jags(model2,adapt=1000,burnin=0,sample=1000*i,silent.jags=T)
+    model2<-extend.jags(model2,adapt=1000,burnin=0,sample=1000*i,
+                        silent.jags=T)
     max.psrf=max(summary(model2)[,"psrf"])
     min.ess=min(summary(model2)[,"SSeff"])
     i=i+1
@@ -498,25 +504,31 @@ SUNSPOT.ESTIMATES<-matrix(NA,ncol=2,nrow=26)
 for(k in 1:2){
   #For Bayesian Lasso
   if (k==1){
-    SUNSPOT.ESTIMATES[1:25,k]=summary(sunspot.out[[k]]$model2)[c(4:26,2,3),"Median"] 
+    SUNSPOT.ESTIMATES[1:25,k]=
+            summary(sunspot.out[[k]]$model2)[c(4:26,2,3),"Median"] 
   }
   #For Bayesian Horseshoe
   if( k==2){
-    SUNSPOT.ESTIMATES[1:25,k]=summary(sunspot.out[[k]]$model2)[c(4:26,2,3),"Mean"] 
+    SUNSPOT.ESTIMATES[1:25,k]=
+            summary(sunspot.out[[k]]$model2)[c(4:26,2,3),"Mean"] 
   }
   SUNSPOT.ESTIMATES[26,k]=sunspot.out[[k]]$model2$sample
 }
 
-#####################################################################################
+
+
+
+#################################################################################
 #Functions Required For Recursive Forecasts 
 #Using a Rolling Window Without Reestimation
 #Using the Bootstrap Method for Nonlinear Model Forecasting
-#####################################################################################
+#################################################################################
 
 #Function Specific For Obtaining a One Step Ahed Forecast
 OneStep.func<-function(params,data,time,s=sd(Train.transform)){
   data2=c(1,data[(time-1):(time-10)])
-  pred=(data2%*%params[1:11])*(1-(1/(1+exp(-(params[24]/s)*(data2[3]-params[25])))))+ 
+  pred=(data2%*%params[1:11])*(1-
+    (1/(1+exp(-(params[24]/s)*(data2[3]-params[25])))))+ 
     (data2%*%params[12:22])*(1/(1+exp(-(params[24]/s)*(data2[3]-params[25]))))
   return(pred)
 }
@@ -524,7 +536,8 @@ OneStep.func<-function(params,data,time,s=sd(Train.transform)){
 #Function That Loops Through the Data Using OneStep.func for each time
 #Train.Data is used to obtain residuals for 
 #Bootstrapped Sampling Errors for Forecasts
-MultiStep.func<-function(params,train.data,test.data,s=sd(Train.transform),n.ahead){ 
+MultiStep.func<-function(params,train.data,test.data,
+                         s=sd(Train.transform),n.ahead){ 
   #n.ahead specifies how many time periods you would like to forecast ahead
   full.data=c(train.data,test.data,rep(NA,n.ahead))
   n.used=length(c(train.data,test.data))
@@ -576,26 +589,26 @@ Forecast.func<-function(boot,params,train.data,test.data,
   return(forecast)
 }
 
-####################################################################################
+##################################################################################
 #Obtaining Forecasts Using Bayesian Lasso 
 #for Horizons 1 to 5 on Transformed Test Data
 #Calculating RMSFE for all Horizons by Comparing Truth to Forecasts
-####################################################################################
+##################################################################################
 BLASSO.FORECASTS.12345=matrix(NA,nrow=length(Test.transform),ncol=5)
 for(j in 1:5){
   for(k in j:(length(Test.transform))){
     if((j-k)==0){
       BLASSO.FORECASTS.12345[k,j]=Forecast.func(boot=500,
-                                                params=SUNSPOT.ESTIMATES[,1],
-                                                train.data=Train.transform,
-                                                test.data=NULL,
-                                                n.ahead=j)[j]
+                                          params=SUNSPOT.ESTIMATES[,1],
+                                          train.data=Train.transform,
+                                          test.data=NULL,
+                                          n.ahead=j)[j]
     }else{
       BLASSO.FORECASTS.12345[k,j]=Forecast.func(boot=500,
-                                                params=SUNSPOT.ESTIMATES[,1],
-                                                train.data=Train.transform,
-                                                test.data=Test.transform[1:(k-j)],
-                                                n.ahead=j)[j]
+                                          params=SUNSPOT.ESTIMATES[,1],
+                                          train.data=Train.transform,
+                                          test.data=Test.transform[1:(k-j)],
+                                          n.ahead=j)[j]
     }
   }  
 } 
@@ -606,21 +619,23 @@ for(k in 1:5){
   RMSFE1[k]=sqrt(mean((Test.transform-BLASSO.FORECASTS.12345[,k])^2,na.rm=T)) 
 }
 
-#####################################################################################
+##################################################################################
 #Obtaining Forecasts Using Bayesian Horseshoe 
 #for Horizons 1 to 5 on Transformed Test Data
 #Calculating RMSFE for all Horizons by Comparing Truth to Forecasts
-#####################################################################################
+##################################################################################
 BHS.FORECASTS.12345=matrix(NA,nrow=length(Test.transform),ncol=5)
 for(j in 1:5){
   for(k in j:(length(Test.transform))){
     if((j-k)==0){
-      BHS.FORECASTS.12345[k,j]=Forecast.func(boot=500,params=SUNSPOT.ESTIMATES[,2],
+      BHS.FORECASTS.12345[k,j]=Forecast.func(boot=500,
+                                             params=SUNSPOT.ESTIMATES[,2],
                                              train.data=Train.transform,
                                              test.data=NULL,
                                              n.ahead=j)[j]
     }else{
-      BHS.FORECASTS.12345[k,j]=Forecast.func(boot=500,params=SUNSPOT.ESTIMATES[,2],
+      BHS.FORECASTS.12345[k,j]=Forecast.func(boot=500,
+                                             params=SUNSPOT.ESTIMATES[,2],
                                              train.data=Train.transform,
                                              test.data=Test.transform[1:(k-j)],
                                              n.ahead=j)[j]
