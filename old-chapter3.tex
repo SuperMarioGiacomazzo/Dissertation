@@ -14,7 +14,9 @@ Traffic occupancy has been used to help forecast other traffic characteristics \
 
 Section \ref{sec:trafficest} proposes a fully Bayesian three step  procedure that automates selecting the regimes and sparse subset AR estimation within regimes. First, a fully saturated TAR model is estimated using Bayesian regularization implemented through a modified horseshoe prior \citep{Carvalho2009,Carvalho2010,Bhadra2016}. Next, the Kullback-Leibler (KL) divergence \citep{Kullback1951} combined with a forward selection algorithm identifies the regimes through comparing posterior predictive distributions of the linear AR model to multiple regime TAR models. Finally, given a restricted set of regimes, the same procedure is repeated to select the relevant dynamics within each of the regimes. The result is a parsimonious TAR model with a posterior predictive distribution close in KL distance to the posterior predictive distribution from the full model.
 
-Section \ref{sec:trafficresults} provides empirical results of out-of-sample forecasting results from final TAR models with potentially many regimes. Baseline periodic seasonal regressions are used to produce baseline forecasts. Models are compared using the mean absolute scaled measure of forecast accuracy (MASFE) of \cite{Hyndman2006}. By scaling forecast errors by the mean absolute error from a horizon-specific naive random walk, models can be simultaneously be compared to each other and the naive method.
+\begin{center}
+NEED MORE
+\end{center}
 
 
 
@@ -140,24 +142,15 @@ Seasonal models allow us to understand the long-run relationship of a variable o
 We expose the daily periodic signal using a harmonic regression model. Harmonic regression estimates a periodic signal from a linear regression over a Fourier basis \citep{Metcalfe2009}. For 3-min data, the seasonal period has a length of 480 discrete measures. Using harmonic regression, we estimate $(L,D)$-specific seasonal profiles of $\{Y_t\}$. Expressed in Equation \ref{eq:trafficseas}, we consider a harmonic seasonal model containing the first $H$ terms of the Fourier series.  This model is not considered a baseline model for its simplicity in estimation but for its simplicity in multi-step forecasting at all horizons. The error $\{\epsilon_t\}$ are assumed i.i.d. with mean 0 and unit variance.
 \begin{equation}
 \label{eq:trafficseas}
-Y_{t}=\mu+\sum\limits_{j=1}^{H} \Big[\alpha_{j}\sin\Big(\frac{2\pi tj}{480}\Big)+\beta_{j}\cos\Big(\frac{2\pi tj}{480}\Big)\Big]+\sigma\epsilon_{t}
+Y_{t}=\mu_{t}+\sum\limits_{t=1}^{H} \Big[\alpha_{t}\sin\Big(\frac{2\pi t}{480}\Big)+\beta_{t}\cos\Big(\frac{2\pi t}{480}\Big)\Big]+\sigma\epsilon_{t}
 \end{equation}
-
-Fitting the model in Equation \ref{eq:trafficseas} is not difficult since it can also be represented as a high dimensional linear regression model like
-\begin{equation}
-\label{eq:hdslinmod}
-\begin{split}
-\bm{y}_F &=\bm{X}_F\bm{\theta}_F+\bm{\epsilon}_F \\
-\end{split}
-\end{equation}
-where $\bm{y}_F=[y_1,y_2,\cdots,y_T]'$, $\bm{\epsilon}_F=[y_1,y_2,\cdots,\epsilon_T]'$, and $\bm{\theta}_F=[\mu,\alpha_1,\cdots,\alpha_H,\beta_1,\cdots,\beta_H]'$. The model matrix  $\bm{X}_F=[\bm{1},\bm{SIN},\bm{COS}]$ where $\bm{1}$ is a $T\times 1$ vector of $1$s, $\bm{SIN}$ is a $T\times H$ matrix containing the Fourier sine terms, and $\bm{COS}$ is a $T\times H$ matrix containing the Fourier cosine terms.
 
 \subsection{Special Considerations for Traffic Modeling}
 The linear matrix form of TAR in Equation \ref{eq:hdlinmod} arises from restricting the set of possible thresholds  $\bm{\delta}$ to a finite set of quantiles based on the sampled transition variable. The high dimensional regression model in \cite{Chan2015,Chan2017} represents a fully saturated TAR model where every realization in the series $\{y_t\}_{t=1}^T$ resides in a different regime. In classic Bayesian handling of TAR and the related smooth transition autoregressive model (STAR), the number of regimes, $(m+1)$, is fixed. To restrict estimation of the $m$ thresholds to the range of $Y_{t-h}$, slightly informative \textit{uniform} priors bounded by empirical quantiles $q(p_{min})$ and $q(p_{max})$ ensure that at least $(1-\min\{p_{min},1-p_{max}\})\times 100\%$ of the data is represented in the lowest and highest regime \citep{Chen1995,Chen1998,Lubrano2000,Lopes2006}. Following from literature, we select $p_{min}=0.15$ and $p_{max}=0.85$ to slightly reduce the dimensionality of $\bm{X}$.
 
-For $(L,D,h)$-specific traffic models, we restrict the maximum number of thresholds $m=50$ and the maximum autoregressive order $P=7$. The model matrix $\bm{X}_R$ of the fully saturated $51$-regime TAR$(7)$ has dimension $T^*\times 408$. The fitting period for each model contains $T=1440$ discrete time realizations of $\{Y_t\}$ leading to $T^*=1440-h-7+1 > 408$. The predetermined threshold vector $\bm{\delta}=[q(0.15),q(p_2),\cdots,q(p_{49}),q(0.85)]'$ constructed from $m$ evenly spaced percentiles ensures approximately $\frac{0.85-0.15}{50}=0.014$ of the full time series is represented in each potentially relevant regime. These modifications to the framework of \cite{Chan2015,Chan2017} are made to ensure the dimensionality of the parameter space is not unnecessarily large for practical application. Based on our approach, it is recommended to select $m$ large enough to ensure the set of quantile-based thresholds is dense to not reduce error in misspecified \textit{a priori} selection of $\bm{\delta}$.
+For $(L,D,h)$-specific traffic models, we restrict the maximum number of regimes $m=50$ and the maximum autoregressive order $P=7$. The model matrix $\bm{X}_R$ of the fully saturated $50$-regime TAR$(7)$ has dimension $T^*\times 4080$. The fitting period for each model contains $T=1440$ discrete time realizations of $\{Y_t\}$ leading to $T^*=1440-h-7+1 < 4080$. The predetermined threshold vector $\bm{\delta}=[q(0.15),q(p_2),\cdots,q(p_{49}),q(0.85)]'$ constructed from $m$ evenly spaced percentiles ensures approximately $\frac{0.85-0.15}{50}=0.014$ of the full time series is represented in each potentially relevant regime. These modifications to the framework of \cite{Chan2015,Chan2017} are made to ensure the dimensionality of the parameter space is not unnecessarily large for practical application. Based on our approach, it is recommended to select $m$ large enough to ensure the set of quantile-based thresholds is dense to not reduce error in misspecified \textit{a priori} selection of $\bm{\delta}$.
 
-For $(L,D)$-specific seasonal models, the number of Fourier sine/cosine pairs $H$ must be less than half the period. Regularized estimation of these models using adaptive LASSO \citep{Zou2006} indicated that the largest significant harmonic of the model in Equation \ref{eq:trafficseas} across locations and days was for $j=139$. Before estimating these seasonal profiles under the Bayesian framework, we set the maximum number of harmonics $H=150$. The vector of coefficients $\bm{\theta}_F$ contains $2H+1=301<1440=T$ parameters that require estimation. To ensure weekly periodic signals are smooth, we seek sparse estimates of $\bm{\theta}_F$.
+For $(L,D)$-specific seasonal models, the number of Fourier sine/cosine pairs $H$ must be less than half the period. Regularized estimation of these models using adaptive LASSO \citep{Zou2006} indicated that the largest significant harmonic of the model in Equation \ref{eq:trafficseas} across locations and days was for $t=139$. Before estimating these seasonal profiles under the Bayesian framework, we set the maximum number of harmonics $H=150$.
 
 
 
@@ -198,7 +191,16 @@ We start by assuming $\{\epsilon_{\pi(t)+h}\} \sim \textrm{ i.i.d. }\mathcal{N}(
 \label{eq:normalmod}
 \bm{y}_R|\bm{X}_R,\bm{\Theta}\sim \mathcal{N}_T(\bm{X}_R\bm{\theta}_R,\sigma^2\bm{I})
 \end{equation}
-where $\mathcal{N}_T$ is a $T$-dimensional \textit{Multivariate normal} distribution and $\bm{I}$ is a $T\times T$ identity matrix. The \textit{Guassian} error specification for all $(L,D,h)$-specific TAR models and $(L,D)$-specific seasonal harmonic profiles is used with caution. Even after aggregating to a 3-min interval, influential spikes toward $0$ and $1$ are seen. For future reference, we let TAR and SEAS denote the \textit{normal} regression models from Equations \ref{eq:hdlinmod} and \ref{eq:hdslinmod}. In both TAR and SEAS, Jefferys' prior is used for $\sigma^2$. Derivation of the \textit{inverse-gamma} full conditional distribution for $\sigma^2$ under both linear models can be found in \cite{bayesreg}.
+where $\mathcal{N}_T$ is a $T$-dimensional \textit{Multivariate normal} distribution and $\bm{I}$ is a $T\times T$ identity matrix.
+
+The purpose of aggregating the original traffic data to 3-min intervals was moderately filter out the influence of stop lights and other causes of inaccurate assessment of traffic flow associated with high resolution data. Nevertheless, even after smoothing, we find numerous occupancy readings outside the general pattern seen in the data. This is captured visually in Figure \ref{fig:OrigPlotTrafficOcc} where unusual spikes toward $0\%$ and $100\%$ are found. For some locations, such as $F$, we find persistent high congestion to be a common daily pattern. To make our procedure more robust to contamination, we also consider  $\{\epsilon_{\pi(t)+h}\} \sim \textrm{ i.i.d. } t(0,\textrm{df},\sigma^2)$ where \textit{t} denotes the \textit{Student t} distribution. The \textit{Student t} regression model is represented as 
+\begin{equation}
+\label{eq:tmod}
+\bm{y}_R|\bm{X}_R,\bm{\Theta}\sim t_T(\bm{X}_R\bm{\theta}_R,\textrm{df},\sigma^2\bm{I})
+\end{equation}
+where $t_T$ is a $T$-dimensional \textit{Multivariate Student t} distribution and $\bm{I}$ is a $T\times T$ identity matrix. Although the degrees of freedom parameter (df) can be included in $\bm{\Theta}$, we fix df$=3$. This choice is to ensure we get heavy tails along with finite second moments.
+
+We utilize both error specifications for all $(L,D,h)$-specific TAR models and $(L,D)$-specific seasonal harmonic profiles. We let TAR and SEAS denote textit{normal} regression models, and TARt and SEASt denote \textit{Student t} regression models. In both circumstances, Jefferys' prior is used for $\sigma^2$. Derivation of the \textit{inverse-gamma} full conditional distribution for $\sigma^2$ under both error specifications can be found in \cite{bayesreg}.
 
 \subsubsection{Horseshoe+ Priors for Penalized Regression}
 
@@ -216,7 +218,7 @@ The horseshoe+ estimator ($\textrm{BHS}^+$) of \cite{Bhadra2016} results from a 
 	\tau &\sim \mathcal{C}^+(0,1)\\
 \end{split}
 \end{equation}
-where $\mathcal{C}^+$ is the \textit{half-Cauchy} distribution. The $\textrm{BHS}^+$ prior provides better detection of ultra-sparse signals than the original BHS; therefore, we utilize $\textrm{BHS}^+$ shrinkage priors in sparse estimation of coefficients in all TAR and SEAS models.  Additional theoretical and empirical defense of $\textrm{BHS}^+$ priors in the high dimensional regression setting, see \cite{Bhadra2016} and Appendix \ref{appendix3}.
+where $\mathcal{C}^+$ is the \textit{half-Cauchy} distribution. The $\textrm{BHS}^+$ prior provides better detection of ultra-sparse signals than the original BHS; therefore, we utilize $\textrm{BHS}^+$ shrinkage priors in sparse estimation of coefficients in all TAR, TARt, SEAS, and SEASt models.  Additional theoretical and empirical defense of $\textrm{BHS}^+$ priors in the high dimensional regression setting, see \cite{Bhadra2016} and Appendix \ref{appendix3}.
 
 The original hierarchy seen in Equation \ref{eq:traffichsp} makes posterior sampling difficult since full conditional distributions are not obtainable. By exploiting the scale-mixture decomposition of the \textit{half-Cauchy} distribution using \textit{inverse gamma} distributions abbreviated $\mathcal{IG}$ \citep{Wand2011}, \cite{Makalic2016b} derived full conditional distributions for all parameters in $\bm{\Theta}$ so Gibbs sampling \citep{Geman1987,Gelfand1990} can be utilized to sample from the full posterior distribution $p(\bm{\Theta}|\bm{y}_R,\bm{X}_R)$. Equation \ref{eq:traffichsp2} reflects the changes to the $\textrm{BHS}^+$ hierarchy for each parameter $\theta_i$ in $\bm{\theta}_R$.
 \begin{equation}
@@ -230,8 +232,7 @@ The original hierarchy seen in Equation \ref{eq:traffichsp} makes posterior samp
 \end{split}
 \end{equation}
 
-\subsubsection{Posterior Sampling}
-The high dimensional TAR and SEAS models, with large $\bm{X}_R$ and $\bm{X}_F$ design matrices, causes issues in Gibbs sampling. Specifically, the full conditional distributions of $\bm{\theta}_R$ and $\bm{\theta}_S$ require large $408\times 480$ and $301\times 301$ matrices, respectively. To obtain $S$ posterior samples $\{\bm{\theta}^{(s)}_R\}_{s=1}^{S}$ and $\{\bm{\theta}^{(s)}_F\}_{s=1}^{S}$, inversion of $\bm{X}'_R\bm{X}_R$ and $\bm{X}'_S\bm{X}_S$ is required in the derived \textit{multivariate normal} full conditional distributions. In our cases, we apply the algorithm of \cite{Rue2001} for fast Gibbs sampling, but for larger choices of $m$, $P$, and $H$, the algorithm of \cite{Bhattacharya2016} is a helpful alternative. For both TAR and SEAS models, we determined $S=2000$ posterior samples after a burn-in period of $5000$ and with a thinning of $10$ was large enough to ensure the minimum effective sample size of all parameters was larger than $150$. Posterior means and quantiles capture the uncertainty of our models given the data. Even though $\textrm{BHS}^+$ shrinkage priors are applied for both TAR and SEAS, posterior means of irrelevant effects in $\bm{\theta}_R$ and $\bm{\theta}_S$ will never equal 0. The profiles obtained from all SEAS models satisfactorily captured the weekly periodic signal from the first three weeks of April. For the TAR models, we continue our three step procedure to identify which autoregressive groups are are irrelevant, and then perform variable selection ignoring the natural grouping.
+Using Gibbs sampling, we obtain $S$ posterior samples from the joint posterior distribution $p(\bm{\Theta}|)$
 
 \subsection{Regime Identification}
 \label{sec:stage2}
@@ -252,8 +253,6 @@ The high dimensional TAR and SEAS models, with large $\bm{X}_R$ and $\bm{X}_F$ d
 
 
 \section{Results}
-\label{sec:trafficresults}
-On the original $[0,1]$-interval, we evaluate traffic occupancy forecasts over the final week of April using a rolling-window and without re-estimation. For each $(L,D,h)$-specific TAR model, we have $T_h=480-P-h+1$ time points requiring forecasts, and for SEAS models, $T_h=480$. We denote the traffic occupancy forecast at time $t$ for a specific detector location $L$ as $\hat{O}_{L,t}$. Using the $(L,D)$-specific seasonal models estimated from the first three weeks of April (1440 discrete time points), we can quickly obtain $\hat{O}_{L,t}$ for all future horizons. Figure \ref{fig:SEASESTPlots} displays the SEAS models fitted to the last week of April. The 3 min, 9 min, and 15 min horizon forecasts from all final TAR models are displayed in Figures \ref{fig:DENS1Plots}, \ref{fig:DENS3Plots}, and \ref{fig:DENS5Plots}. In the TAR plots, $(1-2\alpha)\times 100\%$ credible regions are displayed instead of point forecasts for $\alpha \in \{0.4,0.25,0.2,0.15,0.1,0.05\}$. The true traffic occupancies are plotted in gray for all figures. As illustrated by the SEAS models, the last Friday of April had unusually low congestion relative to the first three Fridays of April. The fact that this Friday also falls on a Grecian holiday weekend (Labor Day) provides a reasonable explanation since vacation time is often used around holidays. Although traffic forecasting is less important for low congested states, this day illustrates the deficiency of ignoring short term temporal dependencies in modeling traffic variables. 
 
 \begin{figure}[htbp]
 \caption{Forecasts Based on SEAS Models}
@@ -262,11 +261,106 @@ On the original $[0,1]$-interval, we evaluate traffic occupancy forecasts over t
 \end{figure}
 
 \begin{figure}[htbp]
+\caption{Forecasts Based on SEASt Models}
+\includegraphics[width=\textwidth]{SEASESTtPlots}
+\label{fig:SEASESTtPlots}
+\end{figure}
+
+On the original $[0,1]$-interval, we evaluate traffic occupancy forecasts over the final week of April using a rolling-window and without re-estimation. For each $(L,D,h)$-specific TAR and TARt model, we have $T_h=480-P-h+1$ time points requiring forecasts. Forecasts over this period are evaluated using the mean absolute scaled forecast error (MASFE) metric from \cite{Hyndman2006}. The formulation of MASE is found in Equation \ref{eq:trafficmase} where $\textrm{MAE}_{RW}(h)$ represents the mean absolute error from a $h$-specific naive random walk model over the fitting period. 
+\begin{equation}
+\label{eq:trafficmase}
+  MASFE(h)=\frac{1}{T_h}\sum\limits_{t=P+h}^{480}\left|\frac{O_{L,t}-\widehat{O}_{L,t}}{\textrm{MAE}_{RW}(h)}\right|
+\end{equation}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{1-Step Ahead MASE Forecast Comparison}
+\begin{tabular}{c|rccccccc}
+  \hline
+  & & \multicolumn{7}{c}{Location}\\
+  \cline{5-7}
+Day & Model & A & B & C & D & E & F & G \\ 
+  \hline
+  \multirow{4}{*}{M} & TAR & 1.02 & 1.10 & 0.88 & 1.07 & 1.87 & 0.81 & 1.48 \\ 
+  & TARt & 0.93 & 1.09 & 0.85 & 1.04 & 1.49 & 0.56 & 1.24 \\ 
+  & SEAS & 1.80 & 1.47 & 1.15 & 1.43 & 4.02 & 1.57 & 3.66 \\ 
+  & SEASt & 1.73 & 1.41 & 1.04 & 1.65 & 3.47 & 1.20 & 2.42 \\ 
+  \hline
+  \multirow{4}{*}{T}  & TAR & 0.90 & 1.05 & 1.04 & 0.98 & 1.36 & 1.03 & 1.95 \\ 
+   & TARt & 0.89 & 1.05 & 0.96 & 0.95 & 0.98 & 0.77 & 1.30 \\ 
+  & SEAS & 1.35 & 1.36 & 1.22 & 1.46 & 3.36 & 1.65 & 3.29 \\ 
+   & SEASt & 1.33 & 1.32 & 1.20 & 1.50 & 2.47 & 1.46 & 2.03 \\ 
+  \hline
+   \multirow{4}{*}{W} & TAR & 1.04 & 1.11 & 0.91 & 0.97 & 2.27 & 1.86 & 1.55 \\ 
+   & TARt & 0.99 & 1.14 & 1.01 & 0.99 & 1.30 & 1.75 & 1.38 \\ 
+   & SEAS & 1.39 & 2.01 & 2.18 & 1.61 & 4.65 & 2.90 & 2.80 \\ 
+   & SEASt & 1.17 & 1.96 & 2.35 & 1.63 & 3.49 & 2.34 & 2.16 \\ 
+  \hline
+ \multirow{4}{*}{Th} & TAR & 0.93 & 0.89 & 0.82 & 0.92 & 1.48 & 1.52 & 1.83 \\ 
+   & TARt & 0.89 & 0.93 & 0.94 & 1.01 & 2.19 & 1.64 & 2.15 \\ 
+   & SEAS & 1.44 & 1.43 & 1.51 & 1.42 & 3.98 & 2.74 & 4.07 \\ 
+   & SEASt & 1.23 & 1.23 & 1.23 & 1.30 & 2.40 & 2.52 & 3.10 \\ 
+  \hline
+  \multirow{4}{*}{F} & TAR & 1.80 & 1.08 & 1.01 & 0.85 & 1.45 & 2.40 & 1.16 \\ 
+   & TARt & 1.13 & 0.92 & 0.55 & 0.78 & 0.47 & 2.70 & 1.07 \\ 
+   & SEAS & 4.77 & 2.23 & 1.98 & 1.83 & 4.37 & 6.24 & 3.78 \\ 
+   & SEASt & 4.68 & 2.09 & 1.63 & 1.62 & 1.82 & 6.23 & 2.17 \\ 
+   \hline
+\end{tabular}
+\label{ref:trafficmase1}
+\end{table}
+
+\begin{figure}[htbp]
 \caption{1-Step Ahead Density Forecasts for TAR Models}
 \includegraphics[width=\textwidth]{DENS1Plots}
 \label{fig:DENS1Plots}
 \end{figure}
 
+\begin{figure}[htbp]
+\caption{1-Step Ahead Density Forecasts for TARt Models}
+\includegraphics[width=\textwidth]{DENS1tPlots}
+\label{fig:DENS1tPlots}
+\end{figure}
+
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{3-Step Ahead MASE Forecast Comparison}
+\begin{tabular}{c|rccccccc}
+  \hline
+    & & \multicolumn{7}{c}{Location}\\
+  \cline{5-7}
+Day & Model & A & B & C & D & E & F & G \\ 
+  \hline
+  \multirow{4}{*}{M} & TAR & 0.94 & 1.06 & 0.88 & 1.13 & 1.85 & 0.88 & 1.50 \\ 
+   & TARt & 0.89 & 1.03 & 0.80 & 1.13 & 1.52 & 0.59 & 1.26 \\ 
+   & SEAS & 1.36 & 1.17 & 0.93 & 1.14 & 2.91 & 1.19 & 2.57 \\ 
+   & SEASt & 1.31 & 1.12 & 0.84 & 1.30 & 2.51 & 0.91 & 1.70 \\ 
+   \hline
+  \multirow{4}{*}{T} & TAR & 0.87 & 1.04 & 0.96 & 1.03 & 1.46 & 1.15 & 1.21 \\ 
+   & TARt & 0.79 & 1.02 & 0.92 & 0.97 & 1.00 & 0.86 & 0.96 \\ 
+   & SEAS & 1.04 & 1.06 & 0.91 & 1.10 & 2.24 & 1.22 & 2.15 \\ 
+   & SEASt & 1.02 & 1.03 & 0.89 & 1.13 & 1.65 & 1.08 & 1.32 \\
+   \hline 
+  \multirow{4}{*}{W} & TAR & 1.09 & 1.15 & 1.10 & 0.99 & 1.75 & 2.00 & 1.26 \\ 
+   & TARt & 0.97 & 1.11 & 1.13 & 0.98 & 1.25 & 1.91 & 0.91 \\ 
+   & SEAS & 1.15 & 1.61 & 1.69 & 1.21 & 2.94 & 2.24 & 1.71 \\ 
+   & SEASt & 0.97 & 1.58 & 1.82 & 1.23 & 2.21 & 1.80 & 1.32 \\ 
+   \hline
+ \multirow{4}{*}{Th}  & TAR & 0.90 & 0.96 & 0.82 & 0.93 & 1.88 & 1.47 & 1.14 \\ 
+   & TARt & 0.84 & 0.91 & 0.71 & 0.86 & 0.73 & 1.20 & 1.04 \\ 
+   & SEAS & 1.15 & 1.09 & 1.14 & 1.03 & 2.69 & 1.96 & 2.68 \\ 
+   & SEASt & 0.99 & 0.94 & 0.92 & 0.94 & 1.62 & 1.80 & 2.04 \\ 
+  \hline
+  \multirow{4}{*}{F} & TAR & 3.04 & 1.09 & 1.00 & 0.66 & 1.14 & 2.47 & 0.92 \\ 
+   & TARt & 1.50 & 1.00 & 0.70 & 0.51 & 0.35 & 2.05 & 0.75 \\ 
+   & SEAS & 3.53 & 1.57 & 1.42 & 1.33 & 3.12 & 4.35 & 2.42 \\ 
+   & SEASt & 3.47 & 1.47 & 1.17 & 1.18 & 1.30 & 4.34 & 1.39 \\ 
+   \hline
+\end{tabular}
+\label{ref:trafficmase3}
+\end{table}
 
 \begin{figure}[htbp]
 \caption{3-Step Ahead Density Forecasts for TAR Models}
@@ -275,114 +369,74 @@ On the original $[0,1]$-interval, we evaluate traffic occupancy forecasts over t
 \end{figure}
 
 \begin{figure}[htbp]
+\caption{3-Step Ahead Density Forecasts for TARt Models}
+\includegraphics[width=\textwidth]{DENS3tPlots}
+\label{fig:DENS3tPlots}
+\end{figure}
+
+\begin{table}[htbp]
+\footnotesize
+\centering
+\caption{5-Step Ahead MASE Forecast Comparison}
+\begin{tabular}{c|rccccccc}
+  \hline
+    & & \multicolumn{7}{c}{Location}\\
+  \cline{5-7}
+Day & Model & A & B & C & D & E & F & G \\ 
+  \hline
+  \multirow{4}{*}{M} & TAR & 0.94 & 0.99 & 0.89 & 1.12 & 1.97 & 0.86 & 1.68 \\ 
+   & TARt & 0.92 & 0.95 & 0.81 & 1.15 & 1.58 & 0.58 & 1.22 \\ 
+   & SEAS & 1.24 & 1.06 & 0.88 & 1.06 & 2.46 & 1.08 & 2.17 \\ 
+   & SEASt & 1.19 & 1.02 & 0.80 & 1.22 & 2.12 & 0.83 & 1.43 \\ 
+  \hline
+  \multirow{4}{*}{T}  & TAR & 0.81 & 1.05 & 0.95 & 1.00 & 1.47 & 1.13 & 1.15 \\ 
+   & TARt & 0.80 & 1.03 & 0.91 & 0.99 & 0.94 & 0.88 & 0.74 \\ 
+   & SEAS & 0.95 & 0.95 & 0.85 & 0.99 & 1.85 & 1.07 & 1.77 \\ 
+   & SEASt & 0.93 & 0.93 & 0.84 & 1.02 & 1.36 & 0.95 & 1.09 \\ 
+  \hline
+  \multirow{4}{*}{W}  & TAR & 1.02 & 1.12 & 1.04 & 0.99 & 1.67 & 1.94 & 1.26 \\ 
+   & TARt & 0.90 & 1.12 & 0.96 & 0.98 & 1.43 & 1.81 & 0.86 \\ 
+   & SEAS & 1.01 & 1.44 & 1.56 & 1.12 & 2.30 & 1.95 & 1.44 \\ 
+   & SEASt & 0.85 & 1.40 & 1.68 & 1.14 & 1.73 & 1.57 & 1.11 \\ 
+  \hline
+  \multirow{4}{*}{Th}  & TAR & 0.84 & 0.98 & 0.82 & 0.87 & 1.51 & 1.48 & 1.22 \\ 
+   & TARt & 0.78 & 0.91 & 0.68 & 0.80 & 0.69 & 1.08 & 0.95 \\ 
+   & SEAS & 1.05 & 1.03 & 1.07 & 0.94 & 2.13 & 1.73 & 2.24 \\ 
+   & SEASt & 0.90 & 0.89 & 0.87 & 0.86 & 1.28 & 1.59 & 1.71 \\ 
+  \hline
+  \multirow{4}{*}{F}  & TAR & 2.85 & 1.20 & 0.88 & 0.70 & 1.26 & 2.52 & 1.00 \\ 
+   & TARt & 1.73 & 1.07 & 0.52 & 0.57 & 0.59 & 1.30 & 0.43 \\ 
+   & SEAS & 3.07 & 1.48 & 1.33 & 1.19 & 2.59 & 3.82 & 2.01 \\ 
+   & SEASt & 3.01 & 1.38 & 1.09 & 1.05 & 1.08 & 3.81 & 1.16 \\ 
+   \hline
+\end{tabular}
+\label{ref:trafficmase5}
+\end{table}
+
+\begin{figure}[htbp]
 \caption{5-Step Ahead Density Forecasts for TAR Models}
 \includegraphics[width=\textwidth]{DENS5Plots}
-\label{fig:DENS5Plots}
+\label{fig:DENS3Plots}
+\end{figure}
+
+\begin{figure}[htbp]
+\caption{5-Step Ahead Density Forecasts for TARt Models}
+\includegraphics[width=\textwidth]{DENS5tPlots}
+\label{fig:DENS3tPlots}
 \end{figure}
 
 
-Forecasts from both models over this period are evaluated using the mean absolute scaled forecast error (MASFE) metric from \cite{Hyndman2006}. The formulation of MASFE is found in Equation \ref{eq:trafficmase} where $\textrm{MAE}_{RW}(h)$ represents the mean absolute error from a $h$-specific naive random walk (RW) model over the fitting period where we obtain $\widehat{O}_{L,t}$ using an observed $O_{L,t-h}$. By scaling errors using $\textrm{MAE}_{RW}(h)$, we are able to compare TAR to SEAS while understanding how they may compare to simple naive approaches. Whenever MASFE$(h)<1$, the model produces absolute forecast errors that are, on average, less than the forecast errors from a simple random walk model with no parameters.
-\begin{equation}
-\label{eq:trafficmase}
-  \textrm{MASFE}(h)=\frac{1}{T_h}\sum\limits_{t=P+h}^{480}\left|\frac{O_{L,t}-\widehat{O}_{L,t}}{\textrm{MAE}_{RW}(h)}\right|
-\end{equation}
-
-Tables \ref{tab:trafficmase1}, \ref{tab:trafficmase3}, and \ref{tab:trafficmase5} compares final TAR and SEAS models for all days and locations at horizons $h\in \{1,3,5\}$, respectively. Multiple-regime TAR models consistently outperform SEAS profiles at all locations and days when forecasting 1-step ahead. For 3-step ahead forecasts, the SEAS model for Tuesday at location $C$ has a smaller MASFE, by a negligible amount. For 5-step ahead forecasts, we see more occurrences of SEAS producing forecasts, as good or better, than TAR. The opposite pattern is exhibited for $h$-specific RW models. For 1-step ahead forecasts, MASFE$>1$ for many of the models. As we increase the horizon $h$, we start noticing a clear advantage of using more complicated models (TAR and SEAS) that capture nonlinear and/or seasonal dynamics. This is generally true except for locations $E$, $F$, and $G$ where traffic occupancies are considerably more difficult to model which is visually indicated by the wide credible regions in Figures \ref{fig:DENS1Plots}, \ref{fig:DENS3Plots}, and \ref{fig:DENS5Plots}.
-
-
-
-\begin{table}[htbp]
-\scriptsize
-\centering
-\caption{1-Step Ahead MASFE Forecast Comparison}
-\begin{tabular}{c|rccccccc}
-  \hline
-  & & \multicolumn{7}{c}{Location}\\
-  \cline{5-7}
-Day & Model & A & B & C & D & E & F & G \\ 
-  \hline
-  \multirow{2}{*}{M} & TAR & 1.02 & 1.10 & 0.88 & 1.07 & 1.87 & 0.81 & 1.48 \\ 
-  & SEAS & 1.80 & 1.47 & 1.15 & 1.43 & 4.02 & 1.57 & 3.66 \\ 
-  \hline
-  \multirow{2}{*}{T}  & TAR & 0.90 & 1.05 & 1.04 & 0.98 & 1.36 & 1.03 & 1.95 \\ 
-  & SEAS & 1.35 & 1.36 & 1.22 & 1.46 & 3.36 & 1.65 & 3.29 \\ 
-  \hline
-   \multirow{2}{*}{W} & TAR & 1.04 & 1.11 & 0.91 & 0.97 & 2.27 & 1.86 & 1.55 \\ 
-   & SEAS & 1.39 & 2.01 & 2.18 & 1.61 & 4.65 & 2.90 & 2.80 \\ 
-  \hline
- \multirow{2}{*}{Th} & TAR & 0.93 & 0.89 & 0.82 & 0.92 & 1.48 & 1.52 & 1.83 \\ 
-   & SEAS & 1.44 & 1.43 & 1.51 & 1.42 & 3.98 & 2.74 & 4.07 \\ 
-  \hline
-  \multirow{2}{*}{F} & TAR & 1.80 & 1.08 & 1.01 & 0.85 & 1.45 & 2.40 & 1.16 \\ 
-   & SEAS & 4.77 & 2.23 & 1.98 & 1.83 & 4.37 & 6.24 & 3.78 \\ 
-   \hline
-\end{tabular}
-\label{tab:trafficmase1}
-\end{table}
 
 
 
 
-\begin{table}[htbp]
-\scriptsize
-\centering
-\caption{3-Step Ahead MASFE Forecast Comparison}
-\begin{tabular}{c|rccccccc}
-  \hline
-    & & \multicolumn{7}{c}{Location}\\
-  \cline{5-7}
-Day & Model & A & B & C & D & E & F & G \\ 
-  \hline
-  \multirow{2}{*}{M} & TAR & 0.94 & 1.06 & 0.88 & 1.13 & 1.85 & 0.88 & 1.50 \\ 
-   & SEAS & 1.36 & 1.17 & 0.93 & 1.14 & 2.91 & 1.19 & 2.57 \\ 
-   \hline
-  \multirow{2}{*}{T} & TAR & 0.87 & 1.04 & 0.96 & 1.03 & 1.46 & 1.15 & 1.21 \\ 
-   & SEAS & 1.04 & 1.06 & 0.91 & 1.10 & 2.24 & 1.22 & 2.15 \\ 
-   \hline 
-  \multirow{2}{*}{W} & TAR & 1.09 & 1.15 & 1.10 & 0.99 & 1.75 & 2.00 & 1.26 \\ 
-   & SEAS & 1.15 & 1.61 & 1.69 & 1.21 & 2.94 & 2.24 & 1.71 \\ 
-   \hline
- \multirow{2}{*}{Th}  & TAR & 0.90 & 0.96 & 0.82 & 0.93 & 1.88 & 1.47 & 1.14 \\ 
-   & SEAS & 1.15 & 1.09 & 1.14 & 1.03 & 2.69 & 1.96 & 2.68 \\ 
-  \hline
-  \multirow{2}{*}{F} & TAR & 3.04 & 1.09 & 1.00 & 0.66 & 1.14 & 2.47 & 0.92 \\ 
-   & SEAS & 3.53 & 1.57 & 1.42 & 1.33 & 3.12 & 4.35 & 2.42 \\ 
-   \hline
-\end{tabular}
-\label{tab:trafficmase3}
-\end{table}
 
 
 
 
-\begin{table}[htbp]
-\scriptsize
-\centering
-\caption{5-Step Ahead MASFE Forecast Comparison}
-\begin{tabular}{c|rccccccc}
-  \hline
-    & & \multicolumn{7}{c}{Location}\\
-  \cline{5-7}
-Day & Model & A & B & C & D & E & F & G \\ 
-  \hline
-  \multirow{2}{*}{M} & TAR & 0.94 & 0.99 & 0.89 & 1.12 & 1.97 & 0.86 & 1.68 \\ 
-   & SEAS & 1.24 & 1.06 & 0.88 & 1.06 & 2.46 & 1.08 & 2.17 \\ 
-  \hline
-  \multirow{2}{*}{T}  & TAR & 0.81 & 1.05 & 0.95 & 1.00 & 1.47 & 1.13 & 1.15 \\ 
-   & SEAS & 0.95 & 0.95 & 0.85 & 0.99 & 1.85 & 1.07 & 1.77 \\ 
-  \hline
-  \multirow{2}{*}{W}  & TAR & 1.02 & 1.12 & 1.04 & 0.99 & 1.67 & 1.94 & 1.26 \\ 
-   & SEAS & 1.01 & 1.44 & 1.56 & 1.12 & 2.30 & 1.95 & 1.44 \\ 
-  \hline
-  \multirow{2}{*}{Th}  & TAR & 0.84 & 0.98 & 0.82 & 0.87 & 1.51 & 1.48 & 1.22 \\ 
-   & SEAS & 1.05 & 1.03 & 1.07 & 0.94 & 2.13 & 1.73 & 2.24 \\ 
-  \hline
-  \multirow{2}{*}{F}  & TAR & 2.85 & 1.20 & 0.88 & 0.70 & 1.26 & 2.52 & 1.00 \\ 
-   & SEAS & 3.07 & 1.48 & 1.33 & 1.19 & 2.59 & 3.82 & 2.01 \\ 
-   \hline
-\end{tabular}
-\label{tab:trafficmase5}
-\end{table}
+
+
+
 
 
 

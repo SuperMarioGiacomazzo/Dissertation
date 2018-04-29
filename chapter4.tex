@@ -91,7 +91,7 @@ The elastic net (ENET) of \cite{Zou2005} has applicability in this context where
 \hat{\bm{\beta}}_{E} (\lambda,\alpha)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\bm{y}-\bm{X}\bm{\beta}||^2 + \lambda\bigg[ (1-\alpha) \sum\limits_{i=1}^{p+q} \beta^2_i+ \alpha\sum\limits_{i=1}^{p+q} |\beta_i| \bigg]
 \end{equation}
 
-As we have seen, ADLASSO satisfies the oracle properties \citep{Zou2006} and ENET \citep{Zou2005} manages collinearity. \cite{Zou2009} exploit both advantages by modifying the $\ell_1$ penalty Equation \ref{eq:enet} to match the weighted form in Equation \ref{eq:adlasso2}. This adaptive ENET (ADENET) estimator is formally presented in Equation \ref{eq:aenet}. \cite{Zou2009} recommend selecting $\hat{\bm{\beta}}=\hat{\bm{\beta}}_{E}$. Since $\hat{\bm{\beta}}_{E}$ depends on the choice of two tuning parameters, $\lambda$ and $\alpha$, optimal selection requires a grid search. Upon empirical evaluation, setting $\hat{\bm{\beta}}=\hat{\bm{\beta}}_{L}$ is sufficient for obtaining the initial weights.
+As we have seen, ADLASSO satisfies the oracle properties \citep{Zou2006} and ENET \citep{Zou2005} manages collinearity. \cite{Zou2009a} exploit both advantages by modifying the $\ell_1$ penalty Equation \ref{eq:enet} to match the weighted form in Equation \ref{eq:adlasso2}. This adaptive ENET (ADENET) estimator is formally presented in Equation \ref{eq:aenet}. \cite{Zou2009a} recommend selecting $\hat{\bm{\beta}}=\hat{\bm{\beta}}_{E}$. Since $\hat{\bm{\beta}}_{E}$ depends on the choice of two tuning parameters, $\lambda$ and $\alpha$, optimal selection requires a grid search. Upon empirical evaluation, setting $\hat{\bm{\beta}}=\hat{\bm{\beta}}_{L}$ is sufficient for obtaining the initial weights.
 \begin{equation}
 \label{eq:aenet}
 \hat{\bm{\beta}}_{AE} (\lambda,\alpha)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\bm{y}-\bm{X}\bm{\beta}||^2 + \lambda\bigg[ (1-\alpha)  \sum\limits_{i=1}^{p+q} \beta^2_i+ \alpha\sum\limits_{i=1}^{p+q} \hat{w}_{i}|\beta_i| \bigg]
@@ -870,11 +870,6 @@ Although a ``best" procedure does not emerge for the Alert series, this example 
 
 
 
-
-
-
-
-
 \section{Conclusion}
 
 Subset ARMA$(p,q)$ models are widely applicable for modeling temporal dynamics and forecasting of weakly stationary time series. ARMA modeling via linear regression has advantages and disadvantages. If $p$ and $q$ are intentionally overestimated, frequentist and Bayesian regularization techniques, that shrink irrelevant parameters to $0$ without overshrinking relevant parameters, are easily applied. All regularization methods presented were chosen based on their theoretical oracle properties and capability of handling correlated predictors. However, it is not guaranteed the final $\hat{\bm{\beta}}$ represents a stationary and invertible ARMA process. Simple adjustments to all methods are discussed to remove this problem. Another issue is the sensitivity to the selection of proxy innovations $\{\hat{\epsilon}_t\}$ using a long AR$(p')$ model. It is strongly suggested that initial model selection is not performed for selection of $p'$ at this step.
@@ -883,5 +878,5 @@ When ADLASSO or ADENET methods are used to automate estimation and model selecti
 
 Bayesian regularization via horseshoe priors reduces irrelevant effects but does not perform model selection.  Posterior distributions of subset ARMA$(p,q)$ models can be obtained through projection removing the need for repeated Gibbs sampling. Whether we used BHS or $\textrm{BHS}^+$, we noticed a general improvement in model selection and forecasting when compared to ADLASSO and ADENET. Also, posterior means $\hat{\bm{\beta}}$ across replications and practicle examples consistently validated stationary and invertible conditions.  However, when the unknown DGP was a subset MA$(q)$ process, BHS and $\textrm{BHS}^+$ rarely selected the corrected model. Combining CV algorithms with BHS and $\textrm{BHS}^+$ may produce better results but are computationally expensive \citep{Peltola2014}; therefore, we leave this for future research.
 
-All discussed methods are quick and easy to employ. In \ref{appendix2}, detailed {\bf R} code is provided to encourage reproducibility. Furthermore, the application of these methods to the Mauna Loa $\textrm{CO}_2$ time series is included to demonstrate usage and illustrate forecasting. 
+All discussed methods are quick and easy to employ. In Appendix \ref{appendix2}, detailed {\bf R} code is provided to encourage reproducibility. Furthermore, the application of these methods to the Mauna Loa $\textrm{CO}_2$ time series is included to demonstrate usage and illustrate forecasting. 
 

@@ -65,7 +65,7 @@ A popular Bayesian subset selection method for linear models uses independent \t
 
  \subsubsection{Bayesian Horseshoe (BHS)}
  
-The horseshoe prior  of \cite{Carvalho2009} can also be expressed as a scale-mixture of normals. Along with a global shrinkage parameter $\lambda$, Bayesian horseshoe adds local shrinkage parameters $\lambda_{\alpha_j}$ and $\lambda_{\beta_j}$. This change allows finer discrimination between relevant and non-significant autoregressive parameters by preventing the simultaneous over-shrinking that may occur to the parameter space in BLASSO. The  Bayesian horseshoe (BHS) prior hierarchy described by \citep{Carvalho2010} is presented in Equation \ref{eq:hsprior} with $C^+$ denoting the \textit{half-Cauchy} distribution. Unfortunately, posterior sampling of $\alpha_j$ and $\beta_j$ does not compare to the ease of the Gibbs sampler for BLASSO since full conditional distributions cannot be found analytically; however, fast slice sampling methods have been developed \citep{Makalic2016}.  
+The horseshoe prior  of \cite{Carvalho2009} can also be expressed as a scale-mixture of normals. Along with a global shrinkage parameter $\lambda$, Bayesian horseshoe adds local shrinkage parameters $\lambda_{\alpha_j}$ and $\lambda_{\beta_j}$. This change allows finer discrimination between relevant and non-significant autoregressive parameters by preventing the simultaneous over-shrinking that may occur to the parameter space in BLASSO. The  Bayesian horseshoe (BHS) prior hierarchy described by \citep{Carvalho2010} is presented in Equation \ref{eq:hsprior} with $C^+$ denoting the \textit{half-Cauchy} distribution. Unfortunately, posterior sampling of $\alpha_j$ and $\beta_j$ does not compare to the ease of the Gibbs sampler for BLASSO since full conditional distributions cannot be found analytically; however, fast slice sampling methods have been developed \citep{Hahn2016}.  
 \begin{equation}
 \begin{split}
 	\label{eq:hsprior}
@@ -689,7 +689,7 @@ The next two examples involve the Jarama River where nonlinear models provided s
 \end{minipage}
 \end{figure}
 
-\section{Concluding Remarks}
+\section{Conclusion}
 
 Bayesian shrinkage priors for the AR coefficients and the \textit{Dirichlet} prior for a composite threshold variable are employed to estimate a flexible specification that nests the classic LSTAR model. Although simulation experiments show \textit{Dirichlet} priors to be an adequate alternative for estimating composite threshold variables, improved forecasting performance is not guaranteed. An advantage of the proposed methods is that practitioners can immediately apply them using common statistical software. Detailed code is provided with this paper for a tutorial in using Bayesian horseshoe to estimate nonlinear LSTAR models.
 
