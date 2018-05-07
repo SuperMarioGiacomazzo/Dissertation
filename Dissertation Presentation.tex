@@ -839,17 +839,515 @@ Day & Model & A & B & C & D & E & F & G \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \frame{\frametitle{Chapter 3: ARMA Model} 
 \begin{itemize}
-\item 
+\item ARMA$(p,q)$ Model \\~\
+\begin{itemize}
+	\item Classic Parametric Form
+	 $$\phi(B)y_t=\theta(B)\epsilon_t$$ where $$\phi(B)=1-\sum\limits_{j=1}^p \phi_j B^{j} \textrm{  and  }\theta(B)=1+\sum\limits_{k=1}^q \theta_k B^{K}$$ and $B$ Represents the Backshift Operator such that $B^ky_{t}=y_{t-k}$ \\~\
+	 \item Autoregressive Order $p$ and Moving Average Order $q$
+	 \item Stationary: Roots of $1-\phi_1z-\phi_2z^2-\cdots -\phi_{p}z^{p}=0$ 
+	 \item Invertible: Roots of $1+\theta_1z+\theta_2z^2+\cdots +\theta_{q}z^{q}=0$ 
+	 \item Multiplicative Seasonal ARMA \citep{Box1976} are Subset ARMA Processes
+	 \item Presence of MA Terms Poses an Estimation Problem \citep{Hamilton1994,Cryer2008}
 \end{itemize}
+\end{itemize}
+}
 
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Fast Estimation of ARMA$(p,q)$ \\~\
+\begin{itemize}
+	\item Residuals $\{\hat{\epsilon}_t: t=p^\prime+1,\cdots,T\}$ of a Long AR$(p^\prime)$ Process Approximate the Unobserved $\{\epsilon_t\}$ \citep{Hannan1982,Brockwell2016} \\~\
+	\item Let $\bm{y}=[y_{m},\cdots,y_T]'$, $\bm{\epsilon}=[\epsilon_{m},\cdots,\epsilon_T]'$, $\bm{\beta}=[\bm{\phi}',\bm{\theta}']'=$ $[\phi_1,\cdots,\phi_p,\theta_1,\cdots,\theta_q]'$, $m=p^\prime+max\{p,q\}+1$, and 
+\begin{equation*}
+\bm{X}=\begin{bmatrix} \bm{x}'_{m}  \\
+					\bm{x}'_{m+1}  \\
+					\vdots \\
+					\bm{x}'_{T} \\
+	\end{bmatrix} =
+	\begin{bmatrix} y_{m-1} & \cdots & y_{m-p} &
+					\hat{\epsilon}_{m-1} & \cdots & \hat{\epsilon}_{m-q} \\
+					y_{m} & \cdots & y_{m-p+1} &
+					\hat{\epsilon}_{m} & \cdots & \hat{\epsilon}_{m-q+1} \\
+					\vdots & \ddots & \vdots &\
+					\vdots & \ddots & \vdots & \\
+					y_{T-1} & \cdots & y_{T-p} &
+					\hat{\epsilon}_{T-1} & \cdots & \hat{\epsilon}_{T-q} \\
+	\end{bmatrix}.
+\end{equation*}
+The ARMA$(p,q)$ Model is Expressed by $\bm{y}=\bm{X}\bm{\beta}+\bm{\epsilon}$ \\~\
+
+\item Consider $p^\prime=10\log_{10}(T)$. \cite{Hannan1984a} and \cite{Chen2011} Suggest Using Information Criteria to Select  $p^\prime$. Reduces the Loss of Data, but Substantially Effects Results.
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Subset ARMA$(p,q)$ Penalized Estimation Methods  \\~\
+\begin{itemize}
+	\item Classic Techniques \\~\
+	\begin{itemize}
+		\item Adaptive LASSO \citep{Zou2006}
+		\begin{equation*}
+\hat{\bm{\beta}}_{AL} (\lambda)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\mathbf{y}-\mathbf{X}\bm{\beta}||^2 + \lambda \sum\limits_{i=1}^{p+q} \hat{w}_{i}|\beta_i|
+\end{equation*}
+		\item Adaptive Elastic Net \citep{Zou2009a}
+		\begin{equation*}
+\hat{\bm{\beta}}_{AE} (\lambda,\alpha)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\mathbf{y}-\mathbf{X}\bm{\beta}||^2 + \lambda\bigg[ (1-\alpha)  \sum\limits_{i=1}^{p+q} \beta^2_i+ \alpha\sum\limits_{i=1}^{p+q} \hat{w}_{i}|\beta_i| \bigg]
+\end{equation*}
+
+		\item Vector of Weights  $\hat{\mathbf{w}}=|\hat{\bm{\beta}}_L+1/T|^{-\eta}$ where 
+		\begin{equation*}
+\hat{\bm{\beta}}_{L} (\lambda)= \underset{\bm{\beta}}{\textrm{argmin }}  ||\mathbf{y}-\mathbf{X}\bm{\beta}||^2 + \lambda \sum\limits_{i=1}^{p+q}|\beta_i|.
+\end{equation*}
+$\hat{\bm{\beta}}_{L}$ is the Original LASSO Estimate of \cite{Tibshirani1996}, and $\eta=2$, as Recommended by \cite{Zou2006,Chen2011}
+	\end{itemize}
+
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Subset ARMA$(p,q)$ Penalized Estimation Methods  \\~\
+\begin{itemize}
+	\item Classic Techniques (Cont.) \\~\
+	\begin{itemize}
+		\item Optimal Selection of Tuning Parameters $\lambda$ and $\alpha$ \\~\
+		
+		For ADLASSO and ADENET, Model Selection Determined by $\lambda$ and $\alpha$. Two Stages Require Tuning. Estimate Prediction Error for Grid of $\lambda$ and $\alpha$  \\~\
+		
+		Time Series Studies Often Perform Selection Based on Out-of-Sample (OOS) Forecasting \\~\		
+		
+		Penalized Information Criteria Such as AIC or BIC \citep{Chen2011} \\~\
+		
+		Cross-Validated (CV) Measures of Error \citep{Stone1974,Hastie2009a} \\~\
+		
+		Appropriateness of CV Questioned in Time Series Analysis. Blocked Approaches Used for Dependent Data \citep{Burman1994, Racine2000, Arlot2010,Bergmeir2012} \\~\
+		
+		Regular K-Fold CV Consistently Outperforms OOS in Estimating Prediction Error \citep{Bergmeir2018}.
+		
+		
+
+	\end{itemize}
+
+\end{itemize}
+\end{itemize}
+}
+
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Subset ARMA$(p,q)$ Penalized Estimation Methods (Cont.)  \\~\
+\begin{itemize}
+	\item Bayesian Techniques \\~\
+	\begin{itemize}
+		\item Bayesian Horseshoe \citep{Carvalho2009,Carvalho2010} and Bayesian Horseshoe+ \citep{Bhadra2016} 		 Hierarchies Considered for Initial Estimation \\~\
+		\item Projection Method with Forward Selection Algorithm Used to Identify the Best Model at Every Level of Flexibility from Intercept-Only to Fully Saturated ARMA$(p,q)$ \\~\
+		\item Final Model Selected Based on Relative Explanatory Power ($RelE$) or Out-of-Sample Forecasting Results \citep{Piironen2017}
+	\end{itemize}
+\end{itemize}
+\end{itemize}
 }
 
 
 
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Overview of Methods \\~\
+
+ADLASSO and ADENET Variants Denoted $\textrm{AL}_m$ and $\textrm{AE}_m$ where $m \in \{1,2,\cdots,11\}$
+
+\begin{table}[htbp]
+  \footnotesize
+  \centering
+  \caption{Summary of ADLASSO and ADENET Variants}
+    \begin{tabular}{c|cc}
+    \toprule
+    Method ($m$) & Initial Weights (Stage 1) & Final Model (Stage 2)  \\
+    \midrule
+    1 & AIC & AIC\\
+    2 & AIC & BIC \\
+    3 & BIC & BIC \\
+    \midrule
+    4 & \multicolumn{2}{c}{OOS} \\
+    5 & \multicolumn{2}{c}{depOOS} \\
+    \midrule
+    6 & \multicolumn{2}{c}{CV-5} \\
+    7 & \multicolumn{2}{c}{CV-10} \\
+    8 & \multicolumn{2}{c}{LOOCV} \\
+    \midrule
+    9 & \multicolumn{2}{c}{BCV-5} \\
+    10 & \multicolumn{2}{c}{BCV-10} \\
+    11 & \multicolumn{2}{c}{LOBOCV} \\
+    \bottomrule
+    \end{tabular}%
+\end{table}%
+
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Overview of Methods (Cont.) \\~\
+
+Bayesian Variants Denoted $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ where $m \in \{1,2,\cdots,4\}$
+
+\begin{table}[htbp]
+  \footnotesize
+  \centering
+  \caption{Summary of BHS and $\textrm{BHS}^+$ Variants }
+    \begin{tabular}{c|cc}
+    \toprule
+    Method ($m$) & Final Model Selection  \\
+    \midrule
+    1 & $e(\cdot)>0.90$ \\
+    2 & $e(\cdot)>0.95$ \\
+    3 & $e(\cdot)>0.98$\\
+    \midrule
+    4 & OOS\\
+    \bottomrule
+    \end{tabular}%
+\end{table}%
+
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Simulation Study \\~\
+\begin{itemize}
+\item Gaussian ARMA Processes \citep{Chen2011} \\~\
+	\begin{equation*}
+	y_{1,t}=0.8y_{1,t-1}+0.7y_{1,t-6}-0.56y_{1,t-7}+\epsilon_{1,t}
+\end{equation*}\\~\
+\begin{equation*}
+	\begin{split}
+	y_{2,t}&=0.8y_{2,t-1}+0.7y_{2,t-6}-0.56y_{2,t-7}\\
+	&+0.8\epsilon_{2,t-1}+0.7\epsilon_{2,t-6}+0.56\epsilon_{2,t-7}+\epsilon_{2,t}
+	\end{split}
+\end{equation*}\\~\
+\begin{equation*}
+	y_{3,t}=0.8\epsilon_{3,t-1}+0.7\epsilon_{3,t-6}+0.56\epsilon_{3,t-7}+\epsilon_{3,t}
+\end{equation*}\\~\
+
+Standard Gaussian Errors $\{\epsilon_{1,t}\}$, $\{\epsilon_{2,t}\}$, and $\{\epsilon_{3,t}\}$. Abbreviated Models I, II, and III, Respectively. Samples of Length $T\in \{120, 240, 360\}$. \\~\
+
+Data Generating Processes are Subset ARMA$(7,7)$. Maximum ARMA Orders $P=Q=14$. \\~\
+
+\item Evaluating Subset ARMA Selection
+\begin{itemize}
+\item $C$: Relative Frequency of Selecting All Relevant Parameters
+\item  $I$: Relative Frequency of Identifying the True Model
+\item  $-$: False Negative Rate (Probability of Missing a Relevant Parameter)
+\item  $-$: False Positive Rate (Probability of Selecting an Irrelevant Parameter)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Simulation Study (Cont.)\\~\
+\begin{itemize}
+\item Sensitivity: Order Selection for Long AR$(p^\prime)$ Process
+
+\begin{table}[htbp]
+\footnotesize
+\caption{Effect of Using AIC to Select $p'$ on ADLASSO Subset ARMA$(14,14)$ Estimation of Model I Based on 500 Replications}
+\centering
+\begin{tabular}{cc|cccc|cccc}
+  \hline
+  & & \multicolumn{4}{c|}{Long AR$(p')$} & \multicolumn{4}{c}{Short AR$(p')$} \\
+  \cline{4-5}  \cline{8-9}
+  & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$\\
+  \hline
+  \multirow{3}{*}{$\textrm{AL}_1$} & 120 & 0.19 & 0.01 & 0.36 & 0.28 & 0.02 & 0.00 & 0.49 & 0.28 \\ 
+  & 240 & 0.40 & 0.05 & 0.24 & 0.27 & 0.02 & 0.00 & 0.43 & 0.34 \\ 
+  & 360 & 0.46 & 0.07 & 0.21 & 0.26 & 0.03 & 0.00 & 0.38 & 0.36 \\ 
+  \hline
+  \multirow{3}{*}{$\textrm{AL}_2$} & 120 & 0.16 & 0.04 & 0.40 & 0.17 & 0.02 & 0.00 & 0.53 & 0.18 \\ 
+  & 240 & 0.36 & 0.13 & 0.27 & 0.18 & 0.01 & 0.00 & 0.47 & 0.24 \\ 
+  & 360 & 0.45 & 0.17 & 0.22 & 0.18 & 0.03 & 0.01 & 0.41 & 0.27 \\ 
+  \hline
+  \multirow{3}{*}{$\textrm{AL}_3$} & 120 & 0.05 & 0.01 & 0.44 & 0.12 & 0.01 & 0.00 & 0.48 & 0.14 \\ 
+  & 240 & 0.15 & 0.05 & 0.35 & 0.17 & 0.01 & 0.00 & 0.44 & 0.20 \\ 
+  & 360 & 0.21 & 0.09 & 0.31 & 0.20 & 0.01 & 0.01 & 0.39 & 0.24 \\ 
+  \hline
+\end{tabular}
+\end{table}
+
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Simulation Study (Cont.)\\~\
+\begin{itemize}
+\item Results for Model I
+\end{itemize}
+\begin{table}[htbp]
+\footnotesize
+\centering
+\caption{Subset ARMA$(14,14)$ Results from 200 Replications of Model I}
+\begin{tabular}{cc|cccc|cccc}
+  \hline
+  & & \multicolumn{4}{c|}{$\textrm{AL}_m$} & \multicolumn{4}{c}{$\textrm{AE}_m$} \\
+  \cline{4-5}  \cline{8-9}
+  $m$ & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$ \\
+  \hline
+  1 & 360 & 0.50 & 0.08 & 0.20 & 0.24 & 0.54 & 0.08 & 0.17 & 0.25 \\ 
+  2 & 360 & 0.42 & 0.16 & 0.23 & 0.19 & 0.50 & 0.20 & 0.19 & 0.15 \\ 
+  3 & 360 & 0.20 & 0.10 & 0.32 & 0.19 & 0.20 & 0.10 & 0.30 & 0.19 \\
+  	\hline 
+  4 & 360 & 0.28 & 0.12 & 0.30 & 0.14 & 0.70 & 0.00 & 0.10 & 0.67 \\ 
+  5 & 360 & 0.24 & 0.12 & 0.32 & 0.15 & 0.66 & 0.00 & 0.12 & 0.66 \\ 
+  \hline
+  6 & 360 & 0.36 & 0.16 & 0.27 & 0.16 & 0.52 & 0.18 & 0.19 & 0.17 \\ 
+  7 & 360 & 0.44 & 0.16 & 0.23 & 0.15 & 0.54 & 0.16 & 0.18 & 0.17 \\ 
+  8 & 360 & 0.42 & 0.21 & 0.24 & 0.15 & 0.53 & 0.17 & 0.19 & 0.16 \\ 
+  \hline
+  9 & 360 & 0.44 & 0.20 & 0.23 & 0.12 & 0.60 & 0.04 & 0.15 & 0.27 \\ 
+  10 & 360 & 0.36 & 0.16 & 0.26 & 0.13 & 0.54 & 0.04 & 0.17 & 0.26 \\ 
+  11 & 360 & 0.46 & 0.24 & 0.23 & 0.11 & 0.62 & 0.05 & 0.14 & 0.29 \\ 
+      \hline
+     & & \multicolumn{4}{c|}{$\textrm{BHS}_m$} & \multicolumn{4}{c}{$\textrm{BHS}^+_m$} \\
+  \cline{4-5}  \cline{8-9}
+  $m$ & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$ \\
+  \hline
+  1 & 360 & 0.70 & 0.60 & 0.18 & 0.04 & 0.66 & 0.57 & 0.21 & 0.04 \\ 
+  2 & 360 & 0.88 & 0.62 & 0.08 & 0.04 & 0.88 & 0.60 & 0.07 & 0.04 \\ 
+  3 & 360 & 0.92 & 0.42 & 0.05 & 0.06 & 0.90 & 0.49 & 0.06 & 0.05 \\ 
+  \hline
+  4 & 360 & 0.92 & 0.30 & 0.04 & 0.09 & 0.92 & 0.32 & 0.05 & 0.08 \\ 
+  \hline
+\end{tabular}
+\end{table}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Simulation Study (Cont.)\\~\
+\begin{itemize}
+\item Results for Model II
+\end{itemize}
+\begin{table}[htbp]
+\footnotesize
+\centering
+\caption{Subset ARMA$(14,14)$ Results from 200 Replications of Model II}
+\begin{tabular}{cc|cccc|cccc}
+  \hline
+    & & \multicolumn{4}{c|}{$\textrm{AL}_m$} & \multicolumn{4}{c}{$\textrm{AE}_m$} \\
+  \cline{4-5}  \cline{8-9}  
+  $m$ & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$ \\
+  \hline
+  1 & 360 & 0.26 & 0.01 & 0.15 & 0.38 & 0.42 & 0.00 & 0.13 & 0.38 \\ 
+  2 & 360 & 0.26 & 0.02 & 0.16 & 0.32 & 0.36 & 0.02 & 0.14 & 0.33 \\ 
+  3 & 360 & 0.20 & 0.01 & 0.18 & 0.30 & 0.23 & 0.02 & 0.17 & 0.31 \\ 
+  \hline
+  4 & 360 & 0.06 & 0.03 & 0.28 & 0.08 & 0.70 & 0.00 & 0.05 & 0.78 \\ 
+  5 & 360 & 0.06 & 0.04 & 0.27 & 0.08 & 0.67 & 0.00 & 0.06 & 0.78 \\
+  \hline
+  6 & 360 & 0.18 & 0.05 & 0.18 & 0.25 & 0.30 & 0.00 & 0.14 & 0.32 \\ 
+  7 & 360 & 0.16 & 0.04 & 0.19 & 0.24 & 0.26 & 0.01 & 0.16 & 0.30 \\ 
+  8 & 360 & 0.16 & 0.02 & 0.20 & 0.26 & 0.26 & 0.01 & 0.16 & 0.31 \\ 
+  \hline
+  9 & 360 & 0.06 & 0.04 & 0.29 & 0.06 & 0.34 & 0.00 & 0.14 & 0.36 \\ 
+  10 & 360 & 0.08 & 0.06 & 0.26 & 0.07 & 0.26 & 0.00 & 0.16 & 0.37 \\ 
+  11 & 360 & 0.04 & 0.03 & 0.27 & 0.06 & 0.31 & 0.00 & 0.14 & 0.38 \\ 
+    \hline
+  & & \multicolumn{4}{c|}{$\textrm{BHS}_m$} & \multicolumn{4}{c}{$\textrm{BHS}^+_m$} \\
+  \cline{4-5}  \cline{8-9}
+  $m$ & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$ \\
+  \hline
+  1 & 360 & 0.13 & 0.02 & 0.24 & 0.09 & 0.12 & 0.03 & 0.25 & 0.09 \\ 
+  2 & 360 & 0.57 & 0.18 & 0.10 & 0.09 & 0.51 & 0.16 & 0.12 & 0.10 \\ 
+  3 & 360 & 0.89 & 0.05 & 0.03 & 0.15 & 0.88 & 0.08 & 0.04 & 0.14 \\ 
+  \hline
+  4 & 360 & 0.84 & 0.09 & 0.05 & 0.17 & 0.87 & 0.10 & 0.04 & 0.15 \\ 
+   \hline
+\end{tabular}
+\end{table}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Simulation Study (Cont.)\\~\
+\begin{itemize}
+\item Results for Model III
+\end{itemize}
+\begin{table}[htbp]
+\footnotesize
+\centering
+\caption{Subset ARMA$(14,14)$ Results from 200 Replications of Model III}
+\begin{tabular}{cc|cccc|cccc}
+  \hline
+    & & \multicolumn{4}{c|}{$\textrm{AL}_m$} & \multicolumn{4}{c}{$\textrm{AE}_m$} \\
+      \cline{4-5}  \cline{8-9}
+  $m$ & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$ \\
+  \hline
+  1 & 360 & 0.45 & 0.03 & 0.26 & 0.33 & 0.47 & 0.02 & 0.21 & 0.34 \\ 
+  2 & 360 & 0.36 & 0.04 & 0.33 & 0.21 & 0.40 & 0.07 & 0.27 & 0.18 \\ 
+  3 & 360 & 0.78 & 0.19 & 0.10 & 0.11 & 0.78 & 0.18 & 0.10 & 0.11 \\ 
+  \hline
+  4 & 360 & 0.49 & 0.18 & 0.24 & 0.21 & 0.86 & 0.00 & 0.05 & 0.61 \\ 
+  5 & 360 & 0.52 & 0.20 & 0.23 & 0.20 & 0.90 & 0.00 & 0.03 & 0.61 \\ 
+  \hline
+  6 & 360 & 0.46 & 0.22 & 0.25 & 0.12 & 0.48 & 0.12 & 0.22 & 0.18 \\ 
+  7 & 360 & 0.44 & 0.23 & 0.28 & 0.12 & 0.50 & 0.14 & 0.23 & 0.16 \\ 
+  8 & 360 & 0.48 & 0.22 & 0.24 & 0.10 & 0.48 & 0.12 & 0.23 & 0.17 \\ 
+  \hline
+  9 & 360 & 0.55 & 0.14 & 0.20 & 0.15 & 0.60 & 0.04 & 0.16 & 0.29 \\ 
+  10 & 360 & 0.56 & 0.21 & 0.18 & 0.14 & 0.64 & 0.02 & 0.14 & 0.25 \\ 
+  11 & 360 & 0.42 & 0.08 & 0.27 & 0.19 & 0.48 & 0.01 & 0.22 & 0.34 \\ 
+  \hline
+    & & \multicolumn{4}{c|}{$\textrm{BHS}_m$} & \multicolumn{4}{c}{$\textrm{BHS}^+_m$} \\
+  \cline{4-5}  \cline{8-9}
+  $m$ & $T$ & $C$ & $I$ & $-$ & $+$ & $C$ & $I$ & $-$ & $+$ \\
+  \hline
+  1 & 360 & 0.26 & 0.03 & 0.46 & 0.14 & 0.26 & 0.04 & 0.46 & 0.14 \\ 
+  2 & 360 & 0.40 & 0.00 & 0.34 & 0.22 & 0.38 & 0.00 & 0.36 & 0.21 \\ 
+  3 & 360 & 0.62 & 0.00 & 0.18 & 0.39 & 0.59 & 0.00 & 0.20 & 0.34 \\ 
+  \hline
+  4 & 360 & 0.40 & 0.02 & 0.35 & 0.25 & 0.35 & 0.02 & 0.36 & 0.24 \\ 
+   \hline
+\end{tabular}
+\end{table}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Application \\~\
+\begin{itemize}
+	\item Monthly $\textrm{CO}_2$ Levels Measured in Mauna Loa, Hawaii \\~\
+	\item Popular Textbook Example for Seasonal ARMA Processes with $Period=12$ \\~\
+	\item Fitting Period: Jan 1994 - Dec 1989 (468 Time Points) \\~\
+	\item Forecasting Period: Jan 1990 - Dec 1997  (96 Time Points) \\~\
+	\item Apply Seasonal and Regular Differencing \\~\
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Application  (Cont.) 
+	\begin{figure}[htbp]
+	\centering
+	\caption{Plots of Mauna Loa $\textrm{CO}_2$ Levels}
+	\includegraphics[scale=0.25]{co2plots}
+	\end{figure}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Application (Cont.) \\~\
+\begin{itemize}
+	\item Forecasting Metrics \\~\
+	\begin{itemize}
+	\item Root Mean Squared Error
+	$$RMSE=\frac{1}{96} \sum\limits_{j=1}^{96} (y_j-\hat{y}_j)^2$$
+	\item Mean Absolute Scaled Error
+	\item Mean Bias
+	$$MB=\frac{1}{96} \sum\limits_{j=1}^{96} (y_{j}-\hat{y}_{j})$$
+	\item Mean Directional Bias
+	$$MDB=\frac{1}{96} \sum\limits_{j=1}^{96} \textrm{sgn}(y_{j}-\hat{y}_{j})$$
+	where $\textrm{sgn}(x)=1$ if $x>0$ and $\textrm{sgn}(x)=-1$ if $x<0$
+	\end{itemize}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Application (Cont.) 
+\begin{itemize}
+	\item Final Model Selection 
+\end{itemize}
+\begin{figure}[htbp]
+	\caption{Subset ARMA Models for Mauna Loa $\textrm{CO}_2$ }
+	\center
+	\includegraphics[scale=0.22]{maunaloaselect}
+\end{figure}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Application (Cont.) \\~\
+\begin{itemize}
+	\item Out-of-Sample Prediction
+\end{itemize}
+\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{One-Step Ahead Forecasting Results for Mauna Loa $\textrm{CO}_2$}
+\begin{tabular}{c|cc|cc|cc|cc}
+   & \multicolumn{2}{c|}{$RMSE$} & \multicolumn{2}{c|}{$MASE$} &
+  \multicolumn{2}{c|}{$MB$} & \multicolumn{2}{c}{$MDB$}\\
+    \hline
+   m & $\textrm{AL}_m$ & $\textrm{AE}_m$ &
+  $\textrm{AL}_m$ & $\textrm{AE}_m$ &
+  $\textrm{AL}_m$ & $\textrm{AE}_m$ &
+  $\textrm{AL}_m$ & $\textrm{AE}_m$ \\
+  \hline
+  1 & 0.34 & 0.34 & 0.53 & 0.53 & -0.13 & -0.13 & -0.31 & -0.29 \\ 
+  2 & 0.33 & 0.33 & 0.52 & 0.52 & -0.10 & -0.10 & -0.21 & -0.21 \\ 
+  3 & 0.34 & 0.34 & 0.52 & 0.52 & -0.10 & -0.10 & -0.21 & -0.21 \\ 
+  4 & \multicolumn{8}{c}{Not Invertible (NI)} \\ 
+  6 & 0.34 & 0.33 & 0.53 & 0.52 & -0.10 & -0.09 & -0.17 & -0.23 \\ 
+  8 & 0.34 & 0.34 & 0.53 & 0.54 & -0.10 & -0.14 & -0.19 & -0.31 \\ 
+  9 & 0.34 & 0.36 & 0.52 & 0.57 & -0.10 & -0.18 & -0.23 & -0.44 \\ 
+  11 & 0.33 & 0.36 & 0.52 & 0.56 & -0.10 & -0.17 & -0.21 & -0.44 \\ 
+  \hline
+  \hline
+  m & $\textrm{BHS}_m$ & $\textrm{BHS}^+_m$ &
+  $\textrm{BHS}_m$ & $\textrm{BHS}^+_m$ &
+  $\textrm{BHS}_m$ & $\textrm{BHS}^+_m$ &
+  $\textrm{BHS}_m$ & $\textrm{BHS}^+_m$ \\
+  \hline
+  1 & 0.31 & 0.31 & 0.49 & 0.49 & -0.01 & -0.01 & 0.04 & 0.06 \\ 
+  2 & 0.32 & 0.32 & 0.50 & 0.50 & -0.02 & -0.02 & 0.00 & -0.02 \\ 
+  3 & 0.32 & 0.32 & 0.51 & 0.51 & -0.02 & -0.02 & 0.00 & 0.00 \\ 
+  4 & 0.32 & 0.32 & 0.50 & 0.50 & -0.01 & -0.01 & 0.02 & 0.02 \\ 
+  \hline
+  \hline
+  RW &  \multicolumn{2}{c|}{0.64} & \multicolumn{2}{c|}{1.03} &
+  \multicolumn{2}{c|}{0.00} & \multicolumn{2}{c}{-0.02}\\
+    ARMA &  \multicolumn{2}{c|}{0.37} & \multicolumn{2}{c|}{0.60} &
+  \multicolumn{2}{c|}{0.01} & \multicolumn{2}{c}{0.13}\\
+    SARMA &  \multicolumn{2}{c|}{0.30} & \multicolumn{2}{c|}{0.49} &
+  \multicolumn{2}{c|}{-0.04} & \multicolumn{2}{c}{-0.02}\\
+   \hline
+\end{tabular}
+\end{table}
+
+\end{itemize}
+}
 
 
-
-
+\frame{\frametitle{Chapter 3: ARMA Model} 
+\begin{itemize}
+\item Contribution and Novelty \\~\
+\begin{itemize}
+	\item Highlight Issues with Previous Usage of Adaptive LASSO in Subset ARMA Selection
+	\item Extends Subset ARMA Estimation to Adaptive Elastic Net 
+	\item Demonstrate the Appropriateness of Multiple Cross Validation Techniques with Penalized Regression for ARMA Models
+	\item Multi-step Bayesian Approach that Outperforms in Estimation, Selection, and Forecasting
+	\item Provides Detailed \textbf{R} Code for Reproducibility    \\~\
+\end{itemize}
+\item Future Developments \\~\
+\begin{itemize}
+	\item Extend Theoretical Asymptotic Results for Adaptive Elastic Net
+	\item More Focus on Bayesian Predictive Posterior Projection Method
+	\item Consider Alternative Bayesian Handling of Moving Average Terms
+\end{itemize}
+\end{itemize}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FINISH: QUESTIONS
