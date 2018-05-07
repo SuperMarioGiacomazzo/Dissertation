@@ -28,7 +28,7 @@
 
 \begin{document}
 \title{Three Essays on Shrinkage Estimation and Model Selection of Linear and Nonlinear Time Series Models}   
-\author{Mario Giacomazzo } 
+\author{Mario Giacomazzo} 
 \date{9 May 2018} 
 
 \frame{\titlepage} 
@@ -223,7 +223,6 @@ Under  prior $\bm{\phi}\sim Dir([0.25,0.25,0.25,0.25]')$, we conduct posterior s
 	\centering
 	\caption{Ten Random Replications}
 	\includegraphics[scale=.42]{simplots2A}
-	\label{fig:sim3plots}
 \end{figure}
 }
 
@@ -232,7 +231,6 @@ Under  prior $\bm{\phi}\sim Dir([0.25,0.25,0.25,0.25]')$, we conduct posterior s
 	\centering
 	\caption{Transition Function}
 	\includegraphics[scale=.42]{simplots2B}
-	\label{fig:sim3plots}
 \end{figure}
 }
 
@@ -241,7 +239,6 @@ Under  prior $\bm{\phi}\sim Dir([0.25,0.25,0.25,0.25]')$, we conduct posterior s
 	\centering
 	\caption{Illustration of Regime-switching Behavior}
 	\includegraphics[scale=.5]{simplots2C}
-	\label{fig:sim3plots}
 \end{figure}
 }
 
@@ -249,9 +246,10 @@ Under  prior $\bm{\phi}\sim Dir([0.25,0.25,0.25,0.25]')$, we conduct posterior s
 \begin{itemize}
 \item Bayesian Selection of the Threshold Variable (Scenario 1)\\~\
 
-Consider Original Choice $z_{1,t}=y_{t-1}=[1,0,0,0]\bm{d}_t$. Posterior Means of $\bm{\phi}$ from 100 Replications are Plotted Below.
+Consider $z_{1,t}=y_{t-1}=[1,0,0,0]\bm{d}_t$.
 \begin{figure}[!h]
 	\centering
+	\caption{Posterior Means of $\bm{\phi}$ from 100 Replications}
       \includegraphics[scale=0.3]{hsthvar1}
 \end{figure}
 \end{itemize}
@@ -261,9 +259,10 @@ Consider Original Choice $z_{1,t}=y_{t-1}=[1,0,0,0]\bm{d}_t$. Posterior Means of
 \begin{itemize}
 \item Bayesian Selection of the Threshold Variable (Scenario 2)\\~\
 
-Consider  $z_{2,t}=y_{t-2}=[0,1,0,0]\bm{d}_t$. Posterior Means of $\bm{\phi}$ from 100 Replications are Plotted Below.
+Consider  $z_{2,t}=y_{t-2}=[0,1,0,0]\bm{d}_t$.
 \begin{figure}[!h]
 	\centering
+	\caption{Posterior Means of $\bm{\phi}$ from 100 Replications}
       \includegraphics[scale=0.3]{hsthvar2}
 \end{figure}
 \end{itemize}
@@ -273,9 +272,10 @@ Consider  $z_{2,t}=y_{t-2}=[0,1,0,0]\bm{d}_t$. Posterior Means of $\bm{\phi}$ fr
 \begin{itemize}
 \item Bayesian Selection of the Threshold Variable (Scenario 3)\\~\
 
-Consider  $z_{3,t}=\frac{y_{t-1}+y_{t-2}+y_{t-3}}{3}=[\frac{1}{3},\frac{1}{3},\frac{1}{3},0]\bm{d}_t$. Posterior Means of $\bm{\phi}$ from 100 Replications are Plotted Below.
+Consider  $z_{3,t}=\frac{y_{t-1}+y_{t-2}+y_{t-3}}{3}=[\frac{1}{3},\frac{1}{3},\frac{1}{3},0]\bm{d}_t$.
 \begin{figure}[!h]
 	\centering
+	\caption{Posterior Means of $\bm{\phi}$ from 100 Replications}
       \includegraphics[scale=0.3]{hsthvar3}
 \end{figure}
 \end{itemize}
@@ -315,15 +315,517 @@ Consider  $z_{3,t}=\frac{y_{t-1}+y_{t-2}+y_{t-3}}{3}=[\frac{1}{3},\frac{1}{3},\f
 
 
 
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CHAPTER 2: THRESHOLD AUTOREGRESSIVE MODEL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \frame{\frametitle{Chapter 2: TAR Model} 
 \begin{itemize}
-\item 
+\item Need for Traffic Occupancy Models \\~\
+	\begin{itemize}
+		\item Advanced Traffic Management Systems (ATMS) Monitor Traffic Characteristics in Real Time
+		\item ATMS Require Fast Short-Term Forecasting to Reduce Congestion
+		\item Traffic Occupancy is the Percent of Time a Detection Zone is Occupied
+		\item Different States of Traffic: Free-Flow, Congested, Transitional
+		\item Factors Influencing Regime Changes : Weekly Work Patterns, Accidents, Weather, etc. \\~\
+	\end{itemize}
+\item Traffic Data Considered \\~\
+	\begin{itemize}
+		\item Major Athens' Arterial: Alexandras Ave.
+		\item Time Period: April 2000
+		\item Obtained by National Technical University of Athens
+		\item Provided for 2013 TRANSportation Data FORecasting Competition (TRANSFOR) Developed by the Traffic Research Board (TRB) for Annual Meeting Workshop \citep{Kamarianakis2014}
+		\item Measured on 90s Interval, but Mean Aggregated to 3min Interval
+	\end{itemize}
 \end{itemize}
-
 }
+
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{figure}[!h]
+	\centering
+	\caption{Map of Traffic Network in Athens, Greece}
+      \includegraphics[scale=0.3]{TrafficMap2}
+\end{figure}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{figure}[!h]
+	\centering
+	\caption{Raw Traffic Occupancy From Westbound Detectors}
+      \includegraphics[scale=0.3]{RawPlotsA}
+\end{figure}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{figure}[!h]
+	\centering
+	\caption{Raw Traffic Occupancy From Eastbound Detectors}
+      \includegraphics[scale=0.3]{RawPlotsB}
+\end{figure}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item $(L,D,h)$-Specific Models \\~\
+	\begin{itemize}
+		\item Location $L\in \{A,B,C,D,E,F,G\}$
+		\item Work Day $D\in\{M,T,W,Th,F\}$
+		\item  Horizon $h \in \{1,3,5\}$ \\~\
+	\end{itemize}
+\item Data Transformation \\~\
+\begin{itemize}
+	\item Let $O_{t}$ Represent the Traffic Occupancy at Time $t$
+	\item $Y_t=\textrm{logit}(O_t)=\log[O_t/(1-O_t)]$
+	\item Raw Data Adjusted at the Boundary so $\textrm{logit}(\cdot)$ Is Defined
+	\item Forecasts Evaluated on Original Scale, but $$\hat{O}_{L,t} \neq  \textrm{logit}^{-1}(\hat{Y}_{L,t})$$
+	\item Density Forecasts Produced from $\{\textrm{logit}^{-1}(\hat{Y}^{(s)}_{L,t})\}_{s=1}^{S}$ where $\{\hat{Y}^{(s)}_{L,t}\}_{s=1}^{S}$ are $S$ posterior samples obtained from the posterior predictive distribution $f(\hat{Y}_{L,t}|\mathcal{I}^*_t)$ where $\mathcal{I}^*_t=\{y_{L,k}\}_{k=t-h}^{t-h-P+1}$
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Horizon-Specific Gaussian TAR$(P)$ Model with $(m+1)$-regimes
+$$y_{t}=\phi_0^{(j)}+\sum\limits_{i=1}^P \phi^{(j)}_i y_{t-h-i+1}+\sigma\epsilon_{t}, \textrm{ for } \delta_{j-1}<y_{t-h}\leq \delta_{j}$$
+where $\sigma>0$, $j\in\{1,2,\cdots,m+1\}$, $h\in \mathbb{N}$, and $\epsilon_t\sim \mathcal{N}(0,1)$. \\~\
+
+
+Vector of Thresholds $\bm{\delta}=[\delta_1,\cdots,\delta_m]$. \\~\
+
+Partitions the Process into $m+1$ regimes such that $-\infty=\delta_0<\delta_1\leq\delta_2\leq \cdots \leq \delta_m<\delta_{m+1}=\infty$.
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item High Dimensional Linear Representation \citep{Chan2015,Chan2017} \\~\
+\begin{itemize}
+\item Let $\bm{y}=[y_{1},\cdots,y_{T}]'$, $\bm{\epsilon}=[\epsilon_{1},\cdots,\epsilon_{T}]'$, and define matrix $\bm{X}$ by
+$$
+\bm{X}=\begin{bmatrix}
+    1 & y_{1-h} & y_{1-h-1} & \dots  & y_{1-h-P+1} \\
+    1 & y_{2-h} & y_{2-h-1} & \dots  & y_{2-h-P+1} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & y_{T-h} & y_{T-h-1} & \dots  & y_{T-h-P+1}
+\end{bmatrix}.
+$$
+
+Second Column of $\bm{X}$ Contains the $h$-Specific Transition Variable. \\~\
+
+Model Matrix $\bm{X}$ Often Used in Linear AR$(P)$ Regressions.
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item High Dimensional Linear Representation (Cont.) \\~\
+\begin{itemize}
+\item Reorder $\bm{y}$, $\bm{\epsilon}$, and $\bm{X}$ According to Transition Variable
+
+Sorting function $\pi(i):\{1,\cdots,T\}\to\{1,\cdots,T\}$  where $\pi(i)$ equates to the time index of the $i$th smallest element in $[y_{1-h},y_{2-h},\cdots,y_{T-h}]'$. Now, 
+$$\bm{y}_R=[y_{\pi(1)+h},\cdots,y_{\pi(T)+h}]',$$ $$\bm{\epsilon}_R=[\epsilon_{\pi(1)+h},\cdots,\epsilon_{\pi(T)+h}]',$$ and 
+$$
+\bm{X}_1=\begin{bmatrix}
+    1 & y_{\pi(1)} & y_{\pi(1)-1} & \dots  & y_{\pi(1)-P+1} \\
+    1 & y_{\pi(2)} & y_{\pi(2)-1} & \dots  & y_{\pi(2)-P+1} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & y_{\pi(T)} & y_{\pi(T)-1} & \dots  & y_{\pi(T)-P+1}
+\end{bmatrix}=
+\begin{bmatrix}
+\bm{y}'_{\pi(1)} \\
+\bm{y}'_{\pi(2)} \\
+\vdots \\
+\bm{y}'_{\pi(T)} \\
+\end{bmatrix}
+$$
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item High Dimensional Linear Representation (Cont.) \\~\
+\begin{itemize}
+\item Finite Set of $m$ Thresholds for an $(m+1)$-Regime TAR$(P)$ \\~\
+
+Define the Sample Quantile Function, $$q(.): [0,1]\to[\min\{y_{t-h}:t=1,2,\cdots,T\},\max\{y_{t-h}:t=1,2,\cdots,T\}]$$ \\~\ 
+
+Select Sequence $\{p_k\}_{k=1}^m$ of $m$ Evenly Spaced Percentiles where $$p_{min}=p_1<\cdots<p_m=p_{max}$$ \\~\
+
+For a Fully Saturated TAR Model Limited to $(m+1)$ Regimes, Fix \textit{a priori} $$\bm{\delta}=[q(p_{1}),q(p_2),\cdots,q(p_{m})]'$$ \\~\
+
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item High Dimensional Linear Representation (Cont.) \\~\
+\begin{itemize}
+\item Finite Set of $m$ Thresholds for an $(m+1)$-Regime TAR$(P)$ (Cont.) \\~\
+
+For $j \in \{2,\cdots,m+1\}$, Let $k_j$ Represent the Number of Elements in $[y_{1-h},y_{2-h},\cdots,y_{T-h}]'$ Less than $q(p_{j-1})$ and Define 
+$$\bm{X}_j=
+\begin{bmatrix}
+    0 & 0 & 0 & \dots  & 0 \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    0 & 0 & 0 & \dots  & 0 \\
+    1 & y_{\pi(k_j+1)} & y_{\pi(k_j+1)-1} & \dots  & y_{\pi(k_j+1)-P+1} \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & y_{\pi(T)} & y_{\pi(T)-1} & \dots  & y_{\pi(T)-P+1}
+\end{bmatrix}=
+\begin{bmatrix}
+0 \\
+\vdots \\
+0\\
+\bm{y}'_{\pi(k_j+1)} \\
+\vdots \\
+\bm{y}'_{\pi(T)} \\
+\end{bmatrix}.
+$$ \\~\
+
+\item Fully Saturated $(m+1)$-Regime TAR$(P)$ as a Linear Regression \\~\
+	$$\bm{y}_R =\bm{X}_R\bm{\theta}_R+\bm{\epsilon}_R$$
+	$\bm{X}_R=[\bm{X}_1,\bm{X}_2,\cdots,\bm{X}_{m+1}]$ is a $T\times (P+1)(m+1)$ Matrix \\~\
+	 
+	$\bm{\theta}_R=[\bm{\theta}'_{1},\bm{\theta}'_2,\cdots,\bm{\theta}'_{m+1}]'$ is a $(P+1)(m+1) \times 1$ Vector of Grouped Reparameterized Coefficients \\~\
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Baseline $(L,D)$-Specific Seasonal Model (Cont.) \\~\
+$$y_{t}=\mu+\sum\limits_{j=1}^{H} \Big[\alpha_{j}\sin\Big(\frac{2\pi tj}{480}\Big)+\beta_{j}\cos\Big(\frac{2\pi tj}{480}\Big)\Big]+\sigma\epsilon_{t}$$
+where $\sigma>0$, $H\in \mathbb{N}$, and $\epsilon_t\sim \mathcal{N}(0,1)$. \\~\
+
+Representable as a High Dimensional Linear Regession,
+ $$\bm{y}_F =\bm{X}_F\bm{\theta}_F+\bm{\epsilon}_F$$
+
+\item Considerations for Traffic Occupancy \\~\
+\begin{itemize}
+	\item Maximum AR Order $P=7$
+	\item Maximum Number of Thresholds $m=50$ 
+	\item Set $p_{min}=0.15$ and $p_{max}=0.85$ 
+	\item Saturated $51$-Regime TAR$(7)$ Model with $408$ Parameters in $\bm{\theta}_R$ \\~\
+	\item Maximum Number of Sine/Cosine Pairs $H=150$
+	\item Saturated Seasonal Harmonic Regression Model with $301$ Parameters in $\bm{\theta}_F$
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Three-Step Procedure For Automatic Estimation and Selection \\~\
+\begin{itemize}
+\item Full Model $\bm{y}_R =\bm{X}_R\bm{\theta}_R+\bm{\epsilon}_R$ Nests $6.61\times 10^{122}$ Different $(m^*+1)$-Regime Subset TAR$(P)$ Models where $0\leq m^* \leq m$ \\~\
+\item Step 1: Sparse Estimation Using Horseshoe+ Shrinkage Priors  \\~\
+\begin{itemize}
+\item Adaptive LASSO Used by \cite{Chan2015}
+\item $\textrm{BHS}^+$ Hierarchy for Each $\theta_i$ in $\bm{\theta}_R$ \citep{Bhadra2016}
+\begin{equation*}
+\begin{split}
+	\theta_i|\lambda_i,\tau,\sigma^2 & \sim \mathcal{N}(0,\lambda^2_i\tau^2\sigma^2) \\
+	\lambda_i &\sim \mathcal{C}^+(0,\eta_i)\\
+	\eta_i & \sim \mathcal{C}^+(0,1)\\
+	\tau &\sim \mathcal{C}^+(0,1)\\
+\end{split}
+\end{equation*}
+
+\item Modified Hierarchy Required for Gibbs Sampling \citep{Makalic2016b} \\~\
+
+If $\lambda_i^2|\nu_i\sim \mathcal{IG}(\frac{1}{2},\frac{1}{\nu_i})$ and $\nu_i \sim \mathcal{IG}(\frac{1}{2},1)$, then $\lambda_i^2 \sim \mathcal{C}^+(0,1)$ \citep{Wand2011}.
+
+\end{itemize}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Three-Step Procedure For Sparse Estimation (Cont.) \\~\
+\begin{itemize}
+\item Step 2: Regime Identification \\~\
+\begin{itemize}
+ \item Good Starting Point Under Full Saturated Model $\mathcal{M}_R$ 
+ \item Samples $\{\bm{\theta}^{(s)}_R\}_{s=1}^S$ and $\{\sigma^{(s)}\}_{s=1}^S$ from Joint Posterior Distribution
+ \item Given Candidate Submodel $\mathcal{M}_\perp$, Posterior Samples $\{\bm{\theta}^{(s)}_\perp\}_{s=1}^S$ and $\{\sigma^{(s)}_\perp\}_{s=1}^S$ Obtained Via Projection
+ \item Gaussian Linear Models \citep{Piironen2015b,Piironen2017}
+	$$\bm{\theta}^{(s)}_\perp = (\mathbf{X}'_\perp \mathbf{X}_\perp)^{-1} \mathbf{X}'_\perp \mathbf{X}_R\bm{\theta}^{(s)}_R$$
+$$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\theta}^{(s)}_R-\mathbf{X}_\perp\bm{\theta}^{(s)}_\perp)'(\mathbf{X}_R\bm{\theta}^{(s)}_R-\mathbf{X}_\perp\bm{\theta}^{(s)}_\perp)}{T}}$$
+\end{itemize}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Three-Step Procedure For Sparse Estimation (Cont.) \\~\
+\begin{itemize}
+\item Step 2: Regime Identification (Cont.) \\~\
+\begin{itemize}
+ \item Kullback-Leibler (KL) Divergence \citep{Kullback1951} Measures the Overall Discrepancy Between the Posterior Predictive Distributions $p(y_{T+1}|\mathcal{M}_R,\mathbf{y}_R,\mathbf{X}_R)$ and $p(y_{T+1}|\mathcal{M}_R,\mathbf{y}_\perp,\mathbf{X}_\perp)$
+ \item KL Divergence for a Particular Sample
+ $$d^{(s)}_{\perp}(\bm{\theta}^{(s)}_R,\sigma^{(s)}_R)=\frac{1}{2}\log\Bigg(\frac{\sigma^{(s)}_\perp}{\sigma^{(s)}_R}\Bigg)^2$$
+ \item Overall Discrepancy
+ $$D(\mathcal{M}_{R}||\mathcal{M}_\perp)=\frac{1}{S}\sum\limits^S_{s=1} d^{(s)}_{\perp}(\bm{\theta}^{(s)}_R,\sigma^{(s)}_R)$$
+\end{itemize}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Three-Step Procedure For Sparse Estimation (Cont.) \\~\
+\begin{itemize}
+\item Step 2: Regime Identification (Cont.) \\~\
+\begin{itemize}
+ \item Forward Stepwise Selection Algorithm \citep{Peltola2014} \\~\
+ 
+ Begin with Linear AR$(P)$ Model, Denoted $\mathcal{M}^{(1)}_\perp$, where $$\bm{\theta}^{(1)}_\perp=[\bm{\theta}'_1,\bm{0}',\bm{0}',\cdots,\bm{0}']',$$
+ with initial discrepancy $D(\mathcal{M}_{R}||\mathcal{M}^{(1)}_{\perp})$ \\~\
+ 
+  For each $j \in \{2,\cdots,m+1\}$, $\bm{\theta}_j$ is Added to $\bm{\theta}^{(1)}_\perp$ and the Best $2$-Regime TAR$(P)$ Model $\mathcal{M}^{(2)}_\perp$  Minimizes the Discrepancy $D(\mathcal{M}_{R}||\mathcal{M}^{(2)}_{\perp})$. \\~\
+  
+  Continue to Identify the Best $3$-Regime TAR, $4$-Regime TAR, $\cdots$ \\~\
+  
+  Stopping Rule Based on Relative Explanatory Power ($RelE$) from \cite{Dupuis2003}
+  $$RelE(\mathcal{M}_\perp)=1-\frac{D(\mathcal{M}||\mathcal{M}_\perp)}{D(\mathcal{M}||\mathcal{M}^1)}$$ \\~\
+\end{itemize}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Three-Step Procedure For Sparse Estimation (Cont.) \\~\
+\begin{itemize}
+\item Step 3: Final Subset Selection \\~\
+\begin{itemize}
+ \item Let $\mathcal{J}=\{j: \bm{\theta}_j \neq 0\}$ indicate the AR$(P)$ parameter groups in $\bm{\theta}_R$ Selected Via Forward Algorithm
+ \item Let $\theta_{i,j}$ Represent the $i$th Parameter in the $j$th Vector $\bm{\theta}_j$ for $i\in \{1,2, \cdots, P+1\}$ and $j\in \{1,2,\cdots,m+1\}$.
+ \item The Set $\mathcal{I}=\{\theta_{i,j}:i=1,\cdots,P+1 \textrm{ and } j\in\mathcal{J}\}$ Contains Potentially Relevant Parameters in $\bm{\theta}_R$
+ \item Repeat Forward Stepwise Algorithm Across $\mathcal{I}$. The Intercept Only Model Utilized for $\mathcal{M}^{(1)}_{\perp}$. \\~\
+\end{itemize}
+\item Result: Final Choice $\mathcal{M}_*$ is a $(m^*+1)$-Regime Subset TAR$(P)$ Model where $m^*$ is the Number of Parameter Groups with at Least 1 Selected Parameter. 
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results \\~\
+\begin{itemize}
+\item $(L,D)$-Specific Seasonal Profiles (Quickly Forecasts at All Horizons) 
+	\begin{figure}[!h]
+			\centering
+			\caption{Forecasts Based on Seasonal Profiles for Westbound Detectors}
+      \includegraphics[scale=0.24]{SEASESTPlotsA}
+	\end{figure}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results (Cont.) \\~\
+\begin{itemize}
+\item $(L,D,1)$-Specific Final Subset TAR$(7)$ Models
+	\begin{figure}[!h]
+			\centering
+			\caption{1-Step Ahead Density TAR Forecasts for Westbound Detectors}
+      \includegraphics[scale=0.24]{DENS1PlotsA}
+	\end{figure}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results (Cont.) \\~\
+\begin{itemize}
+\item $(L,D,3)$-Specific Final Subset TAR$(7)$ Models
+	\begin{figure}[!h]
+			\centering
+			\caption{3-Step Ahead Density TAR Forecasts for Westbound Detectors}
+      \includegraphics[scale=0.24]{DENS3PlotsA}
+	\end{figure}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results (Cont.) \\~\
+\begin{itemize}
+\item $(L,D,5)$-Specific Final Subset TAR$(7)$ Models
+	\begin{figure}[!h]
+			\centering
+			\caption{5-Step Ahead Density TAR Forecasts for Westbound Detectors}
+      \includegraphics[scale=0.24]{DENS5PlotsA}
+	\end{figure}
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results (Cont.) \\~\
+\begin{itemize}
+\item Comparison of Point Forecasts \\~\
+	\begin{itemize}
+	\item Evaluated on Mean Absolute Scaled Forecast Error \citep{Hyndman2006}
+	$$\textrm{MASFE}(h)=\frac{1}{T_h}\sum\limits_{t=P+h}^{480}\left|\frac{O_{L,t}-\widehat{O}_{L,t}}{\textrm{MAE}_{RW}(h)}\right|$$
+	\item $\textrm{MAE}_{RW}(h)$ is the Fitted MAE from Naive Random Walk where  $\widehat{O}_{t}=O_{t-h}$
+	\end{itemize}
+
+	\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{1-Step Ahead MASFE Forecast Comparison}
+\begin{tabular}{c|rccccccc}
+  \hline
+  & & \multicolumn{7}{c}{Location}\\
+  \cline{5-7}
+Day & Model & A & B & C & D & E & F & G \\ 
+  \hline
+  \multirow{2}{*}{M} & TAR & 1.02 & 1.10 & 0.88 & 1.07 & 1.87 & 0.81 & 1.48 \\ 
+  & SEAS & 1.80 & 1.47 & 1.15 & 1.43 & 4.02 & 1.57 & 3.66 \\ 
+  \hline
+  \multirow{2}{*}{T}  & TAR & 0.90 & 1.05 & 1.04 & 0.98 & 1.36 & 1.03 & 1.95 \\ 
+  & SEAS & 1.35 & 1.36 & 1.22 & 1.46 & 3.36 & 1.65 & 3.29 \\ 
+  \hline
+   \multirow{2}{*}{W} & TAR & 1.04 & 1.11 & 0.91 & 0.97 & 2.27 & 1.86 & 1.55 \\ 
+   & SEAS & 1.39 & 2.01 & 2.18 & 1.61 & 4.65 & 2.90 & 2.80 \\ 
+  \hline
+ \multirow{2}{*}{Th} & TAR & 0.93 & 0.89 & 0.82 & 0.92 & 1.48 & 1.52 & 1.83 \\ 
+   & SEAS & 1.44 & 1.43 & 1.51 & 1.42 & 3.98 & 2.74 & 4.07 \\ 
+  \hline
+  \multirow{2}{*}{F} & TAR & 1.80 & 1.08 & 1.01 & 0.85 & 1.45 & 2.40 & 1.16 \\ 
+   & SEAS & 4.77 & 2.23 & 1.98 & 1.83 & 4.37 & 6.24 & 3.78 \\ 
+   \hline
+\end{tabular}
+\end{table}	
+	
+\end{itemize}
+\end{itemize}
+}
+
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results (Cont.) \\~\
+\begin{itemize}
+\item Comparison of Point Forecasts (Cont.) \\~\
+
+	\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{3-Step Ahead MASFE Forecast Comparison}
+\begin{tabular}{c|rccccccc}
+  \hline
+    & & \multicolumn{7}{c}{Location}\\
+  \cline{5-7}
+Day & Model & A & B & C & D & E & F & G \\ 
+  \hline
+  \multirow{2}{*}{M} & TAR & 0.94 & 1.06 & 0.88 & 1.13 & 1.85 & 0.88 & 1.50 \\ 
+   & SEAS & 1.36 & 1.17 & 0.93 & 1.14 & 2.91 & 1.19 & 2.57 \\ 
+   \hline
+  \multirow{2}{*}{T} & TAR & 0.87 & 1.04 & 0.96 & 1.03 & 1.46 & 1.15 & 1.21 \\ 
+   & SEAS & 1.04 & 1.06 & 0.91 & 1.10 & 2.24 & 1.22 & 2.15 \\ 
+   \hline 
+  \multirow{2}{*}{W} & TAR & 1.09 & 1.15 & 1.10 & 0.99 & 1.75 & 2.00 & 1.26 \\ 
+   & SEAS & 1.15 & 1.61 & 1.69 & 1.21 & 2.94 & 2.24 & 1.71 \\ 
+   \hline
+ \multirow{2}{*}{Th}  & TAR & 0.90 & 0.96 & 0.82 & 0.93 & 1.88 & 1.47 & 1.14 \\ 
+   & SEAS & 1.15 & 1.09 & 1.14 & 1.03 & 2.69 & 1.96 & 2.68 \\ 
+  \hline
+  \multirow{2}{*}{F} & TAR & 3.04 & 1.09 & 1.00 & 0.66 & 1.14 & 2.47 & 0.92 \\ 
+   & SEAS & 3.53 & 1.57 & 1.42 & 1.33 & 3.12 & 4.35 & 2.42 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Results (Cont.) \\~\
+\begin{itemize}
+\item Comparison of Point Forecasts (Cont.) \\~\
+
+	\begin{table}[htbp]
+\scriptsize
+\centering
+\caption{5-Step Ahead MASFE Forecast Comparison}
+\begin{tabular}{c|rccccccc}
+  \hline
+    & & \multicolumn{7}{c}{Location}\\
+  \cline{5-7}
+Day & Model & A & B & C & D & E & F & G \\ 
+  \hline
+  \multirow{2}{*}{M} & TAR & 0.94 & 0.99 & 0.89 & 1.12 & 1.97 & 0.86 & 1.68 \\ 
+   & SEAS & 1.24 & 1.06 & 0.88 & 1.06 & 2.46 & 1.08 & 2.17 \\ 
+  \hline
+  \multirow{2}{*}{T}  & TAR & 0.81 & 1.05 & 0.95 & 1.00 & 1.47 & 1.13 & 1.15 \\ 
+   & SEAS & 0.95 & 0.95 & 0.85 & 0.99 & 1.85 & 1.07 & 1.77 \\ 
+  \hline
+  \multirow{2}{*}{W}  & TAR & 1.02 & 1.12 & 1.04 & 0.99 & 1.67 & 1.94 & 1.26 \\ 
+   & SEAS & 1.01 & 1.44 & 1.56 & 1.12 & 2.30 & 1.95 & 1.44 \\ 
+  \hline
+  \multirow{2}{*}{Th}  & TAR & 0.84 & 0.98 & 0.82 & 0.87 & 1.51 & 1.48 & 1.22 \\ 
+   & SEAS & 1.05 & 1.03 & 1.07 & 0.94 & 2.13 & 1.73 & 2.24 \\ 
+  \hline
+  \multirow{2}{*}{F}  & TAR & 2.85 & 1.20 & 0.88 & 0.70 & 1.26 & 2.52 & 1.00 \\ 
+   & SEAS & 3.07 & 1.48 & 1.33 & 1.19 & 2.59 & 3.82 & 2.01 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\end{itemize}
+\end{itemize}
+}
+
+\frame{\frametitle{Chapter 2: TAR Model} 
+\begin{itemize}
+\item Contribution and Novelty \\~\
+\begin{itemize}
+	\item Advances Methodology for Estimating TAR$(P)$ Models with Potentially Many Regimes
+	\item Shows Relevancy in an Industry Needing Short-term Forecasting
+	\item Easy 3-Step Bayesian Approach Capable of Selecting  Regimes and AR Parameters Within Regimes (More Flexible Final Models)
+	\item Appendix Provides Defense for Horseshoe+ Hierarchy \\~\
+\end{itemize}
+\item Future Developments \\~\
+\begin{itemize}
+	\item Modifications for Student t Distributed Errors (Shows Promise)
+	\item Quality of Forecast Credible Regions
+	\item Other Techniques for Modeling Heteroskedasticity
+	\item Look at Using Different Transition Variables (Composite, Difference, etc.)
+\end{itemize}
+\end{itemize}
+}
+
+
+
+
+
+
+
 
 
 
@@ -384,502 +886,14 @@ Consider  $z_{3,t}=\frac{y_{t-1}+y_{t-2}+y_{t-3}}{3}=[\frac{1}{3},\frac{1}{3},\f
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{\frametitle{Part 1: Bayesian Estimation of LSTAR Models}
-\begin{itemize}
-\item Primary Goals \\~\
-	\begin{itemize}
-		\item Establish the Efficacy of Bayesian Shrinkage Estimation applied to LSTAR
-		\item Modify Bayesian Shrinkage Priors to Handle Regime-specific Sparsity
-		\item Allow for Composite Transition Variable to Be Estimated Using Dirichlet Prior
-	\end{itemize}
-\end{itemize}
-}
 
-\frame{\frametitle{Part 1: Bayesian Estimation of LSTAR Models} 
-\begin{itemize}
-\item Bayesian Shrinkage Methods\\~\
-\begin{itemize}
-	\item Bayesian Lasso (BLASSO)
-	\begin{equation*}
-	\begin{split}
-	\alpha_j|\sigma^2,\tau^2_{\alpha_j} \sim N(0,\sigma^2\tau^2_{\alpha_j}) \textrm{,  }  \tau^2_{\alpha_j}| \sim EXP(\lambda^2/2)\\ 
-	 \beta_j|\sigma^2,\tau^2_{\beta_j}\sim N(0,\sigma^2\tau^2_{\beta_j}) \textrm{,  } \tau^2_{\beta_j}| \sim EXP(\lambda^2/2)
-	\end{split}
-\end{equation*}
-	Hyperparameter $\lambda$ Controls Global Shrinkage Across Both Regimes. Following \cite{Park2008}, gamma hyperprior for $\lambda$ leads to inverse-Gaussian full conditional distribution.\\~\
-	\item Regime-Specific Bayesian Lasso (RS-BLASSO) 
-\begin{equation}
-	 \tau^2_{\alpha_j}| \sim EXP(\lambda_1^2/2) \textrm{,  } \tau^2_{\beta_j}| \sim EXP(\lambda_2^2/2)
-\end{equation}
-Hyperparameters $\lambda_1$ and $\lambda_2$ control global shrinkage within low and high regimes, respectively.
-\end{itemize}
-\end{itemize}
-}
 
-\frame{\frametitle{Part 1: Bayesian Estimation of LSTAR Models} 
-\begin{itemize}
-\item Bayesian Shrinkage Methods (Cont.)\\~\
-\begin{itemize}
-	\item Variable Selection with Bayesian Lasso (VS-BLASSO) 
-	Introducing latent binary variables $\zeta_j$ and $\eta_j$ for $j \in \{1,2,\cdots, p\}$, reparameterize $\alpha_j=\zeta_j\alpha_j^*$ and $\beta_j=\eta_j\beta_j^*$.
-		\begin{equation*}
-		\begin{split}
-	 	\zeta_j \sim BERN(0.5) \textrm{,  } & \alpha_j^*|\sigma^2\sim DEXP\Big(0,\frac{\sigma^2}{\lambda}\Big) \\
-	 	 \eta_j \sim BERN(0.5) \textrm{,  } & \beta_j^*|\sigma^2\sim DEXP\Big(0,\frac{\sigma^2}{\lambda}\Big)
-		\end{split}
-		\end{equation*}
-	Method proposed by \cite{Lykou2011,Lykou2013}. Combines the subset selection approach of \cite{Kuo1998} with the Bayesian Lasso of  \cite{Park2008}.
-\end{itemize}
-\end{itemize}
-}
 
-\frame{\frametitle{Part 1: Bayesian Estimation of LSTAR Models} 
-\begin{itemize}
-\item Bayesian Shrinkage Methods (Cont.)\\~\
-\begin{itemize}
-	\item Bayesian Horseshoe (BHS)
-	\begin{equation*}
-	\begin{split}
-	\alpha_j|\lambda_{\alpha_j} & \sim N(0,\lambda_{\alpha_j}) \textrm{,  }  \beta_j|\lambda_{\beta_j} \sim N(0,\lambda_{\beta_j}) \\
-	  \lambda_{\alpha_j} & \sim C^+(0,\lambda) \textrm{,  } \lambda_{\beta_j} \sim C^+(0,\lambda) \\
-	  \lambda|\sigma^2 & \sim C^+(0,\sigma)
-	\end{split}
-	\end{equation*}
-	Although hyperparameter $\lambda$ provides global shrinkage, the additional  hyperparameters allow for finer shrinkage locally.
-\end{itemize}
-\end{itemize}
-}
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models}
-\begin{itemize}
-\item Primary Goals\\~\
-\begin{itemize}
-\item Explore Modeling Approaches for Traffic Occupancy Using Autoregressive Distributed Lag (ARDL) Models and Threshold Autoregressive Distributed Lag (TARDL) Models.
-\item Combine Bayesian Shrinkage with Projection Predictive Variable Selection to Obtain Sparse Estimation Focused on Optimal Forecasting \citep{Piironen2017}
-\item Modify Above Methodology to Handle Regime-Specific Sparsity Patterns
-\item Evaluate Models on Short-Term Forecasting at Multiple Horizons
-\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Modeling Traffic Occupancy \\~\
-	\begin{itemize}
-		\item Advanced Traffic Management Systems (ATMS) Monitor Traffic Characteristics in Real Time
-		\item ATMS Require Fast Short-Term Forecasting to Reduce Congestion
-		\item Most Modeling Approaches Aimed at Traffic Flow and Speed \citep{Smith1997, Vlahogianni2014}
-		\item Different Regimes of Traffic: Free-Flow, Congested, Transitional
-		\item Factors Influencing Regime Changes : Weekly Work Patterns, Accidents, Weather, etc.
-		\item Traffic Occupancy is the Percent of Time a Detection Zone is Occupied
-		\item Capture Spatio-Temporal Dependencies with ARDL and TARDL Models
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Traffic Data Used \\~\
-	\begin{itemize}
-		\item Major Athens' Arterial: Alexandras Ave.
-		\item Traffic Occupancy Measured on 90s Interval
-		\item Time Period: April 2000
-		\item Obtained by National Technical University of Athens
-		\item Provided for 2013 TRANSportation Data FORecasting Competition (TRANSFOR) Developed by the Traffic Research Board (TRB) for Annual Meeting Workshop \citep{Kamarianakis2012}
-		\item Mean Aggregate to 3-min Interval for Moderate Smoothing
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Traffic Data Used (Cont.) \\~\
-
-Focus on Data From 3 Loop Detectors Identified as $A$, $B$, and $C$ Along Westbound Direction. Illustrated from Google Maps.
-\begin{figure}[!h]
-\includegraphics[scale=0.25]{TrafficMap}
-\end{figure}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Primary Focus \\~\
-
-Let  $O_{L,t}=$ Traffic occupancy for location $L \in\{A,B,C\}$ at time $t$ \\~\
-
-For each day $D\in\{M,T,W,Th,F\}$ and  horizon $h \in \{1,3,5\}$, we develop and compare $(D,h)$-specific models for $O_{B,t}$. \\~\
-
-Since $O_{L,t} \in [0,1]$, models are built using $Y_{L,t}=\log[O_{L,t}/(1-O_{L,t})]$ \citep{Wallis1987}. \\~\
-
-Models designed to ``directly'' forecast $Y_{B,t+h}$ given previously known information $\mathcal{I}=\{Y_{A,k},Y_{B,k},Y_{C,k}| k \leq t\}$
-
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item  Primary Focus (Cont.) \\~\
-Time Series Plots of $O_{A,t}$ (\textit{maroon}), $O_{B,t}$ (\textit{black}), and $O_{C,t}$ (\textit{blue})
-\begin{figure}[!h]
-\includegraphics[scale=0.23]{OrigPlotTrafficOcc}
-\end{figure}
-\end{itemize}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Baseline Models
-\begin{itemize}
-	\item Horizon Specific Random Walks  $\mathcal{W}(D,h)$
-	\begin{equation*}	
-		Y_{B,t}=Y_{B,t-h}+\epsilon_t
-	\end{equation*}
-	\item Harmonic Seasonal Profile $\mathcal{S}_L(D)$\\~\
-	
-	Build Daily Seasonal Profiles for All Locations of Interest. These Models Can Be Used to Forecast at All Horizons
-	\begin{equation*}
-		Y_{L,t}=\mu_{L,t}+\sum\limits_{t=1}^{S} \Big[\alpha_{L,t}\sin\Big(\frac{2\pi t}{480}\Big)+\beta_{L,t}\cos\Big(\frac{2\pi t}{480}\Big)\Big]+		\epsilon_{L,t}
-	\end{equation*}
-\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Models Using Raw Traffic Occupancies\\~\
-
-Define $\bm{Y_{L,t-h}}'=[Y_{L,t-h},Y_{L,t-h-1},\cdots,Y_{L,t-h-P+1}]$
-\begin{itemize}
-	\item ARDL $\mathcal{L}_1(D,h)$
-	\begin{equation*}
-		Y_{B,t}=\mu+\bm{\alpha}'\bm{Y_{A,t-h}}+\bm{\beta}'\bm{Y_{B,t-h}}+\bm{\gamma}'\bm{Y_{C,t-h}}+\epsilon_t
-	\end{equation*}
-	\item TARDL $\mathcal{R}_1(D,h)$\\~\
-	\begin{equation*}
-Y_{B,t}=
-  \begin{cases}
-    \mu_L+\bm{\alpha_L}'\bm{Y_{A,t-h}}+\bm{\beta_L}'\bm{Y_{B,t-h}}+\bm{\gamma_L}'\bm{Y_{C,t-h}}+\epsilon_{t,L} & \textrm{ if } Y_{B,t-h}<\delta \\
-    \mu_H+\bm{\alpha_H}'\bm{Y_{A,t-h}}+\bm{\beta_H}'\bm{Y_{B,t-h}}+\bm{\gamma_H}'\bm{Y_{C,t-h}}+\epsilon_{t,H} & \textrm{ if } Y_{B,t-h}>\delta \\
-  \end{cases}
-\end{equation*}
-\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Models Using Deviations From Seasonal Profiles \\~\
-
-Define $\Delta_{L,t}=Y_{L,t}-\widehat{Y}_{L,t}$ as the deviation from the seasonal profile for location $L$ at time $t$. 
-
-Also, define $\bm{\Delta_{L,t-h}}'=[\Delta_{L,t-h},\Delta_{L,t-h-1},\cdots,\Delta_{L,t-h-P+1}]$.
-
-
-\begin{itemize}
-	\item ARDL $\mathcal{L}_2(D,h)$
-\begin{equation*}
-\Delta_{B,t}=\mu+\bm{\alpha}'\bm{\Delta_{A,t-h}}+\bm{\beta}'\bm{\Delta_{B,t-h}}+\bm{\gamma}'\bm{\Delta_{C,t-h}}+\epsilon_t
-\end{equation*}
-	\item TARDL $\mathcal{R}_2(D,h)$\\~\
-\begin{equation*}
-\Delta_{B,t}=
-  \begin{cases}
-    \mu_L+\bm{\alpha_L}'\bm{\Delta_{A,t-h}}+\bm{\beta_L}'\bm{\Delta_{B,t-h}}+\bm{\gamma_L}'\bm{\Delta_{C,t-h}}+\epsilon_{t,L} & \textrm{ if } Y_{B,t-h}<\delta \\
-    \mu_H+\bm{\alpha_H}'\bm{\Delta_{A,t-h}}+\bm{\beta_H}'\bm{\Delta_{B,t-h}}+\bm{\gamma_H}'\bm{\Delta_{C,t-h}}+\epsilon_{t,H} & \textrm{ if } Y_{B,t-h}>\delta \\
-  \end{cases}
-\end{equation*}
-\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Model Complexity\\~\
-	
-	Consider Full Model  $\mathcal{M} \in \{L_1(D,h),R_1(D,h),L_2(D,h),R_2(D,h)\}$.
-	Define Parameter Vector $\bm{\theta}_{\mathcal{M}}\in \bm{\Theta}_\mathcal{M}$. The dimensionality $\dim(\bm{\Theta}_\mathcal{M})$ increases with with $S$ and  $P$.
-	\begin{table}[!h]
-  \footnotesize
-  \centering
-    \begin{tabular}{cc}
-    \toprule
-   Model & $\dim(\bm{\Theta})$  \\
-    \midrule
-    $\mathcal{W}(D,h)$ & $1$ \\
-    $\mathcal{S}_B(D)$ & $2S+2$ \\
-    $\mathcal{L}_1(D,h)$ & $3P+1+1=3P+2$ \\
-    $\mathcal{R}_1(D,h)$ & $2(3P+2)=6P+4$ \\
-    $\mathcal{L}_2(D,h)$ & $3(2S+2)+ 3P+2=6S+3P+8$ \\
-    $\mathcal{R}_2(D,h)$ & $3(2S+2)+6P+4=6S+6P+10$ \\
-    \bottomrule
-    \end{tabular}%
-\end{table}%
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Consider General TAR($P$) Model
-	
-	\begin{equation*}
-\begin{split}
-y_t&=
-  \begin{cases}
-    \alpha_0+\alpha_1y_{t-1}+\alpha_2y_{t-2}+\cdots+\alpha_Py_{t-P}+\epsilon_{\alpha,t} & \textrm{ if } z_t<\delta \\
-    \beta_0+\beta_1y_{t-1}+\beta_2y_{t-2}+\cdots+\beta_Py_{t-P}+\epsilon_{\beta,t} & \textrm{ if } z_t>\delta \\
-  \end{cases}\\
-  &=
-    \begin{cases}
-    \bm{\alpha}'\bm{y_{t-1}} +\epsilon_{\alpha,t} & \textrm{ if } z_t<\delta \\
-     \bm{\beta}'\bm{y_{t-1}} +\epsilon_{\beta,t} & \textrm{ if } z_t>\delta \\
-  \end{cases}\\
-  \textrm{ where } & \epsilon_{\alpha,t} \sim N(0,\sigma^2_\alpha) \textrm{ and } \epsilon_{\beta,t} \sim N(0,\sigma^2_\beta)
-  \end{split}
-\end{equation*}
-	
-	For future reference, we abbreviate the full TAR($P$) model $\mathcal{M}_R$. \\~\
-	
-	Model $\mathcal{M}_R$ is fully defined by parameter vector $\bm{\theta}_{\mathcal{M}_R}'=[\bm{\alpha}',\bm{\beta}',\sigma_\alpha,\sigma_\beta,\delta]$. \\~\
-	
-	Furthermore, let $\mathcal{M}_{LR}$ and $\mathcal{M}_{HR}$ represent the low-regime and high-regime models, respectively.\\~\
-	
-
-From the $2^{2(P+1)}$ submodels, we aim to identify the best submodel $\mathcal{M}^*_R$
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-\item Methodology Step 1: Bayesian Shrinkage\\~\
-
-Apply Regime-Specific BHS for Initial Sparse Estimation
-\begin{equation*}
-\label{eq:hsp}
-\begin{split}
- 	\alpha_j &\sim N(0,\sigma^2_\alpha\lambda^2_{\alpha_j}\lambda_{\alpha}^2), \textrm{ } \lambda_{\alpha_j}\sim C^+(0,1), \textrm{ } \lambda_\alpha \sim C^+(0,1) \\
- 	\beta_j & \sim N(0,\sigma^2_\beta\lambda^2_{\beta_j}\lambda_{\beta}^2), \textrm{ } \lambda_{\beta_j}\sim C^+(0,1), \textrm{ } \lambda_\beta \sim C^+(0,1)\\
- 	& \forall j \in \{1,2,3,\cdots,P\}
-\end{split}
-\end{equation*}
-
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Methodology Step 2: Projection Predictive Variable Selection\\~\
-	\begin{itemize}
-		\item Kullback-Leibler (KL) Divergence
-		\begin{itemize}
-			\item Asymmetric Measure of Distance Between 2 Probability Distributions
-			\item Developed by \cite{Goutis1998, Dupuis2003,Piironen2017} for Generalized Linear Models
-			\item Measure Discrepancy Between Full Model $\mathcal{M}_R$ and Proposed Submodel $\mathcal{M}^\perp_R$ \\~\
-		\end{itemize}
-		\item Necessary Definitions
-			$$\textrm{Matrix } \bm{Y_{t-1}} \textrm{ where $k$th row is } \bm{y_{k-1}}'=[1,y_{k-1},y_{k-2},\cdots,y_{k-P}]$$
-			$$\textrm{Regime-Specific Full Reference Models: } \mathcal{M}_{LR} \textrm{ and } \mathcal{M}_{HR}$$
-			$$\textrm{Regime-Specific Submodels: } \mathcal{M}^\perp_{LR} \textrm{ and } \mathcal{M}^\perp_{HR}$$
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Methodology Step 2: Projection Predictive Variable Selection (Cont.)\\~\
-	 \begin{itemize}
-		\item Regime-Specific Projection Approach\\~\
-		\begin{equation*}
-		\begin{split}
-		f(\bm{\theta}_{\mathcal{M}_R}|\mathcal{M}_R,Data) & \to f(\bm{\theta}_{\mathcal{M}^\perp_R}|\mathcal{M}^\perp_R,Data)\\
-		\bm{\theta}^{(s)} & \to \bm{\theta}^{\perp(s)}\\
-		[\bm{\alpha}^{(s)},\sigma_\alpha^{(s)},\bm{\beta}^{},\sigma_\beta^{(s)},\delta^{(s)}] & \to [\bm{\alpha}^{\perp(s)},\sigma_\alpha^{\perp(s)},\bm{\beta}^{\perp(s)},\sigma_\beta^{\perp(s)},\delta^{(s)}]\\
-		\end{split}
-		\end{equation*}
-		\item Regime-Specific Projection Process
-
-\indent Split $\bm{Y_{t-1}}$ into $\bm{Y_{LR,t-1}}$ and $\bm{Y_{HR,t-1}}$ based on $\delta^{(s)}$.
-
-\indent Identify $\bm{Y^\perp_{LR,t-1}}$ and $\bm{Y^\perp_{HR,t-1}}$ based on proposed  $\mathcal{M}^\perp_{LR}$ and $\mathcal{M}^\perp_{HR}$
-
-\begin{equation*}
-\scriptsize
-\begin{split}
-\bm{\alpha}^{\perp(s)}&=(\bm{Y^{\perp'}_{LR,t-1}}\bm{Y^{\perp}_{LR,t-1}})^{-1} \bm{Y^{\perp'}_{LR,t-1}}     \bm{Y_{LR,t-1}}\bm{\alpha}^{(s)}\\
-\sigma_\alpha^{\perp(s)}&=\sqrt{\sigma_\alpha^{(s)}+\frac{( \bm{Y_{LR,t-1}}\bm{\alpha}^{(s)}-\bm{Y^\perp_{LR,t-1}}\bm{\alpha}^{\perp(s)})'( \bm{Y_{LR,t-1}}\bm{\alpha}^{(s)}-\bm{Y^\perp_{LR,t-1}}\bm{\alpha}^{\perp(s)})}{T}                                  }\\
-\bm{\beta}^{\perp(s)}&=(\bm{Y^{\perp'}_{HR,t-1}}\bm{Y^{\perp}_{HR,t-1}})^{-1} \bm{Y^{\perp'}_{HR,t-1}} \bm{Y_{HR,t-1}}\bm{\beta}^{(s)}\\
-\sigma_\beta^{\perp(s)}&=\sqrt{\sigma_\beta^{(s)}+\frac{( \bm{Y_{HR,t-1}}\bm{\beta}^{(s)}-\bm{Y^\perp_{HR,t-1}}\bm{\beta}^{\perp(s)})'( \bm{Y_{HR,t-1}}\bm{\beta}^{(s)}-\bm{Y^\perp_{HR,t-1}}\bm{\beta}^{\perp(s)})}{T}                                   }
-\end{split}
-\end{equation*}
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Methodology Step 2: Projection Predictive Variable Selection (Cont.)\\~\
-	 \begin{itemize}
-		\item Regime-Specific Projection Process (Cont.)\\~\
-		For each $\bm{\theta}^{(s)}$, we obtain regime-specific KL divergences,
-\begin{equation*}
-\begin{split}
-d^{(s)}_{LR}(\bm{\alpha}^{(s)},\sigma^{(s)}_\alpha)&=\frac{1}{2}\log\bigg(\frac{\sigma^{\perp(s)}_\alpha}{\sigma^{(s)}_\alpha}\bigg)\\
-d^{(s)}_{HR}(\bm{\beta}^{(s)},\sigma^{(s)}_\beta)&=\frac{1}{2}\log\bigg(\frac{\sigma^{\perp(s)}_\beta}{\sigma^{(s)}_\beta}\bigg)
-\end{split}
-\end{equation*}
-	
-		Finally, we measure regime-specific discrepancies by
-\begin{equation*}
-\begin{split}
-D(\mathcal{M}_{LR}||\mathcal{M}^\perp_{LR})&=\frac{1}{S}\sum\limits^S_{s=1} d^{(s)}_{LR}(\bm{\alpha}^{(s)},\sigma^{(s)}_\alpha)    \\
-D(\mathcal{M}_{HR}||\mathcal{M}^\perp_{HR})&=\frac{1}{S}\sum\limits^S_{s=1} d^{(s)}_{HR}(\bm{\beta}^{(s)},\sigma^{(s)}_\beta)     \\
-\end{split}
-\end{equation*}
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Methodology Step 2: Projection Predictive Variable Selection (Cont.)\\~\
-	 \begin{itemize}
-		\item Forward Stepwise Selection Algorithm\\~\
-		
-		For Intercept-only Models $\mathcal{M}^0_{LR}$ and $\mathcal{M}^0_{HR}$, calculate initial discrepancies $D(\mathcal{M}_{LR}||\mathcal{M}^0_{LR})$ and $D(\mathcal{M}_{HR}||\mathcal{M}^0_{HR})$	\\~\
-	
-		For each level of flexibility $p \in \{1,2,\cdots,P\}$, we identify the best regime-specific submodels $\mathcal{M}^p_{LR}$ and $\mathcal{M}^p_{HR}$.\\~\
-		
-		Algorithm conducted such that for $j<k$ $\mathcal{M}^j_{HR}$ is nested in $\mathcal{M}^k_{HR}$.
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 2: Bayesian Estimation of TAR Models} 
-\begin{itemize}
-	\item Methodology Step 3: Final Model Selection\\~\
-	 \begin{itemize}
-		\item Choose $\mathcal{M}^*_{LR}$ and $\mathcal{M}^*_{HR}$ Based on Relative Explanatory Power \\~\
-		\begin{equation*}
-\begin{split}
-RelE(\mathcal{M}^p)&=1-\frac{D(\mathcal{M}||\mathcal{M}^p)}{D(\mathcal{M}||\mathcal{M}^0)}\\
-\end{split}
-\end{equation*}
-		\item Choose Based On Minimization of RMSFE for Time Period Intentionally Ignored
-		\begin{equation*}
-  			RMSFE(\mathcal{M}^p)=\sqrt{\frac{1}{T}\sum (y_t-\hat{y}_t)^2}
-		\end{equation*}
-	\end{itemize}
-\end{itemize}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-\frame{\frametitle{Part 3: Current Status and Future Directions} 
-\begin{itemize}
-\item Bayesian Shrinkage Estimation of Logistic Smooth Transition Autoregressions \\~\
-	\begin{itemize}
-		\item Submitted to \textit{Communications in Statistics: Simulation and Compuation} on June 19, 2017
-		\item Code Implementing Bayesian Shrinkage Estimation for Coefficients and Dirichlet Prior for Composite Threshold Variable was Included in Paper Submission
-		\item Decision has not been Made \\~\
-	\end{itemize}
-	\item Sparse Bayesian Linear and Nonlinear Models Estimated for Short-Term Forecasting of Traffic Occupancy \\~\
-	\begin{itemize}
-		\item Plan to Submit to \textit{International Journal of Forecasting} Before December
-		\item Code Applying Horseshoe Priors and Projection Approach to AR and TAR Models Will Be Included in Submission
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 3: Current Status and Future Directions} 
-\begin{itemize}
-\item Additions to Second Paper \\~\
-	\begin{itemize}
-		\item Model Traffic Occupancy for Loop Detectors in Eastbound Direction
-		\item Build and Evaluate a Combined Model Analogous to Error Correction Models
-		\item Compare to Models Intentionally Ignoring Information from Nearby Locations
-		\item Incorporate Traffic Volume and Speed in Models for Traffic Occupancy
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 3: Current Status and Future Directions} 
-\begin{itemize}
-\item Future Research Ideas \\~\
-	\begin{itemize}
-		\item Bayesian Shrinkage and Selection Ideas to Generalized Nonlinear Models.
-		\item Model Traffic Occupancy Using Linear and Nonlinear Beta AR Models
-		 	$$O_t \sim Beta(\mu_t\phi_t,\mu_t(1-\phi_t))$$
-		 	$$log\bigg(\frac{\mu_t}{1-\mu_t}\bigg)=f_1(y_{t-1},y_{t-2},\cdots,y_{t-P})$$
-		 	$$log(\phi)=f_2(y_{t-1},y_{t-2},\cdots,y_{t-P})$$
-	\end{itemize}
-\end{itemize}
-}
-
-\frame{\frametitle{Part 3: Current Status and Future Directions} 
-\begin{itemize}
-\item Future Research Ideas (Cont.) \\~\
-	\begin{itemize}
-		\item Bayesian Regularization and Multicollinearity. Naturally occurs in AR, LSTAR, TAR, ARDL, and TARDL Models. \\~\
-		
-		 For  $T \in \{50,100,200\}$, $\phi_1 \in \{0.9,0.7,0.5\}$ and  $\phi_2 \in \{-0.9,-0.7,-0.5\}$, we generate 100 replications of length $T$ under the below specifications:
-		$$x_{1,t}=\phi_1 x_{1,t-1}+\epsilon_{1,t} \textrm{ and } x_{2,t}=\phi_2 x_{2,t-1}+\epsilon_{2,t}$$
-		$$y_t=80+8x_{1,t-1}-6x_{1,t-3}-8x_{2,t-2}+6x_{2,t-4}+\epsilon_t$$
-	For $P \in \{5,10,20\}$, we compare shrinkage methods on parameter estimation and variable selection errors. \\~\
-		\item Bayesian Approaches to Forecast Combinations from Naive, Linear, and Nonlinear Models.
-		\begin{itemize}
-			\item Consider Static and Dynamic Approaches to Weighting Schemes.
-			\item Possible Value in Nonlinear Combination Schemes
-		\end{itemize}
-	\end{itemize}
-\end{itemize}
-}
 
 
 

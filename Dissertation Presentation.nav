@@ -86,21 +86,19 @@
 \headcommand {\beamer@framepages {43}{43}}
 \headcommand {\slideentry {0}{0}{44}{44/44}{}{0}}
 \headcommand {\beamer@framepages {44}{44}}
-\headcommand {\slideentry {0}{0}{45}{45/45}{}{0}}
+\headcommand {\beamer@sectionpages {1}{44}}
+\headcommand {\beamer@subsectionpages {1}{44}}
+\headcommand {\sectionentry {1}{\translate {References}}{45}{\translate {References}}{0}}
+\headcommand {\slideentry {1}{0}{0}{45/45}{}{0}}
 \headcommand {\beamer@framepages {45}{45}}
-\headcommand {\slideentry {0}{0}{46}{46/46}{}{0}}
-\headcommand {\beamer@framepages {46}{46}}
-\headcommand {\beamer@sectionpages {1}{46}}
-\headcommand {\beamer@subsectionpages {1}{46}}
-\headcommand {\sectionentry {1}{\translate {References}}{47}{\translate {References}}{0}}
-\headcommand {\slideentry {1}{0}{0}{47/47}{}{0}}
-\headcommand {\beamer@framepages {47}{47}}
-\headcommand {\slideentry {1}{0}{0}{47/48}{}{0}}
-\headcommand {\beamer@framepages {47}{48}}
-\headcommand {\slideentry {1}{0}{0}{47/49}{}{0}}
-\headcommand {\beamer@framepages {47}{49}}
-\headcommand {\beamer@partpages {1}{49}}
-\headcommand {\beamer@subsectionpages {1}{49}}
-\headcommand {\beamer@sectionpages {1}{49}}
-\headcommand {\beamer@documentpages {49}}
-\headcommand {\def \inserttotalframenumber {49}}
+\headcommand {\slideentry {1}{0}{0}{45/46}{}{0}}
+\headcommand {\beamer@framepages {45}{46}}
+\headcommand {\slideentry {1}{0}{0}{45/47}{}{0}}
+\headcommand {\beamer@framepages {45}{47}}
+\headcommand {\slideentry {1}{0}{0}{45/48}{}{0}}
+\headcommand {\beamer@framepages {45}{48}}
+\headcommand {\beamer@partpages {1}{48}}
+\headcommand {\beamer@subsectionpages {1}{48}}
+\headcommand {\beamer@sectionpages {1}{48}}
+\headcommand {\beamer@documentpages {48}}
+\headcommand {\def \inserttotalframenumber {48}}
