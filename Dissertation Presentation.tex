@@ -142,7 +142,7 @@
 \begin{itemize}
 \item Given autoregressive order $P$, let $\bm{x}_t'=[y_{t-1},y_{t-2},\cdots,y_{t-P}]$, $\bm{\alpha}'=[\alpha_1,\cdots,\alpha_P]$, and $\bm{\beta}'=[\beta_1,\cdots,\beta_P]$. 
 
-$$y_t=(\mu_\alpha+\bm{x}'_t\bm{\alpha})(1-G(z_{t}))+(\mu_\beta+\bm{x}'_{t}\bm{\beta}+)G(z_{t})+\epsilon_t$$
+$$y_t=(\mu_\alpha+\bm{x}'_t\bm{\alpha})(1-G(z_{t}))+(\mu_\beta+\bm{x}'_{t}\bm{\beta})G(z_{t})+\epsilon_t$$
 
 where $\epsilon_{t}\sim \textrm{ i.i.d. } N(0,\sigma^2)$ and $G(z_t): \mathbb{R}\to\mathbbm{G}\subseteq[0,1]$. \\~\
 
@@ -390,7 +390,7 @@ Consider  $z_{3,t}=\frac{y_{t-1}+y_{t-2}+y_{t-3}}{3}=[\frac{1}{3},\frac{1}{3},\f
 	\item $Y_t=\textrm{logit}(O_t)=\log[O_t/(1-O_t)]$
 	\item Raw Data Adjusted at the Boundary so $\textrm{logit}(\cdot)$ Is Defined
 	\item Forecasts Evaluated on Original Scale, but $$\hat{O}_{L,t} \neq  \textrm{logit}^{-1}(\hat{Y}_{L,t})$$
-	\item Density Forecasts Produced from $\{\textrm{logit}^{-1}(\hat{Y}^{(s)}_{L,t})\}_{s=1}^{S}$ where $\{\hat{Y}^{(s)}_{L,t}\}_{s=1}^{S}$ are $S$ posterior samples obtained from the posterior predictive distribution $f(\hat{Y}_{L,t}|\mathcal{I}^*_t)$ where $\mathcal{I}^*_t=\{y_{L,k}\}_{k=t-h}^{t-h-P+1}$
+	\item Density Forecasts Produced from $\{\textrm{logit}^{-1}(\hat{Y}^{(s)}_{t})\}_{s=1}^{S}$ where $\{\hat{Y}^{(s)}_{t}\}_{s=1}^{S}$ are $S$ posterior samples obtained from the posterior predictive distribution $f(\hat{Y}_{t}|\mathcal{I}^*_t)$ where $\mathcal{I}^*_t=\{y_{k}\}_{k=t-h}^{t-h-P+1}$
 \end{itemize}
 \end{itemize}
 }
@@ -461,7 +461,7 @@ $$
 \begin{itemize}
 \item Finite Set of $m$ Thresholds for an $(m+1)$-Regime TAR$(P)$ \\~\
 
-Define the Sample Quantile Function, $$q(.): [0,1]\to[\min\{y_{t-h}:t=1,2,\cdots,T\},\max\{y_{t-h}:t=1,2,\cdots,T\}]$$ \\~\ 
+Define the Empirical Quantile Function, $$q(.): [0,1]\to[\min\{y_{t-h}:t=1,2,\cdots,T\},\max\{y_{t-h}:t=1,2,\cdots,T\}]$$ \\~\ 
 
 Select Sequence $\{p_k\}_{k=1}^m$ of $m$ Evenly Spaced Percentiles where $$p_{min}=p_1<\cdots<p_m=p_{max}$$ \\~\
 
@@ -534,7 +534,7 @@ Representable as a High Dimensional Linear Regession,
 \item Full Model $\bm{y}_R =\bm{X}_R\bm{\theta}_R+\bm{\epsilon}_R$ Nests $6.61\times 10^{122}$ Different $(m^*+1)$-Regime Subset TAR$(P)$ Models where $0\leq m^* \leq m$ \\~\
 \item Step 1: Sparse Estimation Using Horseshoe+ Shrinkage Priors  \\~\
 \begin{itemize}
-\item Adaptive LASSO Used by \cite{Chan2015}
+\item Group LASSO Used by \cite{Chan2015}
 \item $\textrm{BHS}^+$ Hierarchy for Each $\theta_i$ in $\bm{\theta}_R$ \citep{Bhadra2016}
 \begin{equation*}
 \begin{split}
@@ -565,7 +565,7 @@ If $\lambda_i^2|\nu_i\sim \mathcal{IG}(\frac{1}{2},\frac{1}{\nu_i})$ and $\nu_i 
  \item Given Candidate Submodel $\mathcal{M}_\perp$, Posterior Samples $\{\bm{\theta}^{(s)}_\perp\}_{s=1}^S$ and $\{\sigma^{(s)}_\perp\}_{s=1}^S$ Obtained Via Projection
  \item Gaussian Linear Models \citep{Piironen2015b,Piironen2017}
 	$$\bm{\theta}^{(s)}_\perp = (\mathbf{X}'_\perp \mathbf{X}_\perp)^{-1} \mathbf{X}'_\perp \mathbf{X}_R\bm{\theta}^{(s)}_R$$
-$$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\theta}^{(s)}_R-\mathbf{X}_\perp\bm{\theta}^{(s)}_\perp)'(\mathbf{X}_R\bm{\theta}^{(s)}_R-\mathbf{X}_\perp\bm{\theta}^{(s)}_\perp)}{T}}$$
+$$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)})^2+\frac{(\mathbf{X}_R\boldmath{\theta}^{(s)}_R-\mathbf{X}_\perp\bm{\theta}^{(s)}_\perp)'(\mathbf{X}_R\bm{\theta}^{(s)}_R-\mathbf{X}_\perp\bm{\theta}^{(s)}_\perp)}{T}}$$
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -579,9 +579,9 @@ $$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\thet
 \begin{itemize}
  \item Kullback-Leibler (KL) Divergence \citep{Kullback1951} Measures the Overall Discrepancy Between the Posterior Predictive Distributions $p(y_{T+1}|\mathcal{M}_R,\mathbf{y}_R,\mathbf{X}_R)$ and $p(y_{T+1}|\mathcal{M}_R,\mathbf{y}_\perp,\mathbf{X}_\perp)$
  \item KL Divergence for a Particular Sample
- $$d^{(s)}_{\perp}(\bm{\theta}^{(s)}_R,\sigma^{(s)}_R)=\frac{1}{2}\log\Bigg(\frac{\sigma^{(s)}_\perp}{\sigma^{(s)}_R}\Bigg)^2$$
+ $$d^{(s)}_{\perp}(\bm{\theta}^{(s)}_R,\sigma^{(s)})=\frac{1}{2}\log\Bigg(\frac{\sigma^{(s)}_\perp}{\sigma^{(s)}}\Bigg)^2$$
  \item Overall Discrepancy
- $$D(\mathcal{M}_{R}||\mathcal{M}_\perp)=\frac{1}{S}\sum\limits^S_{s=1} d^{(s)}_{\perp}(\bm{\theta}^{(s)}_R,\sigma^{(s)}_R)$$
+ $$D(\mathcal{M}_{R}||\mathcal{M}_\perp)=\frac{1}{S}\sum\limits^S_{s=1} d^{(s)}_{\perp}(\bm{\theta}^{(s)}_R,\sigma^{(s)})$$
 \end{itemize}
 \end{itemize}
 \end{itemize}
@@ -633,7 +633,7 @@ $$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\thet
 	\begin{figure}[!h]
 			\centering
 			\caption{Forecasts Based on Seasonal Profiles for Westbound Detectors}
-      \includegraphics[scale=0.24]{SEASESTPlotsA}
+      \includegraphics[scale=0.25]{SEASESTPlotsA}
 	\end{figure}
 \end{itemize}
 \end{itemize}
@@ -647,7 +647,7 @@ $$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\thet
 	\begin{figure}[!h]
 			\centering
 			\caption{1-Step Ahead Density TAR Forecasts for Westbound Detectors}
-      \includegraphics[scale=0.24]{DENS1PlotsA}
+      \includegraphics[scale=0.25]{DENS1PlotsA}
 	\end{figure}
 \end{itemize}
 \end{itemize}
@@ -661,7 +661,7 @@ $$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\thet
 	\begin{figure}[!h]
 			\centering
 			\caption{3-Step Ahead Density TAR Forecasts for Westbound Detectors}
-      \includegraphics[scale=0.24]{DENS3PlotsA}
+      \includegraphics[scale=0.25]{DENS3PlotsA}
 	\end{figure}
 \end{itemize}
 \end{itemize}
@@ -675,7 +675,7 @@ $$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\thet
 	\begin{figure}[!h]
 			\centering
 			\caption{5-Step Ahead Density TAR Forecasts for Westbound Detectors}
-      \includegraphics[scale=0.24]{DENS5PlotsA}
+      \includegraphics[scale=0.25]{DENS5PlotsA}
 	\end{figure}
 \end{itemize}
 \end{itemize}
@@ -688,7 +688,7 @@ $$\sigma^{(s)}_\perp=\sqrt{(\sigma^{(s)}_R)^2+\frac{(\mathbf{X}_R\boldmath{\thet
 \item Comparison of Point Forecasts \\~\
 	\begin{itemize}
 	\item Evaluated on Mean Absolute Scaled Forecast Error \citep{Hyndman2006}
-	$$\textrm{MASFE}(h)=\frac{1}{T_h}\sum\limits_{t=P+h}^{480}\left|\frac{O_{L,t}-\widehat{O}_{L,t}}{\textrm{MAE}_{RW}(h)}\right|$$
+	$$\textrm{MASFE}(h)=\frac{1}{T_h}\sum\limits_{t=P+h}^{480}\left|\frac{O_{t}-\widehat{O}_{t}}{\textrm{MAE}_{RW}(h)}\right|$$
 	\item $\textrm{MAE}_{RW}(h)$ is the Fitted MAE from Naive Random Walk where  $\widehat{O}_{t}=O_{t-h}$
 	\end{itemize}
 
@@ -1001,9 +1001,9 @@ Bayesian Variants Denoted $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ where $m \in \
     \toprule
     Method ($m$) & Final Model Selection  \\
     \midrule
-    1 & $e(\cdot)>0.90$ \\
-    2 & $e(\cdot)>0.95$ \\
-    3 & $e(\cdot)>0.98$\\
+    1 & $RelE(\cdot)>0.90$ \\
+    2 & $RelE(\cdot)>0.95$ \\
+    3 & $RelE(\cdot)>0.98$\\
     \midrule
     4 & OOS\\
     \bottomrule
@@ -1040,7 +1040,7 @@ Data Generating Processes are Subset ARMA$(7,7)$. Maximum ARMA Orders $P=Q=14$. 
 \item $C$: Relative Frequency of Selecting All Relevant Parameters
 \item  $I$: Relative Frequency of Identifying the True Model
 \item  $-$: False Negative Rate (Probability of Missing a Relevant Parameter)
-\item  $-$: False Positive Rate (Probability of Selecting an Irrelevant Parameter)
+\item  $+$: False Positive Rate (Probability of Selecting an Irrelevant Parameter)
 \end{itemize}
 \end{itemize}
 \end{itemize}
