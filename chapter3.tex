@@ -198,7 +198,7 @@ Assume $\{\epsilon_{\pi(t)+h}\} \sim \textrm{ i.i.d. }\mathcal{N}(0,\sigma^2)$ w
 \label{eq:normalmod}
 \bm{y}_R|\bm{X}_R,\bm{\Theta}\sim \mathcal{N}_T(\bm{X}_R\bm{\theta}_R,\sigma^2\bm{I})
 \end{equation}
-where $\mathcal{N}_T$ is a $T$-dimensional \textit{Multivariate normal} distribution and $\bm{I}$ is a $T\times T$ identity matrix. The \textit{Guassian} error specification for all $(L,D,h)$-specific TAR models and $(L,D)$-specific seasonal harmonic profiles is used with caution. Even after aggregating to a 3-min interval, influential spikes toward $0$ and $1$ are seen. For future reference, we let TAR and SEAS denote the \textit{normal} regression models from Equations \ref{eq:hdlinmod} and \ref{eq:hdslinmod}. In both TAR and SEAS, Jefferys' prior is used for $\sigma^2$. Derivation of the \textit{inverse-gamma} full conditional distribution for $\sigma^2$ under both linear models can be found in \cite{bayesreg}.
+where $\mathcal{N}_T$ is a $T$-dimensional \textit{Multivariate normal} distribution and $\bm{I}$ is a $T\times T$ identity matrix. The \textit{Gaussian} error specification for all $(L,D,h)$-specific TAR models and $(L,D)$-specific seasonal harmonic profiles is used with caution. Even after aggregating to a 3-min interval, influential spikes toward $0$ and $1$ are seen. For future reference, we let TAR and SEAS denote the \textit{normal} regression models from Equations \ref{eq:hdlinmod} and \ref{eq:hdslinmod}. In both TAR and SEAS, Jefferys' prior is used for $\sigma^2$. Derivation of the \textit{inverse-gamma} full conditional distribution for $\sigma^2$ under both linear models can be found in \cite{bayesreg}.
 
 \subsubsection{Horseshoe+ Priors for Penalized Regression}
 
@@ -224,8 +224,10 @@ The original hierarchy seen in Equation \ref{eq:traffichsp} makes posterior samp
 \begin{split}
 \theta_i|\lambda_i^2,\tau^2,\sigma^2 & \sim \mathcal{N}(0,\lambda_i^2\tau^2\sigma^2) \\
 \lambda^2_i|\nu_i & \sim \mathcal{IG}(1/2,1/\nu_i)\\
+\nu_i|\eta_i & \sim \mathcal{IG}(1/2,1/\eta^2_i) \\
+\eta^2_i|\zeta_i & \sim \mathcal{IG}(1/2,1/\zeta_i) \\
+\zeta_i & \sim \mathcal{IG}(1/2,1) \\
 \tau^2|\xi & \sim \mathcal{IG}(1/2,1/\xi)\\
-\nu_i & \sim \mathcal{IG}(1/2,1) \\
 \xi & \sim \mathcal{IG}(1/2,1) \\
 \end{split}
 \end{equation}

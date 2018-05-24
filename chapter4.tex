@@ -225,7 +225,7 @@ The hierarchical representations of BHS and $\textrm{BHS}^+$ displayed in Equati
 
 \subsubsection{Predictive Posterior Projection}
 
-Define $\mathcal{V}_F=\{1,2,\cdots,p+q\}$. For the fully saturated ARMA$(p,q)$ model, let $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ correspond to the posterior means of $\bm{\beta}$ under BHS and $\textrm{BHS}^+$, respectively. Both $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ are quality initial estimates of $\bm{\beta}$ but not sparse since $\hat{\beta}_i \neq 0$ for all $i$. Obtaining these estimates is analogous to the first stages of ADLASSO and ADENET. Any $\mathcal{V}_\perp \subset \mathcal{V}_F$ characterizes a particular subset ARMA$(p,q)$ model via indicating the parameters of $\bm{\beta}$ included.  Although the best model $\mathcal{V}^* \subset \mathcal{V}_F$ may differ under BHS and $\textrm{BHS}^+$, the corresponding final subset ARMA$(p,q)$ models are defined $\hat{\bm{\beta}}_{HS}=\hat{\bm{\beta}}_{HS}(\mathcal{V}^*)$ and $\hat{\bm{\beta}}_{HS^{+}}=\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}^*)$. In this section, a Bayesian inspired algorithm to select $\mathcal{V}^*$ after Bayesian regularization is presented. For simplicity, the outline of this approach is generalized for both BHS and $\textrm{BHS}^+$.
+Define $\mathcal{V}_F=\{1,2,\cdots,p+q\}$. For the fully saturated ARMA$(p,q)$ model, let $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ correspond to the posterior means of $\bm{\beta}$ under BHS and $\textrm{BHS}^+$, respectively. Both $\hat{\bm{\beta}}_{HS}(\mathcal{V}_F)$ and $\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}_F)$ are quality initial estimates of $\bm{\beta}$ but not sparse since $\hat{\beta}_i \neq 0$ for all $i$. Obtaining these estimates is analogous to the first stages of ADLASSO and ADENET. To achieve sparse estimates, additional processing is necessary after sampling from posterior distributions derived from shrinkage priors \citep{Hahn2015}. Any $\mathcal{V}_\perp \subset \mathcal{V}_F$ characterizes a particular subset ARMA$(p,q)$ model via indicating the parameters of $\bm{\beta}$ included.  Although the best model $\mathcal{V}^* \subset \mathcal{V}_F$ may differ under BHS and $\textrm{BHS}^+$, the corresponding final subset ARMA$(p,q)$ models are defined $\hat{\bm{\beta}}_{HS}=\hat{\bm{\beta}}_{HS}(\mathcal{V}^*)$ and $\hat{\bm{\beta}}_{HS^{+}}=\hat{\bm{\beta}}_{HS^{+}}(\mathcal{V}^*)$. In this section, a Bayesian inspired algorithm to select $\mathcal{V}^*$ after Bayesian regularization is presented. For simplicity, the outline of this approach is generalized for both BHS and $\textrm{BHS}^+$.
 
 After Bayesian estimation, the full model $\mathcal{V}_F$ represents a viable reference model. The sets $\{\bm{\beta}^{(s)}(\mathcal{V}_F)\}_{s=1}^S$ and $\{\sigma^{(s)}(\mathcal{V}_F)\}_{s=1}^S$ are the $S$ posterior samples under the reference model. Given a proposed nested model $\mathcal{V}_\perp \subset \mathcal{V}_F$, \cite{Goutis1998} suggested the Kullback-Leibler (K-L) distance \citep{Kullback1951} to evaluate discrepancy between $\mathcal{V}_F$ and $\mathcal{V}_\perp$. Classic model selection via AIC is based on K-L information and derivable from a Bayesian perspective \citep{Akaike1974,Akaike1985,burnham2003,Burnham2004}. For a future value $\tilde{y}=y_{T+1}$, the loss in explanatory power from using $\mathcal{V}_\perp$ instead of $\mathcal{V}_F$  is assessed by the K-L distance between posterior predictive distributions listed in Equation \ref{eq:projpreddist}. If the discrepancy between $p(\tilde{y}|\bm{y},\bm{X},V_F)$ and $p(\tilde{y}|\bm{y},\bm{X},V_\perp)$ is small, the more parsimonious $\mathcal{V}_\perp$ is favored.  The foundation of this concept is provided in \cite{Dupuis2003,Nott2010,vehtari2012,Piironen2015b,Piironen2017}.
 \begin{equation}
@@ -478,7 +478,7 @@ Tables \ref{tab:alaemod1}, \ref{tab:alaemod2}, and \ref{tab:alaemod3} display th
 Modifications for temporal dependence $d$ are introduced in methods $\textrm{AL}_4$ versus $\textrm{AL}_5$ and $\textrm{AE}_4$ versus $\textrm{AE}_5$. OOS ($m=4$) and depOOS ($m=5$) produce similar results, which is expected considering the minor difference in training periods. Accounting for the assumed dependence $d=14$ in ADLASSO does not impact performance. As previously implied, neither CV-$K$ nor BCV-$K$ methods worked well on Model II; however,  false positive rates $+$ are much lower for BCV-K. The ADENET methods are more sensitive to the way the tuning parameters are selected. ADENET CV methods $\textrm{AE}_6$, $\textrm{AE}_7$, and $\textrm{AE}_8$ select the true model far more frequently than $\textrm{AE}_9$, $\textrm{AE}_{10}$, and $\textrm{AE}_{11}$. To be sure final subset selection contains all relevant parameters, BCV methods indicate a larger $C$ but negatively impact the false positive rate $+$.
 
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 \footnotesize
 \centering
 \caption{ADLASSO and ADENET Subset ARMA$(14,14)$ Results from 200 Replications of Model I}
@@ -518,7 +518,7 @@ Modifications for temporal dependence $d$ are introduced in methods $\textrm{AL}
 \label{tab:alaemod1}
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 \footnotesize
 \centering
 \caption{ADLASSO and ADENET Subset ARMA$(14,14)$ Results from 200 Replications of Model II}
@@ -558,7 +558,7 @@ Modifications for temporal dependence $d$ are introduced in methods $\textrm{AL}
 \label{tab:alaemod2}
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 \footnotesize
 \centering
 \caption{ADLASSO and ADENET Subset ARMA$(14,14)$ Results from 200 Replications of Model III}
