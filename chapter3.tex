@@ -37,7 +37,7 @@ Analyzing the raw traffic occupancy from an urban network measured on the 90s in
 
 Define random variable $O_{L,t}$ as the traffic occupancy for location $L$ at time $t$ and $o_{L,t}$ represents a known realization. As common practice, weekend data is ignored. Cyclical human behavior patterns throughout the work week lead to weekly seasonal traffic patterns. Data during April 2000 covers four complete weeks. The first three weeks are used to fit TAR models, and the last week is designated for forecasting evaluation. Time series plots of $\{o_{L,t}\}$ are found in Figure \ref{fig:OrigPlotTrafficOcc} organized by location.
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
 \caption{Raw Traffic Occupancy for All Locations Measured on 3-Minute Interval: Shaded Region Indicates the Forecasting Period}
 \includegraphics[width=\textwidth]{rawplots}
 \label{fig:OrigPlotTrafficOcc}
@@ -60,7 +60,8 @@ The order parameter $P\in\mathbb{N}$ represents the maximum short-term lag relev
  
 \subsection{Transformed Occupancy}
 Using function $\textrm{logit}(x):(0,1)\to\mathbb{R}$ such that $\phi(x)=\log [x/(1-x)]$, define the new transformed variable $Y_{L,t}=\textrm{logit}(O_{L,t})$. Raw occupancy is bounded on the $[0,1]$ interval. Recoding $0$ with $0.0001$ and $1$ with $0.9999$ is a nonevasive technique to handle extreme occupancies when $\textrm{logit}(.)$ is undefined. All models are defined for the variable $Y_{L,t}$, an approach used for proportional time series since \cite{Wallis1987}. Figure \ref{fig:TransPlotTrafficOcc} displays the transformed series $\{y_{L,t}\}$ for each location. Although forecasts are produced for the final week, evaluation of forecasts are considered on the original scale using $\textrm{logit}^{-1}(x):\mathbb{R}\to(0,1)$ where $\textrm{logit}^{-1}(x)=\frac{\exp(x)}{1+\exp(x)}$. Since $\textrm{logit}(x)$ is a nonlinear transformation, the forecast $\hat{O}_{L,t} \neq  \textrm{logit}^{-1}(\hat{Y}_{L,t})$. Unbiased forecasts and quantiles are produced from the set $\{\textrm{logit}^{-1}(\hat{Y}^{(s)}_{L,t})\}_{s=1}^{S}$ where $\{\hat{Y}^{(s)}_{L,t}\}_{s=1}^{S}$ are $S$ posterior samples obtained from the posterior predictive distribution $f(\hat{Y}_{L,t}|\mathcal{I}^*_t)$ where $\mathcal{I}^*_t=\{y_{L,k}\}_{k=t-h}^{t-h-P+1}$.
-\begin{figure}[htbp]
+
+\begin{figure}[ht!]
 \caption{Logit Transformed Traffic Occupancy for All Locations Measured on 3-Minute Interval: Shaded Region Indicates the Forecasting Period}
 \includegraphics[width=\textwidth]{Transplots}
 \label{fig:TransPlotTrafficOcc}
@@ -293,26 +294,26 @@ After fixing all $\theta_{i,j} \notin \mathcal{I}$ to $0$, the forward selection
 \label{sec:trafficresults}
 On the original $[0,1]$-interval, traffic occupancy forecasts are evaluated over the final week of April using a rolling-window and without re-estimation. For each $(L,D,h)$-specific TAR model, there are $T_h=480-P-h+1$ time points requiring forecasts, and for SEAS models, $T_h=480$. Denote the traffic occupancy forecast at time $t$ for a specific detector location $L$ as $\hat{O}_{L,t}$. Using the $(L,D)$-specific seasonal models estimated from the first three weeks of April (1440 discrete time points), $\hat{O}_{L,t}$ is quickly obtained for all future horizons. Figure \ref{fig:SEASESTPlots} displays the SEAS models fitted to the last week of April. The 3 min, 9 min, and 15 min horizon forecasts from all final TAR models are displayed in Figures \ref{fig:DENS1Plots}, \ref{fig:DENS3Plots}, and \ref{fig:DENS5Plots}. In the TAR plots, $(1-2\alpha)\times 100\%$ credible regions are displayed instead of point forecasts for $\alpha \in \{0.4,0.25,0.2,0.15,0.1,0.05\}$. The true traffic occupancies are plotted in gray for all figures. As illustrated by the SEAS models, the last Friday of April had unusually low congestion relative to the first three Fridays of April. The fact that this Friday also falls on a Grecian holiday weekend (Labor Day) provides a reasonable explanation since vacation time is often used around holidays. Although traffic forecasting is less important for low congested states, this day illustrates the deficiency of ignoring short term temporal dependencies in modeling traffic variables. 
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
 \caption{Forecasts Based on SEAS Models}
 \includegraphics[width=\textwidth]{SEASESTPlots}
 \label{fig:SEASESTPlots}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
 \caption{1-Step Ahead Density Forecasts for TAR Models}
 \includegraphics[width=\textwidth]{DENS1Plots}
 \label{fig:DENS1Plots}
 \end{figure}
 
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
 \caption{3-Step Ahead Density Forecasts for TAR Models}
 \includegraphics[width=\textwidth]{DENS3Plots}
 \label{fig:DENS3Plots}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[ht!]
 \caption{5-Step Ahead Density Forecasts for TAR Models}
 \includegraphics[width=\textwidth]{DENS5Plots}
 \label{fig:DENS5Plots}

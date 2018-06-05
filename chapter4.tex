@@ -411,7 +411,7 @@ The proxy innovations $\{\hat{\epsilon}_{k,t}\}$ are obtained from long AR$(p^\p
 \label{tab:longvsshort1}
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 \caption{Effect of Using AIC to Select $p'$ on ADLASSO Subset ARMA$(14,14)$ Estimation of Model II Based on 500 Replications}
 \centering
 \begin{tabular}{cc|cccc|cccc}
@@ -601,7 +601,7 @@ Modifications for temporal dependence $d$ are introduced in methods $\textrm{AL}
 Results for $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ for $m \in \{1,2,\cdots,4\}$ are displayed in Tables \ref{tab:hshspmod1}, \ref{tab:hshspmod2}, and \ref{tab:hshspmod3}. These tables are subdivided according to Table \ref{tab:bhstypes}. As it pertains to Models I-III, results for $\textrm{BHS}_m$ and $\textrm{BHS}^+_m$ are close to identical; therefore, performance only regarding $\textrm{BHS}_m$ is discussed. Subset selection from methods $\textrm{BHS}_1$, $\textrm{BHS}_2$, and $\textrm{BHS}_3$ based off relative efficiency $e(\cdot)$ is effected by the threshold $e^*$. Increasing $e^*$ increases $C$ and decreases $-$ due to the nested nature of models obtained via forward stepwise algorithm. Jointly considering ($I$, $+$), $e^*=0.95$ ($\textrm{BHS}_2$) yields the best results. Specifically for Models II and III, the results for $e^*=0.95$ are not superb. Setting $e^*=0.99$ Selection of $e^*$ is more a preference-based decision than scientific decision. The advantage of $\textrm{BHS}_4$ is that final model selection is based on actual OOS forecasting rather than an arbitrary threshold. For shorter time series ($T=120$), $\textrm{BHS}_4$ does not outperform $\textrm{BHS}_2$, but when $T=360$, $\textrm{BHS}_4$ starts to be competitive. Modifications can be made to $\tau$ to ensure enough data remains for model fitting, but for right now, the recommendation is to reserve $\textrm{BHS}_4$ for longer series.
 
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 \footnotesize
 \centering
 \caption{BHS and $\textrm{BHS}^+$ Subset ARMA$(14,14)$ Results from 200 Replications of Model I}
@@ -797,7 +797,7 @@ Table \ref{tab:alertselect} summarizes one-step ahead forecasting for $\{y_{2,t}
 	\includegraphics[scale=0.42]{alertselect}
 \end{figure}
 
-\begin{table}[htbp]
+\begin{table}[ht!]
 \footnotesize
 \centering
 \caption{One-Step Ahead Forecasting Results for Alert $\textrm{CO}_2$}
